@@ -21,25 +21,25 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PhotoScreenContent(photos: List<Int>) {
-    var selectedPhotoIndex by remember { mutableStateOf(-1) }
+    var selectedPhoto by remember { mutableStateOf(-1) }
 
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(1),
         content = {
             items(photos.size) { index ->
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
-                        .height(if (index == selectedPhotoIndex) 240.dp else 180.dp)
-                        .width(if (index == selectedPhotoIndex) 360.dp else 240.dp)
+                        .height(if (index == selectedPhoto) 240.dp else 120.dp)
+                        .width(if (index == selectedPhoto) 320.dp else 240.dp)
                         .clickable {
-                            selectedPhotoIndex = index
+                            selectedPhoto = index
                         }
                 ) {
                     Image(
                         painter = painterResource(id = photos.get(index)),
                         contentDescription = "Photo",
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.FillHeight
                     )
                 }
             }
