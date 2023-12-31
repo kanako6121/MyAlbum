@@ -1,0 +1,39 @@
+# MacOS
+.DS_Store
+Thumbs.db
+
+# Gradle
+.gradle/
+build/
+reports/
+gradlew.bat
+local.properties
+
+# IntelliJ IDEA
+.idea/*
+*.iml
+!.idea/codeStyles
+
+# Generated files
+gen/
+bin/
+out/
+captures/
+.navigation/
+.externalNativeBuild/
+.cxx/
+project.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.log
+output-metadata.json
+
+# Keystore files
+*.jks
+*.keystore
+keystore.properties
+releasekey.gradle
+!debug.keystore

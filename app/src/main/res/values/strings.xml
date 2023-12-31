@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyAlbum</string>
+    <string name="label_title">My Favorite Photos</string>
+</resources>
