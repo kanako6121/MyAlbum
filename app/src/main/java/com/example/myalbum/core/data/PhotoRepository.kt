@@ -1,4 +1,6 @@
 package com.example.myalbum.core.data
 
-class PhotoRepository {
+import javax.inject.Inject
+
+class PhotoRepository @Inject constructor() {
 }
