@@ -1,4 +1,4 @@
-package com.example.myalbum.ui.theme
+package com.example.myalbum.core.theme
 
 import android.app.Activity
 import android.os.Build
