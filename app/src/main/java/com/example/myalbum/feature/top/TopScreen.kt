@@ -34,9 +34,10 @@ import com.example.myalbum.R
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PhotoScreen(
+fun TopScreen(
     onNavigateEditScreen: () -> Unit,
-) {
+    onNavigatePreviewScreen: () -> Unit,
+    ) {
     Scaffold(
         topBar = {
             TopBar(
@@ -55,16 +56,18 @@ fun PhotoScreen(
                 R.drawable.seigo5,
                 R.drawable.seigo9,
                 )
-            PhotoScreenContent(
+            TopScreenContent(
                 onNavigateEditScreen = onNavigateEditScreen,
+                onNavigatePreviewScreen = onNavigatePreviewScreen,
                 photos = photos
             )
         }
     }
 }
 @Composable
-fun PhotoScreenContent(
+fun TopScreenContent(
     onNavigateEditScreen: () -> Unit,
+    onNavigatePreviewScreen: () -> Unit,
     photos: List<Int>
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
@@ -114,7 +117,8 @@ fun TopBar(
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-    PhotoScreen(
-        onNavigateEditScreen = {}
+    TopScreen(
+        onNavigateEditScreen = {},
+        onNavigatePreviewScreen = {},
     )
 }

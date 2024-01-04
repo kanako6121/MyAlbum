@@ -4,7 +4,8 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun EditScreen(
-    onNavigatePhotoScreen: () -> Unit,
+    onNavigateTopScreen: () -> Unit,
+    onNavigatePreviewScreen: () -> Unit
 ) {
 
 }

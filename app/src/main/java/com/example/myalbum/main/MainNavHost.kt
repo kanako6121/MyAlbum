@@ -6,12 +6,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.feature.edit.EditScreen
-import com.example.myalbum.feature.ui.PhotoScreen
+import com.example.myalbum.feature.preview.PreviewScreen
+import com.example.myalbum.feature.top.TopScreen
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    startDestination: String = "home",
+    startDestination: String = "top",
 ) {
     val navController = rememberNavController()
 
@@ -20,10 +21,15 @@ fun MainNavHost(
         navController = navController,
         startDestination = startDestination,
     ) {
-        composable("home") {
-            PhotoScreen(
+        composable("top") {
+            TopScreen(
                 onNavigateEditScreen = {
                     navController.navigate("edit") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigatePreviewScreen = {
+                    navController.navigate("preview") {
                         launchSingleTop = true
                     }
                 },
@@ -31,8 +37,24 @@ fun MainNavHost(
         }
         composable("edit") {
             EditScreen(
-                onNavigatePhotoScreen = {
-                    navController.navigate("home") {
+                onNavigateTopScreen = {
+                    navController.navigate("top") {
+                    }
+                },
+                onNavigatePreviewScreen = {
+                    navController.navigate("preview") {
+                    }
+                }
+            )
+        }
+        composable("preview") {
+            PreviewScreen(
+                onNavigateTopScreen = {
+                    navController.navigate("top") {
+                    }
+                },
+                onNavigateEditScreen = {
+                    navController.navigate("edit") {
                     }
                 }
             )
