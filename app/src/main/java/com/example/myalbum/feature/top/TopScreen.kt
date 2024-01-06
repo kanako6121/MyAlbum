@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 
 
@@ -37,6 +38,7 @@ import com.example.myalbum.R
 fun TopScreen(
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
+    viewModel: TopViewModel,
     ) {
     Scaffold(
         topBar = {
@@ -59,7 +61,7 @@ fun TopScreen(
             TopScreenContent(
                 onNavigateEditScreen = onNavigateEditScreen,
                 onNavigatePreviewScreen = onNavigatePreviewScreen,
-                photos = photos
+                photos = photos,
             )
         }
     }
@@ -70,6 +72,7 @@ fun TopScreenContent(
     onNavigatePreviewScreen: () -> Unit,
     photos: List<Int>
 ) {
+    val photoList by 
     var selectedPhoto by remember { mutableStateOf(-1) }
 
     LazyVerticalStaggeredGrid(
@@ -120,5 +123,6 @@ fun ShowPhotoGrid() {
     TopScreen(
         onNavigateEditScreen = {},
         onNavigatePreviewScreen = {},
+        viewModel = TopViewModel(),
     )
 }
