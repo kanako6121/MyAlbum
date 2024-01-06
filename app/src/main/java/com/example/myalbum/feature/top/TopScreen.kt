@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,13 +43,14 @@ fun TopScreen(
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
     onNavigateUp: () -> Unit,
+    onExpandMenu: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = {
-            CenterAlignedTopAppBar(
+            TopScreenAppBar(
                 onNavigateUp = onNavigateUp,
-                title = null,
+                title = String(),
             )
         },
     ) { paddings ->
@@ -113,9 +114,9 @@ fun TopScreenContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CenterAlignedTopAppBar(
+fun TopScreenAppBar(
     onNavigateUp: () -> Unit,
-    title: (@Composable () -> Unit)?,
+    title: String,
     modifier: Modifier? = Modifier,
     navigationIcon: (@Composable () -> Unit)? = {},
     colors: TopAppBarColors? = TopAppBarDefaults.centerAlignedTopAppBarColors(),
@@ -124,7 +125,9 @@ fun CenterAlignedTopAppBar(
         navigationIcon = {
             IconButton(onClick = onNavigateUp) {
             }
-            Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+            Icon(
+                imageVector = Icons.TwoTone.Menu, contentDescription = null
+            )
         },
         title = { Text(text = stringResource(id = R.string.label_title)) },
     )
@@ -138,5 +141,6 @@ fun ShowPhotoGrid() {
         onNavigateUp = {},
         onNavigateEditScreen = {},
         onNavigatePreviewScreen = {},
+        onExpandMenu = {},
     )
 }
