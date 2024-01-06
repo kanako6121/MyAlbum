@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -13,9 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,23 +33,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TopScreen(
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
-    viewModel: TopViewModel,
-    ) {
+    onNavigateUp: () -> Unit,
+) {
     Scaffold(
+        modifier = Modifier.fillMaxWidth(),
         topBar = {
-            TopBar(
-                title = stringResource(id = R.string.label_title),
+            CenterAlignedTopAppBar(
+                onNavigateUp = onNavigateUp,
+                title = null,
             )
-        }
+        },
     ) { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
@@ -57,8 +63,9 @@ fun TopScreen(
                 R.drawable.seigo4,
                 R.drawable.seigo5,
                 R.drawable.seigo9,
-                )
+            )
             TopScreenContent(
+                onNavigateUp = onNavigateUp,
                 onNavigateEditScreen = onNavigateEditScreen,
                 onNavigatePreviewScreen = onNavigatePreviewScreen,
                 photos = photos,
@@ -66,13 +73,14 @@ fun TopScreen(
         }
     }
 }
+
 @Composable
 fun TopScreenContent(
+    onNavigateUp: () -> Unit,
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
     photos: List<Int>
 ) {
-    val photoList by 
     var selectedPhoto by remember { mutableStateOf(-1) }
 
     LazyVerticalStaggeredGrid(
@@ -105,11 +113,17 @@ fun TopScreenContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(
-    title: String,
+fun CenterAlignedTopAppBar(
+    onNavigateUp: () -> Unit,
+    title: (@Composable () -> Unit)?,
+    modifier: Modifier? = Modifier,
+    navigationIcon: (@Composable () -> Unit)? = {},
+    colors: TopAppBarColors? = TopAppBarDefaults.centerAlignedTopAppBarColors(),
 ) {
     TopAppBar(
         navigationIcon = {
+            IconButton(onClick = onNavigateUp) {
+            }
             Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
         },
         title = { Text(text = stringResource(id = R.string.label_title)) },
@@ -121,8 +135,8 @@ fun TopBar(
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
+        onNavigateUp = {},
         onNavigateEditScreen = {},
         onNavigatePreviewScreen = {},
-        viewModel = TopViewModel(),
     )
 }

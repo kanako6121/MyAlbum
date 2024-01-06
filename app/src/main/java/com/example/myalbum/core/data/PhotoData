@@ -1,0 +1,8 @@
+package com.example.myalbum.core.data
+
+@Stable
+data class PhotoData(
+ val id: Int,
+ val date: LocalDate,
+ val photoName: String,
+)

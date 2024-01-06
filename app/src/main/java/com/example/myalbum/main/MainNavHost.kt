@@ -25,7 +25,6 @@ fun MainNavHost(
             TopScreen(
                 onNavigateEditScreen = {
                     navController.navigate("edit") {
-                        launchSingleTop = true
                     }
                 },
                 onNavigatePreviewScreen = {
@@ -33,6 +32,7 @@ fun MainNavHost(
                         launchSingleTop = true
                     }
                 },
+                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
             )
         }
         composable("edit") {
