@@ -33,6 +33,7 @@ fun MainNavHost(
                     }
                 },
                 onNavigateUp = { navController.popBackStack("top", inclusive = false) },
+                onExpandMenu = {},
             )
         }
         composable("edit") {
