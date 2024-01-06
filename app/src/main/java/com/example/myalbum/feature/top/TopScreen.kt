@@ -1,6 +1,7 @@
 package com.example.myalbum.feature.top
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,6 +58,7 @@ fun TopScreen(
         Column(
             modifier = Modifier.padding(paddings),
         ) {
+            var selectedImages by mutableStateOf<List<Uri>>(emptyList())
             val photos = listOf(
                 R.drawable.seigo1,
                 R.drawable.seigo2,
