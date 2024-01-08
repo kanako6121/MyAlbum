@@ -1,18 +1,21 @@
 package com.example.myalbum.feature.top
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Menu
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,33 +36,39 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TopScreen(
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
     onNavigateUp: () -> Unit,
-    onExpandMenu: () -> Unit,
 ) {
+    val navController = rememberAnimatedNavController()
+
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = {
             TopScreenAppBar(
-                onNavigateUp = onNavigateUp,
-                title = String(),
+                title = stringResource(id = R.string.label_title),
+                navigationIcon = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Outlined.Menu, contentDescription = null)
+                    }
+                },
             )
         },
     ) { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
         ) {
-            var selectedImages by mutableStateOf<List<Uri>>(emptyList())
             val photos = listOf(
                 R.drawable.seigo1,
                 R.drawable.seigo2,
@@ -94,7 +104,6 @@ fun TopScreenContent(
                     modifier = Modifier
                         .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
                         .shadow(elevation = 4.dp)
-                        //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
                         .background(Color.White)
                         .border(
                             BorderStroke(width = 0.5.dp, color = Color.Gray)
@@ -102,7 +111,7 @@ fun TopScreenContent(
                         .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
                 ) {
                     Image(
-                        painter = painterResource(id = photos.get(index)),
+                        painter = painterResource(id = photos[index]),
                         contentDescription = "Photo",
                         contentScale = ContentScale.Fit
                     )
@@ -113,27 +122,39 @@ fun TopScreenContent(
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopScreenAppBar(
-    onNavigateUp: () -> Unit,
     title: String,
-    modifier: Modifier? = Modifier,
-    navigationIcon: (@Composable () -> Unit)? = {},
-    colors: TopAppBarColors? = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     TopAppBar(
-        navigationIcon = {
-            IconButton(onClick = onNavigateUp) {
+        actions = {
+            IconButton(onClick = onExpandMenu) {
             }
-            Icon(
-                imageVector = Icons.TwoTone.Menu, contentDescription = null
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.label_title), maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
-        title = { Text(text = stringResource(id = R.string.label_title)) },
+        navigationIcon = {
+            IconButton(onClick = { actions() }) {
+                Icon(
+                    painter = ,
+                    contentDescription = null
+                )
+            }
+        }
     )
 }
+
 
 
 @Preview(showBackground = true)
@@ -143,6 +164,5 @@ fun ShowPhotoGrid() {
         onNavigateUp = {},
         onNavigateEditScreen = {},
         onNavigatePreviewScreen = {},
-        onExpandMenu = {},
     )
 }

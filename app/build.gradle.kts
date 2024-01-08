@@ -71,6 +71,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
 
     // hilt
     implementation("com.google.dagger:hilt-android:2.50")
