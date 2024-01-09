@@ -21,7 +21,7 @@ fun MainNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = "top",
+        startDestination = startDestination,
         exitTransition = {
             slideOut { fullSize -> IntOffset(fullSize.width, 0) }
         },
