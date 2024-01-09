@@ -1,7 +1,6 @@
 package com.example.myalbum.feature.top
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -131,7 +131,7 @@ fun TopScreenAppBar(
 ) {
     TopAppBar(
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { }) {
             }
         },
         title = {
@@ -142,10 +142,7 @@ fun TopScreenAppBar(
         },
         navigationIcon = {
             IconButton(onClick = { }) {
-                Icon(
-                    painter = painterResource(id = androidx.core.R.drawable.notification_action_background),
-                    contentDescription = null
-                )
+                    Icon(imageVector = Icons.Default.Menu, contentDescription = null)
             }
         }
     )
