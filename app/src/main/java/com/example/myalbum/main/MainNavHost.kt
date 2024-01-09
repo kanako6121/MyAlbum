@@ -1,6 +1,5 @@
 package com.example.myalbum.main
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.runtime.Composable
@@ -12,22 +11,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
     startDestination: String = "top",
 ) {
-    val navController = rememberAnimatedNavController()
-
+    val navController = rememberNavController()
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = "top",
         exitTransition = {
-            slideOut { fullSize -> IntOffset(-fullSize.width, 0) }
+            slideOut { fullSize -> IntOffset(fullSize.width, 0) }
         },
         popExitTransition = {
             slideOut { fullSize -> IntOffset(fullSize.width, 0) }

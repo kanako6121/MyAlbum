@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -135,7 +135,7 @@ fun TopScreenAppBar(
 ) {
     TopAppBar(
         actions = {
-            IconButton(onClick = ) {
+            IconButton(onClick = {}) {
             }
         },
         title = {
@@ -145,16 +145,15 @@ fun TopScreenAppBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { actions() }) {
+            IconButton(onClick = { }) {
                 Icon(
-                    painter = ,
+                    painter = painterResource(id = androidx.core.R.drawable.notification_action_background),
                     contentDescription = null
                 )
             }
         }
     )
 }
-
 
 
 @Preview(showBackground = true)
