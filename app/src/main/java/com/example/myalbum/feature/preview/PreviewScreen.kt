@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 fun PreviewScreen(
     onNavigateTopScreen: () -> Unit,
     onNavigateEditScreen: () -> Unit,
+    onNavigateUp: () -> Unit,
     ) {
 
 }

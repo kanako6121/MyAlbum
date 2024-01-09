@@ -1,6 +1,7 @@
 package com.example.myalbum.feature.top
 
 import android.annotation.SuppressLint
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,6 +49,8 @@ fun TopScreen(
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
     onNavigateUp: () -> Unit,
+    onFinishApp: () -> Unit,
+    viewModel: TopViewModel,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -78,6 +81,7 @@ fun TopScreen(
                 onNavigateEditScreen = onNavigateEditScreen,
                 onNavigatePreviewScreen = onNavigatePreviewScreen,
                 photos = photos,
+                viewModel = viewModel,
             )
         }
     }
@@ -88,7 +92,8 @@ fun TopScreenContent(
     onNavigateUp: () -> Unit,
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
-    photos: List<Int>
+    photos: List<Int>,
+    viewModel: TopViewModel,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
 
@@ -153,8 +158,10 @@ fun TopScreenAppBar(
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
-        onNavigateUp = {},
         onNavigateEditScreen = {},
         onNavigatePreviewScreen = {},
+        onNavigateUp = {},
+        onFinishApp = onFinishApp,
+        viewModel = viewModel,
     )
 }

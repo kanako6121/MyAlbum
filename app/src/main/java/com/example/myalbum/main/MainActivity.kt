@@ -3,6 +3,7 @@ package com.example.myalbum.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.Modifier
 import com.example.myalbum.core.theme.MyAlbumTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +14,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyAlbumTheme {
-                MainNavHost()
+                MainNavHost(
+                    modifier = Modifier,
+                    startDestination = "",
+                    onFinishApp = {},
+                )
             }
         }
     }

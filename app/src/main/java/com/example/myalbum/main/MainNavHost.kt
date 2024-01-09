@@ -16,7 +16,8 @@ import com.example.myalbum.feature.top.TopScreen
 fun MainNavHost(
     modifier: Modifier = Modifier,
     startDestination: String = "top",
-) {
+    onFinishApp: () -> Unit,
+    ) {
     val navController = rememberNavController()
     NavHost(
         modifier = modifier,
@@ -46,7 +47,11 @@ fun MainNavHost(
                         launchSingleTop = true
                     }
                 },
-                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
+                onNavigateUp = {
+                    navController.popBackStack("top", inclusive = false)
+                               },
+                onFinishApp = onFinishApp,
+                viewModel = viewModel,
             )
         }
         composable("edit") {
@@ -58,7 +63,8 @@ fun MainNavHost(
                 onNavigatePreviewScreen = {
                     navController.navigate("preview") {
                     }
-                }
+                },
+                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
             )
         }
         composable("preview") {
@@ -70,7 +76,8 @@ fun MainNavHost(
                 onNavigateEditScreen = {
                     navController.navigate("edit") {
                     }
-                }
+                },
+                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
             )
         }
     }
