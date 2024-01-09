@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
+import com.example.myalbum.feature.top.TopViewModel
 
 @Composable
 fun MainNavHost(
@@ -51,7 +52,7 @@ fun MainNavHost(
                     navController.popBackStack("top", inclusive = false)
                                },
                 onFinishApp = onFinishApp,
-                viewModel = viewModel,
+                viewModel = TopViewModel(),
             )
         }
         composable("edit") {

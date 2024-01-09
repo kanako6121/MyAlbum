@@ -1,7 +1,6 @@
 package com.example.myalbum.feature.top
 
 import android.annotation.SuppressLint
-import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -161,7 +160,8 @@ fun ShowPhotoGrid() {
         onNavigateEditScreen = {},
         onNavigatePreviewScreen = {},
         onNavigateUp = {},
-        onFinishApp = onFinishApp,
-        viewModel = viewModel,
+        onFinishApp = {},
+        viewModel = TopViewModel(),
     )
 }
+
