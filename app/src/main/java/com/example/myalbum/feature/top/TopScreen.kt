@@ -49,7 +49,6 @@ fun TopScreen(
     onNavigatePreviewScreen: () -> Unit,
     onNavigateUp: () -> Unit,
     onFinishApp: () -> Unit,
-    viewModel: TopViewModel,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -80,7 +79,6 @@ fun TopScreen(
                 onNavigateEditScreen = onNavigateEditScreen,
                 onNavigatePreviewScreen = onNavigatePreviewScreen,
                 photos = photos,
-                viewModel = viewModel,
             )
         }
     }
@@ -92,7 +90,6 @@ fun TopScreenContent(
     onNavigateEditScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
     photos: List<Int>,
-    viewModel: TopViewModel,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
 
@@ -161,7 +158,6 @@ fun ShowPhotoGrid() {
         onNavigatePreviewScreen = {},
         onNavigateUp = {},
         onFinishApp = {},
-        viewModel = TopViewModel(),
     )
 }
 

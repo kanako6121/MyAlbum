@@ -52,7 +52,6 @@ fun MainNavHost(
                     navController.popBackStack("top", inclusive = false)
                                },
                 onFinishApp = onFinishApp,
-                viewModel = TopViewModel(),
             )
         }
         composable("edit") {
