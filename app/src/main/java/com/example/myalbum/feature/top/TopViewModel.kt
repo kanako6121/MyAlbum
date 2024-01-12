@@ -7,13 +7,14 @@ import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import com.example.myalbum.core.data.PhotoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class TopViewModel @Inject constructor(
   private val repository: PhotoRepository,
 ) : ViewModel() {
-  fun getImageUri(context: Context, imageId: Long): Uri {
+  fun getImageUri(imageId: Long): Uri {
     return ContentUris.withAppendedId(
       MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
       imageId
@@ -41,7 +42,7 @@ class TopViewModel @Inject constructor(
 
       while (cursor.moveToNext()) {
         val imageId = cursor.getLong(idColumn)
-        val imageUri = getImageUri(context, imageId)
+        val imageUri = getImageUri(imageId)
         images.add(imageUri)
       }
     }

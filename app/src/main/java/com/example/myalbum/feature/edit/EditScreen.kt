@@ -15,36 +15,41 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
+import com.example.myalbum.feature.top.TopViewModel
 
 @Composable
 fun EditScreen(
+    viewModel: TopViewModel,
     onNavigateTopScreen: () -> Unit,
     onNavigatePreviewScreen: () -> Unit,
     onNavigateUp: () -> Unit,
 ) {
     EditContentScreen(
-
+        onNavigateUp = onNavigateUp,
     )
 }
 
 @Composable
 fun EditContentScreen(
+    onNavigateUp: () -> Unit,
 ) {
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             EditTopBar(
                 title = stringResource(id = R.string.label_edit),
-                onUpPress = ,
+                onNavigateUp = onNavigateUp,
             )
         }
     ) { paddings ->
             Column (
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(paddings)
-                    .fillMaxSize(),
                 ) {
-
+                
             }
 
             }
@@ -52,10 +57,10 @@ fun EditContentScreen(
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun EditTopBar(
+        fun EditTopBar(
         title: String,
-        onUpPress: () -> Unit,
-    ) {
+        onNavigateUp: () -> Unit,
+        ) {
         TopAppBar(
             title = { Text(text = title) },
             modifier = Modifier.fillMaxWidth(),
