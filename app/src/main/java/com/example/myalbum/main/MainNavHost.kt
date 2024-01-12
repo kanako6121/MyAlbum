@@ -5,6 +5,7 @@ import androidx.compose.animation.slideOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -56,6 +57,7 @@ fun MainNavHost(
         }
         composable("edit") {
             EditScreen(
+                viewModel = hiltViewModel(),
                 onNavigateTopScreen = {
                     navController.navigate("top") {
                     }

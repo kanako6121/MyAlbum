@@ -3,15 +3,19 @@ package com.example.myalbum.feature.edit
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.myalbum.R
 import com.example.myalbum.feature.top.TopViewModel
 
@@ -56,7 +62,7 @@ fun EditContentScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .aspectRatio(ratio = 1.5f, matchHeightConstraintsFirst = false)
+                    .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
             {
@@ -68,6 +74,28 @@ fun EditContentScreen(
                         .align(Alignment.TopCenter),
                 )
             }
+            Text(
+                text = "思い出を書いてみよう",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterHorizontally),
+                fontSize = 20.sp,
+            )
+            Text(
+                text = "2024.1.1",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterHorizontally),
+                fontSize = 20.sp,
+            )
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 5,
+                value = "",
+                onValueChange = {
+
+                },
+            )
         }
     }
 }
@@ -81,8 +109,16 @@ fun EditTopBar(
     TopAppBar(
         title = { Text(text = title) },
         modifier = Modifier.fillMaxWidth(),
+        actions = {
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Rounded.Send,
+                    contentDescription = null
+                )
+            }
+        },
         navigationIcon = {
-            IconButton(onClick = onUpPress) {
+            IconButton(onClick = onNavigateUp) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = null
@@ -90,4 +126,10 @@ fun EditTopBar(
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEditScreen() {
+    EditContentScreen {}
 }
