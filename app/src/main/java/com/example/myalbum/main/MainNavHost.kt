@@ -2,10 +2,16 @@ package com.example.myalbum.main
 
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,71 +22,60 @@ import com.example.myalbum.feature.top.TopViewModel
 
 @Composable
 fun MainNavHost(
-    modifier: Modifier = Modifier,
-    startDestination: String = "top",
-    onFinishApp: () -> Unit,
+    navController: NavController = rememberNavController(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    viewModel: TopViewModel = hiltViewModel()
     ) {
-    val navController = rememberNavController()
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = startDestination,
-        exitTransition = {
-            slideOut { fullSize -> IntOffset(fullSize.width, 0) }
-        },
-        popExitTransition = {
-            slideOut { fullSize -> IntOffset(fullSize.width, 0) }
-        },
-        enterTransition = {
-            slideIn { fullSize -> IntOffset(fullSize.width, 0) }
-        },
-        popEnterTransition = {
-            slideIn { fullSize -> IntOffset(-fullSize.width, 0) }
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            AppDrawerContent(
+                drawerState = drawerState,
+                menuItems = DrawerParams.drawerButtons,
+                defalutPick = MainNavPotion.TopScerrn
+            ) { onUserPickedOption ->
+                when (onUserPickedOption) {
+                    MainNavOption.TopScreen -> {
+                        navController.navigate(onUserPickedOption.name) {
+                            popUpTo(NavRoutes.MainRoute.name)
+                        }
+                    }
+
+                    ManNavOption.EditScerrn -> {
+                        navController.navigate(onUserPickedOption.name) {
+                            popUpTo(NavRoutes.MainRoute.name)
+                        }
+                    }
+
+                    MainNavOption.PreviewScreen -> {
+                        navController.navigate(onUserPickedOption.name) {
+                            popUpTo(NavRoutes.MainRoute.name)
+                        }
+                    }
+                }
+            }
         }
     ) {
-        composable("top") {
+        NavHost(
+            navController,
+            startDestination = if (isOnboarded.value) NavRoutes.MainRoutes.name
+            else NavRoutes.IntroRoute.name
+        ) {
+            introGraph(navController)
+            mainGraph(drawerState)
+        }
+    }
+}
+
+fun NavGraphBuilder.mainGraph(drawerState: DrawerState) {
+    navigation(startDestination = MainNavOption.TopScreen.name, route = NavRoute.name) {
+        composable(MainNavOption.TopScreen.name) {
             TopScreen(
-                onNavigateEditScreen = {
-                    navController.navigate("edit") {
-                    }
-                },
-                onNavigatePreviewScreen = {
-                    navController.navigate("preview") {
-                        launchSingleTop = true
-                    }
-                },
-                onNavigateUp = {
-                    navController.popBackStack("top", inclusive = false)
-                               },
-                onFinishApp = onFinishApp,
-            )
-        }
-        composable("edit") {
-            EditScreen(
-                viewModel = hiltViewModel(),
-                onNavigateTopScreen = {
-                    navController.navigate("top") {
-                    }
-                },
-                onNavigatePreviewScreen = {
-                    navController.navigate("preview") {
-                    }
-                },
-                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
-            )
-        }
-        composable("preview") {
-            PreviewScreen(
-                onNavigateTopScreen = {
-                    navController.navigate("top") {
-                    }
-                },
-                onNavigateEditScreen = {
-                    navController.navigate("edit") {
-                    }
-                },
-                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
-            )
+                onNavigateEditScreen = { /*TODO*/ },
+                onNavigatePreviewScreen = { /*TODO*/ },
+                onNavigateUp = { /*TODO*/ }) {
+                
+            }
         }
     }
 }
