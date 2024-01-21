@@ -3,9 +3,8 @@ package com.example.myalbum.core.data
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.myalbum.R
-import com.example.myalbum.main.MainNavOption
 
-data class AppDrawerItemInfo<T>(
+data class AppDrawerItem<T>(
     val drawerOption: T,
     @StringRes val title: Int,
     @DrawableRes val drawableId: Int,
@@ -13,20 +12,26 @@ data class AppDrawerItemInfo<T>(
 
 object DrawerParams {
     val drawerButtons = arrayListOf(
-        AppDrawerItemInfo(
+        AppDrawerItem(
             MainNavOption.TopScreen,
             R.string.label_title,
             R.drawable.ic_launcher_foreground,
         ),
-        AppDrawerItemInfo(
+        AppDrawerItem(
             MainNavOption.EditScreen,
             R.string.label_edit,
             R.drawable.ic_launcher_foreground,
         ),
-        AppDrawerItemInfo(
+        AppDrawerItem(
             MainNavOption.PreviewScreen,
             R.string.label_preview,
             R.drawable.ic_launcher_foreground,
         )
     )
+}
+
+enum class MainNavOption {
+    TopScreen,
+    EditScreen,
+    PreviewScreen,
 }
