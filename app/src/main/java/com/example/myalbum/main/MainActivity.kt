@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.example.myalbum.core.theme.MyAlbumTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,6 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier,
                     startDestination = "",
                     onFinishApp = {},
+                    navController = NavHostController()
                 )
             }
         }

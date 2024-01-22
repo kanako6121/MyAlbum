@@ -20,13 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
-import com.example.myalbum.core.data.AppDrawerItemInfo
+import com.example.myalbum.core.data.AppDrawerItem
 import kotlinx.coroutines.launch
 
 @Composable
 fun <T : Enum<T>> AppDrawerContent(
     drawerState: DrawerState,
-    menuItems: List<AppDrawerItemInfo<T>>,
+    menuItems: List<AppDrawerItem<T>>,
     defaultPick: T,
     onClick: (T) -> Unit
 ) {
