@@ -116,6 +116,8 @@ fun TopScreenContent(photos: List<Int>) {
 fun ShowPhotoGrid() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     TopScreen(
-        drawerState = drawerState
+        viewModel = TopViewModel,
+        navController = NavController(),
+        drawerState = drawerState,
     )
 }
