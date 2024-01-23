@@ -1,12 +1,11 @@
 package com.example.myalbum.feature.preview
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 
 @Composable
 fun PreviewScreen(
-    onNavigateTopScreen: () -> Unit,
-    onNavigateEditScreen: () -> Unit,
-    onNavigateUp: () -> Unit,
+    navController: NavController,
     ) {
 
 }

@@ -27,31 +27,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.top.TopViewModel
 
 @Composable
 fun EditScreen(
-    viewModel: TopViewModel,
-    onNavigateTopScreen: () -> Unit,
-    onNavigatePreviewScreen: () -> Unit,
-    onNavigateUp: () -> Unit,
+    navController: NavController,
 ) {
     EditContentScreen(
-        onNavigateUp = onNavigateUp,
     )
 }
 
 @Composable
 fun EditContentScreen(
-    onNavigateUp: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             EditTopBar(
                 title = stringResource(id = R.string.label_edit),
-                onNavigateUp = onNavigateUp,
             )
         }
     ) { paddings ->
@@ -104,7 +99,6 @@ fun EditContentScreen(
 @Composable
 fun EditTopBar(
     title: String,
-    onNavigateUp: () -> Unit,
 ) {
     TopAppBar(
         title = { Text(text = title) },
@@ -118,7 +112,7 @@ fun EditTopBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = onNavigateUp) {
+            IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = null
@@ -131,5 +125,5 @@ fun EditTopBar(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewEditScreen() {
-    EditContentScreen {}
+    EditContentScreen ()
 }
