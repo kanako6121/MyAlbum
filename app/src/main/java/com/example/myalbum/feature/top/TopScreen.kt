@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.myalbum.R
+import com.example.myalbum.main.isExpandedScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +45,9 @@ fun TopScreen(
     viewModel: TopViewModel,
     navController: NavController,
     drawerState: DrawerState,
+    isExpandedScreen: Boolean,
+    openDrawer: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     Scaffold(
         topBar = {
@@ -116,8 +121,10 @@ fun TopScreenContent(photos: List<Int>) {
 fun ShowPhotoGrid() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     TopScreen(
-        viewModel = TopViewModel,
+        viewModel = {},
         navController = NavController(),
         drawerState = drawerState,
+        isExpandedScreen = false,
+        openDrawer = {},
     )
 }
