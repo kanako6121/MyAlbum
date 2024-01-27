@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +30,7 @@ fun <T : Enum<T>> AppDrawerContent(
     drawerState: DrawerState,
     menuItems: List<AppDrawerItem<T>>,
     defaultPick: T,
-    onClick: (T) -> Unit
+    onClick: (T) -> Unit,
 ) {
     var currentPick by remember { mutableStateOf(defaultPick) }
     val coroutineScope = rememberCoroutineScope()
@@ -49,17 +51,13 @@ fun <T : Enum<T>> AppDrawerContent(
                 ) {
                     items(menuItems) { item ->
                         AppDrawerItem(item = item) { navOption ->
-
                             if (currentPick == navOption) {
                                 return@AppDrawerItem
                             }
-
                             currentPick = navOption
-
                             coroutineScope.launch {
                                 drawerState.close()
                             }
-
                             onClick(navOption)
                         }
                     }
