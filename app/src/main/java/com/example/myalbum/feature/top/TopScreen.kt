@@ -37,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
-import com.example.myalbum.core.data.AppDrawerItem
 import com.example.myalbum.core.data.MainNavOption
 import com.example.myalbum.core.data.PhotoRepository
 import kotlinx.coroutines.launch
@@ -45,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun <T : Enum<T>> TopScreen(
     drawerState: DrawerState,
-    menuItems: AppDrawerItem,
+    menuItems: String,
     defaultPick: T,
     onClick: (T) -> Unit,
     viewModel: TopViewModel,
@@ -140,10 +139,7 @@ fun TopScreenContent(photos: List<Int>) {
 fun ShowPhotoGrid() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val viewModel = TopViewModel(repository = PhotoRepository())
-    val title = AppDrawerItem(title = "title")
-    val menuItems = title
-
-
+    val menuItems = "title"
 
         TopScreen(
         drawerState = drawerState,
