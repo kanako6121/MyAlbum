@@ -9,16 +9,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,47 +36,71 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AppDrawerItem
+import com.example.myalbum.core.data.MainNavOption
+import com.example.myalbum.core.data.PhotoRepository
+import com.example.myalbum.main.MainNavHost
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopScreen(
+fun <T : Enum<T>> TopScreen(
     drawerState: DrawerState,
-    isExpandedScreen: Boolean,
-    openDrawer: () -> Unit,
+    menuItems: List<AppDrawerItem>,
+    defaultPick: T,
+    onClick: (T) -> Unit,
+    viewModel: TopViewModel,
 ) {
-    Scaffold(
-        topBar = {
-            val coroutineScope = rememberCoroutineScope()
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            drawerState.open()
-                        }
-                    }) {
-                        Icon(
-                            Icons.Rounded.Menu,
-                            contentDescription = "MenuButton"
-                        )
-                    }
-                },
-            )
-        }
-    ) { paddingValues ->
-        Surface {
-            Column(modifier = Modifier.padding(paddingValues)) {
-                val photos = listOf(
-                    R.drawable.seigo1,
-                    R.drawable.seigo2,
-                    R.drawable.seigo3,
-                    R.drawable.seigo4,
-                    R.drawable.seigo5,
-                    R.drawable.seigo9,
+    var currentPick by remember { mutableStateOf(defaultPick) }
+    val coroutineScope = rememberCoroutineScope()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                drawerShape = MaterialTheme.shapes.small,
+                drawerContentColor = MaterialTheme.colorScheme.primaryContainer,
+                drawerContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                drawerTonalElevation = 4.dp,
+            ) {
+                Text("Title", modifier = Modifier.padding(16.dp))
+                Divider()
+                NavigationDrawerItem(
+                    label = { Text(text = menuItems.toString()) },
+                    selected = false,
+                    onClick = { /*TODO*/ }
                 )
-                TopScreenContent(photos = photos)
+            }
+        },
+    ) {
+        Scaffold(
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    text = { Text("Show drawer") },
+                    icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }
+                )
+            }
+        )
+        { paddingValues ->
+            Surface {
+                Column(modifier = Modifier.padding(paddingValues)) {
+                    val photos = listOf(
+                        R.drawable.seigo1,
+                        R.drawable.seigo2,
+                        R.drawable.seigo3,
+                        R.drawable.seigo4,
+                        R.drawable.seigo5,
+                        R.drawable.seigo9,
+                    )
+                    TopScreenContent(photos = photos)
+                }
             }
         }
     }
@@ -113,11 +140,15 @@ fun TopScreenContent(photos: List<Int>) {
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val viewModel = TopViewModel(repository = PhotoRepository())
+    val menuItems = listOf("title","top","preview")
+
     TopScreen(
         drawerState = drawerState,
-        isExpandedScreen = false
-    ) {
-
-    }
+        menuItems = menuItems,
+        defaultPick = MainNavOption.TopScreen,
+        onClick = { },
+        viewModel = viewModel
+    )
 }
