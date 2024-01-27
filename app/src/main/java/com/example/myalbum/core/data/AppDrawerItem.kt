@@ -2,13 +2,12 @@ package com.example.myalbum.core.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
 import com.example.myalbum.R
 
 data class AppDrawerItem<T>(
     val drawerOption: T,
     @StringRes val title: Int,
-    @DrawableRes val drawbleId: Int,
+    @DrawableRes val drawbleId: (Any) -> Unit,
 )
 
 object DrawerParams {

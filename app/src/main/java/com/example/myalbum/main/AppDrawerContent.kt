@@ -1,5 +1,7 @@
 package com.example.myalbum.main
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,5 +65,34 @@ fun <T : Enum<T>> AppDrawerContent(
                 }
             }
         }
+    }
+}
+
+fun <T> AppDrawerItem(item: AppDrawerItem<T>, drawbleId: (Any) -> Unit) {
+    object DrawerParams {
+        val drawerButtons = arrayListOf(
+            AppDrawerItem(
+                MainNavOption.TopScreen,
+                R.string.label_top,
+                R.drawable.ic_launcher_foreground,
+            ),
+            AppDrawerItem(
+                MainNavOption.EditScreen,
+                R.string.label_edit,
+                R.drawable.ic_launcher_foreground,
+            ),
+            AppDrawerItem(
+                MainNavOption.PreviewScreen,
+                R.string.label_preview,
+                R.drawable.ic_launcher_foreground,
+            )
+        )
+    }
+}
+
+    enum class MainNavOption {
+        TopScreen,
+        EditScreen,
+        PreviewScreen,
     }
 }
