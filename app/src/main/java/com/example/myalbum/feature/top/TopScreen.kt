@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 import com.example.myalbum.core.data.MainNavOption
 import com.example.myalbum.core.data.PhotoRepository
@@ -63,7 +64,7 @@ fun <T : Enum<T>> TopScreen(
                 Text("Title", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = menuItems.toString()) },
+                    label = { Text(text = menuItems) },
                     selected = false,
                     onClick = { /*TODO*/ }
                 )
@@ -137,15 +138,11 @@ fun TopScreenContent(photos: List<Int>) {
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val viewModel = TopViewModel(repository = PhotoRepository())
-    val menuItems = "title"
-
         TopScreen(
-        drawerState = drawerState,
-        menuItems = menuItems,
+        drawerState = DrawerState(initialValue = DrawerValue.Closed),
+        menuItems = "title",
         defaultPick = MainNavOption.TopScreen,
         onClick = { },
-        viewModel = viewModel
+        viewModel = TopViewModel(repository = PhotoRepository())
     )
 }
