@@ -79,8 +79,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     testImplementation("com.google.dagger:hilt-android-testing:2.50")
-    kspTest("com.google.dagger:hilt-android-compiler:250")
+    kspTest("com.google.dagger:hilt-android-compiler:2.50")
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.50")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:250")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.50")
 }
