@@ -74,7 +74,7 @@ fun <T : Enum<T>> TopScreen(
         Scaffold(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
-                    text = { Text("Show drawer") },
+                    text = { Text("追加") },
                     icon = { Icon(Icons.Filled.Add, contentDescription = "") },
                     onClick = {
                         coroutineScope.launch {
