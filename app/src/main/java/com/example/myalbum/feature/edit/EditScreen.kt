@@ -33,7 +33,8 @@ import com.example.myalbum.feature.top.TopViewModel
 
 @Composable
 fun EditScreen(
-    navController: NavController,
+    onNavigationToTopScreen: () -> Unit,
+    onNavigationToPreviewScreen: () ->Unit,
 ) {
     EditContentScreen(
     )

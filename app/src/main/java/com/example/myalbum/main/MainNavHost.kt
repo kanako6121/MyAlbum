@@ -1,5 +1,6 @@
 package com.example.myalbum.main
 
+import android.drm.DrmStore.Action.PREVIEW
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
@@ -18,10 +19,6 @@ import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
 import com.example.myalbum.feature.top.TopViewModel
 
-fun EditScreen(onNavigateUp: () -> Boolean) {
-
-}
-
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
@@ -37,30 +34,19 @@ fun MainNavHost(
         composable("top") {
             TopScreen(
                 viewModel = TopViewModel(repository = PhotoRepository()),
-                onNavigateToEditScreen = { 
-                    navController.navigate("edit/photoId")
-                }, 
-                composable("edit") {
-            EditScreen(
-                onNavigateUp = { navController.popBackStack("top", inclusive = false) },
+                onNavigationToEditScreen = { navController.navigate("edit") },
+                onNavigationToPreviewScreen = { navController.navigate("preview") },
+                menuItems = String(),
             )
         }
-        composable(
-            "edit/{photoId},
-                    arguments = listOf(
-                    navArgument("photoId") { type =  },
-        ),
-        ) {
-        PreviewScreen(
-            viewModel = hiltViewModel(),
-            onNavigateUp = { navController.popBackStack("top", inclusive = false) },
-        )
+        composable("edit") {
+            EditScreen(
+                onNavigationToTopScreen = { navController.navigate("top") },
+                onNavigationToPreviewScreen = { navController.navigate("preview") }
+            )
+        }
+        composable("preview") {
+            PreviewScreen(navController = navController)
+        }
     }
-    }
-}
-
-enum class Screen(val route: String) {
-    TOP("top"),
-    EDIT("edit"),
-    PREVIEW("preview"),
 }

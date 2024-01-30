@@ -42,18 +42,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun <T : Enum<T>> TopScreen(
-    drawerState: DrawerState,
     menuItems: String,
-    defaultPick: T,
-    onClick: (T) -> Unit,
     viewModel: TopViewModel,
-    onNavigateToEditScreen: Any,
-    onNavigateToPreview: Any,
+    onNavigationToEditScreen: () -> Unit,
+    onNavigationToPreviewScreen: () -> Unit,
+    defaultPick: T,
+    drawerState: DrawerState,
 ) {
     var currentPick by remember { mutableStateOf(defaultPick) }
     val coroutineScope = rememberCoroutineScope()
     ModalNavigationDrawer(
-        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
                 drawerShape = MaterialTheme.shapes.small,
@@ -139,16 +137,11 @@ fun TopScreenContent(photos: List<Int>) {
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
-        drawerState = DrawerState(initialValue = DrawerValue.Closed),
         menuItems = "編集する",
-        defaultPick = MainNavOption.TopScreen,
-        onClick = { },
         viewModel = TopViewModel(repository = PhotoRepository()),
-        onNavigateToEditScreen = { photoId ->
-            navController.navigate("edit/photoId")
-        },
-        onNavigateToPreview = { photoId ->
-            navController.navigate("preview/photoId")
-        }
+        onNavigationToEditScreen = {},
+        onNavigationToPreviewScreen = {},
+        defaultPick = MainNavOption.TopScreen,
+        drawerState = DrawerState(initialValue = DrawerValue.Closed)
     )
 }
