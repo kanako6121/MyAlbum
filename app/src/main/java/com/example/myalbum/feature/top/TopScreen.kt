@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.sharp.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -20,6 +24,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -32,11 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AppDrawerItem
+import com.example.myalbum.core.data.DrawerParams
 import com.example.myalbum.core.data.MainNavOption
 import com.example.myalbum.core.data.PhotoRepository
 import kotlinx.coroutines.launch
@@ -137,7 +145,7 @@ fun TopScreenContent(photos: List<Int>) {
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-        TopScreen(
+    TopScreen(
         drawerState = DrawerState(initialValue = DrawerValue.Closed),
         menuItems = "編集する",
         defaultPick = MainNavOption.TopScreen,
