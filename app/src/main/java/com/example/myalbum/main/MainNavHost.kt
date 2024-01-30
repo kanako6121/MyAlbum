@@ -18,9 +18,7 @@ import com.example.myalbum.feature.top.TopViewModel
 @Composable
 fun MainNavHost(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    isExPandedScreen: Boolean,
     navController: NavHostController = rememberNavController(),
-    openDrawer: () -> Unit,
     startDestination: String = NavigationDestinations.TOP_ROUTE,
 ) {
     NavHost(
