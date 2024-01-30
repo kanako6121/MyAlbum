@@ -1,18 +1,15 @@
 package com.example.myalbum.main
 
-import android.drm.DrmStore.Action.PREVIEW
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.example.myalbum.core.data.MainNavOption
 import com.example.myalbum.core.data.PhotoRepository
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
@@ -37,6 +34,8 @@ fun MainNavHost(
                 onNavigationToEditScreen = { navController.navigate("edit") },
                 onNavigationToPreviewScreen = { navController.navigate("preview") },
                 menuItems = String(),
+                drawerState = DrawerState(initialValue = DrawerValue.Closed),
+                defaultPick = MainNavOption.TopScreen
             )
         }
         composable("edit") {
