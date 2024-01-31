@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -39,10 +40,10 @@ import com.example.myalbum.core.data.MainNavOption
 fun <T : Enum<T>> TopScreen(
     menuItems: String,
     viewModel: TopViewModel,
-    onNavigationToEditScreen: () -> Unit,
-    onNavigationToPreviewScreen: () -> Unit,
     defaultPick: T,
     drawerState: DrawerState,
+    onNavigationToEditScreen: () -> Unit,
+    onNavigationToPreviewScreen: () -> Unit
 ) {
     val photos = listOf(
         R.drawable.seigo1,
@@ -53,8 +54,6 @@ fun <T : Enum<T>> TopScreen(
         R.drawable.seigo9,
     )
     TopScreenContent(
-        onNavigationToEditScreen = onNavigationToEditScreen,
-        onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         photos = photos
     )
 }
@@ -62,16 +61,15 @@ fun <T : Enum<T>> TopScreen(
 @Composable
 fun TopScreenContent(
     photos: List<Int>,
-    onNavigationToEditScreen: () -> Unit,
-    onNavigationToPreviewScreen: () -> Unit,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopBar(
-                onFinishApp = { },
-                onReload = {},
+                title = "title",
+                onNavigationToPreviewScreen = {},
+                onNavigationToEditScreen = {},
             )
         },
     ) { paddings ->
@@ -108,8 +106,13 @@ fun TopScreenContent(
 }
 
 @Composable
-fun TopBar(onFinishApp: () -> Unit, onReload: () -> Unit) {
+fun TopBar(
+    title: String,
+    onNavigationToPreviewScreen: () -> Unit,
+    onNavigationToEditScreen: () -> Unit,
+) {
     ModalNavigationDrawer(
+        modifier = Modifier.fillMaxSize(0.1f),
         drawerContent = {
             ModalDrawerSheet(
                 drawerShape = MaterialTheme.shapes.small,
@@ -120,9 +123,9 @@ fun TopBar(onFinishApp: () -> Unit, onReload: () -> Unit) {
                 Text("Menu", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
-                    label = { "title" },
+                    label = { title },
                     selected = false,
-                    onClick = { }
+                    onClick = {  }
                 )
             }
         },
@@ -136,9 +139,9 @@ fun ShowPhotoGrid() {
     TopScreen(
         menuItems = "編集する",
         viewModel = viewModel(),
+        defaultPick = MainNavOption.TopScreen,
+        drawerState = DrawerState(initialValue = DrawerValue.Closed),
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
-        defaultPick = MainNavOption.TopScreen,
-        drawerState = DrawerState(initialValue = DrawerValue.Closed)
     )
 }
