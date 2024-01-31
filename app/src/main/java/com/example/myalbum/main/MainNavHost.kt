@@ -34,7 +34,7 @@ fun MainNavHost(
                 onNavigationToEditScreen = { navController.navigate("edit") },
                 onNavigationToPreviewScreen = { navController.navigate("preview") },
                 menuItems = String(),
-                drawerState = DrawerState(initialValue = DrawerValue.Closed),
+                drawerState = drawerState,
                 defaultPick = MainNavOption.TopScreen
             )
         }
