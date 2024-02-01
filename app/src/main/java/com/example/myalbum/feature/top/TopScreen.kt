@@ -63,7 +63,6 @@ fun <T : Enum<T>> TopScreen(
     TopScreenContent()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopScreenContent() {
     var selectedPhoto by remember { mutableStateOf(-1) }
@@ -79,11 +78,11 @@ fun TopScreenContent() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = { "Menu" },
+            TopBar(
+                title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = {drawerState.isOpen},
+                        onClick = { drawerState.isOpen },
                     ) {
                         Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
                     }
@@ -125,7 +124,7 @@ fun TopScreenContent() {
 }
 
 @Composable
-fun TopAppBar() {
+fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,

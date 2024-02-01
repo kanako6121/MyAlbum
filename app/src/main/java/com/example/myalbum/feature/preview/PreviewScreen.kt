@@ -5,7 +5,8 @@ import androidx.navigation.NavController
 
 @Composable
 fun PreviewScreen(
-    navController: NavController,
+    onNavigationToTopScreen: () -> Unit,
+    onNavigationToEditScreen: () ->Unit,
     ) {
 
 }
