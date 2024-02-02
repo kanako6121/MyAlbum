@@ -60,13 +60,18 @@ fun <T : Enum<T>> TopScreen(
         R.drawable.seigo5,
         R.drawable.seigo9,
     )
-    TopScreenContent()
+    TopScreenContent(
+        drawerState = drawerState,
+        onNavigationToEditScreen = onNavigationToEditScreen,
+    )
 }
 
 @Composable
-fun TopScreenContent() {
+fun TopScreenContent(
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    onNavigationToEditScreen: () -> Unit,
+) {
     var selectedPhoto by remember { mutableStateOf(-1) }
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val photos = listOf(
         R.drawable.seigo1,
         R.drawable.seigo2,
@@ -80,17 +85,12 @@ fun TopScreenContent() {
         topBar = {
             TopBar(
                 title = {},
-                navigationIcon = {
-                    IconButton(
-                        onClick = { drawerState.isOpen },
-                    ) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                }
+                navigationIcon = { drawerState.isOpen },
             )
+            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
         },
-        floatingActionButton = {},
-    ) { paddings ->
+    )
+    { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
         ) {
@@ -150,7 +150,10 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
             }
         },
         content = {
-            TopScreenContent()
+            TopScreenContent(
+                drawerState = drawerState,
+                onNavigationToEditScreen = { }
+            )
         },
     )
 }
