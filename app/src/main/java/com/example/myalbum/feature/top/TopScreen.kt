@@ -16,15 +16,12 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,6 +60,8 @@ fun <T : Enum<T>> TopScreen(
     TopScreenContent(
         drawerState = drawerState,
         onNavigationToEditScreen = onNavigationToEditScreen,
+        onNavigationToPreviewScreen = onNavigationToPreviewScreen,
+        menuItems = menuItems,
     )
 }
 
@@ -70,6 +69,8 @@ fun <T : Enum<T>> TopScreen(
 fun TopScreenContent(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     onNavigationToEditScreen: () -> Unit,
+    onNavigationToPreviewScreen: () -> Unit,
+    menuItems: String,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
     val photos = listOf(
@@ -84,7 +85,7 @@ fun TopScreenContent(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopBar(
-                title = {},
+                title = {menuItems},
                 navigationIcon = { drawerState.isOpen },
             )
             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
@@ -142,9 +143,9 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
                     drawerContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     drawerTonalElevation = 4.dp,
                 ) {
-                    Text("Menu", modifier = Modifier.padding(16.dp))
+                    Text("menu", modifier = Modifier.padding(16.dp))
                     Divider(color = Color.Gray, thickness = 0.5.dp)
-                    DrawerMenuItem(icon = Icons.Default.Edit, "編集する")
+                    DrawerMenuItem(icon = Icons.Default.Edit, label = title.toString())
                     DrawerMenuItem(icon = Icons.Default.Check, label = "プレビュー")
                 }
             }
@@ -152,7 +153,9 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
         content = {
             TopScreenContent(
                 drawerState = drawerState,
-                onNavigationToEditScreen = { }
+                onNavigationToEditScreen = { },
+                onNavigationToPreviewScreen = { },
+                menuItems = String(),
             )
         },
     )
