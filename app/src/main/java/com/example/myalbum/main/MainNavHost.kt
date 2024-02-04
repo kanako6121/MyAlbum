@@ -5,6 +5,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -59,8 +60,8 @@ fun MainNavHost(
         }
         composable("top") {
             TopScreen(
-                viewModel = TopViewModel(repository = PhotoRepository()),
-                onNavigationToEditScreen = { navigateToEdit },
+                viewModel = hiltViewModel(),
+                onNavigationToEditScreen = {  },
                 onNavigationToPreviewScreen = { navigateToPreview },
                 menuItems = String(),
                 drawerState = drawerState,
