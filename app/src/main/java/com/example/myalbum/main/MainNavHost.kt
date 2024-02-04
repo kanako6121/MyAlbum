@@ -12,11 +12,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.core.data.MainNavOption
-import com.example.myalbum.core.data.PhotoRepository
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
-import com.example.myalbum.feature.top.TopViewModel
 
 @Composable
 fun MainNavHost(
@@ -61,8 +59,8 @@ fun MainNavHost(
         composable("top") {
             TopScreen(
                 viewModel = hiltViewModel(),
-                onNavigationToEditScreen = {  },
-                onNavigationToPreviewScreen = { navigateToPreview },
+                onNavigationToEditScreen = { navController.navigate("top") },
+                onNavigationToPreviewScreen = {navController.navigate("preview") },
                 menuItems = String(),
                 drawerState = drawerState,
                 defaultPick = MainNavOption.TopScreen
@@ -70,14 +68,14 @@ fun MainNavHost(
         }
         composable("edit") {
             EditScreen(
-                onNavigationToTopScreen = { navigateToTop },
-                onNavigationToPreviewScreen = { navigateToPreview }
+                onNavigationToTopScreen = {  },
+                onNavigationToPreviewScreen = {  }
             )
         }
         composable("preview") {
             PreviewScreen(
-                onNavigationToTopScreen = { navigateToTop },
-                onNavigationToEditScreen = { navigateToEdit }
+                onNavigationToTopScreen = { },
+                onNavigationToEditScreen = { }
             )
         }
     }
