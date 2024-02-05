@@ -45,7 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
-import com.example.myalbum.core.data.DrawerMenuItem
 import com.example.myalbum.core.data.MainNavOption
 
 @Composable
@@ -68,7 +67,6 @@ fun <T : Enum<T>> TopScreen(
         drawerState = drawerState,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        menuItems = DrawerMenuItem(icon = , label = ),
     )
 }
 
@@ -77,7 +75,6 @@ fun TopScreenContent(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
-    menuItems: String,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
     val photos = listOf(
@@ -92,7 +89,7 @@ fun TopScreenContent(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopBar(
-                title = {menuItems},
+                title = {},
                 navigationIcon = { drawerState.isOpen },
             )
             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
@@ -152,7 +149,7 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
                 ) {
                     Text("menu", modifier = Modifier.padding(16.dp))
                     Divider(color = Color.Gray, thickness = 0.5.dp)
-                    DrawerMenuItem(icon = Icons.Default.Edit, label = {})
+                    DrawerMenuItem(icon = Icons.Default.Edit, label = "menu")
                     DrawerMenuItem(icon = Icons.Default.Check, label = "プレビュー")
                 }
             }
@@ -161,8 +158,9 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
             TopScreenContent(
                 drawerState = drawerState,
                 onNavigationToEditScreen = { },
-                onNavigationToPreviewScreen = { },
-            )
+            ) {
+
+            }
         },
     )
 }
@@ -184,7 +182,6 @@ fun DrawerMenuItem(icon: ImageVector, label: String) {
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
-        menuItems = "編集する",
         viewModel = viewModel(),
         defaultPick = MainNavOption.TopScreen,
         drawerState = DrawerState(initialValue = DrawerValue.Closed),
