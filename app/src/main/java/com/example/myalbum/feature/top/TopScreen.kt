@@ -4,9 +4,15 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
@@ -28,9 +34,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +50,6 @@ import com.example.myalbum.core.data.MainNavOption
 
 @Composable
 fun <T : Enum<T>> TopScreen(
-    menuItems: String,
     viewModel: TopViewModel,
     defaultPick: T,
     drawerState: DrawerState,
@@ -61,7 +68,7 @@ fun <T : Enum<T>> TopScreen(
         drawerState = drawerState,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        menuItems = menuItems,
+        menuItems = DrawerMenuItem(icon = , label = ),
     )
 }
 
@@ -145,7 +152,7 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
                 ) {
                     Text("menu", modifier = Modifier.padding(16.dp))
                     Divider(color = Color.Gray, thickness = 0.5.dp)
-                    DrawerMenuItem(icon = Icons.Default.Edit, label = title.toString())
+                    DrawerMenuItem(icon = Icons.Default.Edit, label = {})
                     DrawerMenuItem(icon = Icons.Default.Check, label = "プレビュー")
                 }
             }
@@ -155,12 +162,24 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
                 drawerState = drawerState,
                 onNavigationToEditScreen = { },
                 onNavigationToPreviewScreen = { },
-                menuItems = String(),
             )
         },
     )
 }
-
+@Composable
+fun DrawerMenuItem(icon: ImageVector, label: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = label)
+    }
+}
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {

@@ -28,48 +28,34 @@ fun MainNavHost(
         navController = navController,
         startDestination = startDestination,
     ) {
-        val navigateToTop: () -> Unit = {
-            navController.navigate(NavigationDestinations.TOP_ROUTE) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-        }
-        val navigateToEdit: () -> Unit = {
-            navController.navigate(NavigationDestinations.EDIT_ROUTE) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-        }
-
-        val navigateToPreview: () -> Unit = {
-            navController.navigate(NavigationDestinations.PREVIEW_ROUTE) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-        }
         composable("top") {
             TopScreen(
                 viewModel = hiltViewModel(),
-                onNavigationToEditScreen = { navController.navigate("top") },
-                onNavigationToPreviewScreen = {navController.navigate("preview") },
-                menuItems = String(),
+                onNavigationToEditScreen = {
+                    navController.navigate(NavigationDestinations.EDIT_ROUTE) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onNavigationToPreviewScreen = {
+                    navController.navigate(NavigationDestinations.PREVIEW_ROUTE) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 drawerState = drawerState,
-                defaultPick = MainNavOption.TopScreen
-            )
+                defaultPick = MainNavOption.TopScreen,
         }
         composable("edit") {
             EditScreen(
-                onNavigationToTopScreen = {  },
-                onNavigationToPreviewScreen = {  }
+                onNavigationToTopScreen = { },
+                onNavigationToPreviewScreen = { }
             )
         }
         composable("preview") {
