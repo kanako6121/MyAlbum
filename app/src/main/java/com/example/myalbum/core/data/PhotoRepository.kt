@@ -9,6 +9,5 @@ import javax.inject.Inject
 class PhotoRepository @Inject constructor(
     @ApplicationContext private val applicationContext: Context,
 ) {
-    private val _masterFlow = MutableStateFlow(0)
-    val masterFlow = _masterFlow.asStateFlow()
+
 }
