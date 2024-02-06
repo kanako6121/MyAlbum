@@ -50,7 +50,6 @@ fun MainNavHost(
                     }
                 },
                 drawerState = drawerState,
-                defaultPick = MainNavOption.TopScreen,
             )
         }
         composable("edit") {

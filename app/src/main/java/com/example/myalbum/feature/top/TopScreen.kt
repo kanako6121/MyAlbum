@@ -48,9 +48,8 @@ import com.example.myalbum.R
 import com.example.myalbum.core.data.MainNavOption
 
 @Composable
-fun <T : Enum<T>> TopScreen(
+fun TopScreen(
     viewModel: TopViewModel,
-    defaultPick: T,
     drawerState: DrawerState,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit
@@ -183,7 +182,6 @@ fun DrawerMenuItem(icon: ImageVector, label: String) {
 fun ShowPhotoGrid() {
     TopScreen(
         viewModel = viewModel(),
-        defaultPick = MainNavOption.TopScreen,
         drawerState = DrawerState(initialValue = DrawerValue.Closed),
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
