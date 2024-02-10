@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,7 +22,7 @@ import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
 
 @Composable
-fun MainNavHost(
+fun MainNav(
     navController: NavController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     vm: MainViewModel = hiltViewModel()
@@ -43,24 +44,24 @@ fun MainNavHost(
                                 }
                             }
                             MainNavOption.EditScreen -> {
-                                navController.navigate(onUserPickedOption.name) {
+                                navController.navigate(onUserPickedOption.) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
 
                             MainNavOption.PreviewScreen -> {
-                                navController.navigate(onUserPickedOption.name) {
+                                navController.navigate(onUserPickedOption.) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
                         }
-                    },
+                    }
                 }
             ) {
                 val isOnboarded = vm.isOnboarded.collectAsState()
                 NavHost(
                     navController,
-                    startDestination = if(isOnboarded.value) NavRoutes.name else NavRoutes.name )
+                    startDestination = if (isOnboarded.value) NavRoutes.MainRoute.name else NavRoutes.IntroRoute.name
             }
         }
     }
