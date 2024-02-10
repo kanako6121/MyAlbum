@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -61,7 +60,11 @@ fun MainNav(
                 val isOnboarded = vm.isOnboarded.collectAsState()
                 NavHost(
                     navController,
-                    startDestination = if (isOnboarded.value) NavRoutes.MainRoute.name else NavRoutes.IntroRoute.name
+                    startDestination = if (isOnboarded.value) NavRoutes.MainRoute.name else NavRoutes.EditRoute.name
+                ) {
+                    editGraph(navController)
+                    mainGraph(drawerState)
+                }
             }
         }
     }
