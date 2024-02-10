@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
@@ -19,6 +18,7 @@ import com.example.myalbum.core.theme.MyAlbumTheme
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
+
 
 @Composable
 fun MainNav(
@@ -43,13 +43,13 @@ fun MainNav(
                                 }
                             }
                             MainNavOption.EditScreen -> {
-                                navController.navigate(onUserPickedOption.) {
+                                navController.navigate(onUserPickedOption.name) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
 
                             MainNavOption.PreviewScreen -> {
-                                navController.navigate(onUserPickedOption.) {
+                                navController.navigate(onUserPickedOption.name) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
