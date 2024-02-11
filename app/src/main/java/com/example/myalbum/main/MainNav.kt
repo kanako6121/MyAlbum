@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
@@ -68,6 +69,10 @@ fun MainNav(
             }
         }
     }
+}
+
+fun editGraph(navController: NavController) {
+
 }
 
 enum class NavRoutes {
