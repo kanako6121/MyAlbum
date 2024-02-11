@@ -39,18 +39,18 @@ fun MainNav(
                     ) { onUserPickedOption ->
                         when (onUserPickedOption) {
                             MainNavOption.TopScreen -> {
-                                navController.navigate(onUserPickedOption.name) {
+                                navController.navigate(NavRoutes.MainRoute.name) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
                             MainNavOption.EditScreen -> {
-                                navController.navigate(onUserPickedOption.name) {
+                                navController.navigate(NavRoutes.EditRoute.name) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
 
                             MainNavOption.PreviewScreen -> {
-                                navController.navigate(onUserPickedOption.name) {
+                                navController.navigate(NavRoutes.PreviewRoute.name) {
                                     popUpTo(NavRoutes.MainRoute.name)
                                 }
                             }
@@ -69,10 +69,6 @@ fun MainNav(
             }
         }
     }
-}
-
-fun editGraph(navController: NavController) {
-
 }
 
 enum class NavRoutes {
