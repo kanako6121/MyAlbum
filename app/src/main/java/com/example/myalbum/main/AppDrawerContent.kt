@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @Composable
-fun <T : Enum<T>> AppDrawerContent(
+fun <T> AppDrawerContent(
     drawerState: DrawerState,
-    menuItems: ArrayList<AppDrawerItemInfo<MainNavOption>>,
-    defaultPick: MainNavOption,
-    param: (Any) -> Unit,
+    menuItems: ArrayList<AppDrawerItemInfo<T>>,
+    defaultPick: T,
+    onSelect: (T) -> Unit,
 ) {
     var currentPick by remember { mutableStateOf(defaultPick) }
     val coroutinScope = rememberCoroutineScope()
@@ -53,6 +53,7 @@ fun <T : Enum<T>> AppDrawerContent(
                             coroutinScope.launch {
                                 drawerState.close()
                             }
+                            onSelect(navOption)
                         }
                     }
                 }
