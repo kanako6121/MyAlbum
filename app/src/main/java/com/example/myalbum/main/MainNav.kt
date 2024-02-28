@@ -1,20 +1,25 @@
 package com.example.myalbum.main
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
-import com.example.myalbum.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainNav(
@@ -22,37 +27,53 @@ fun MainNav(
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
   vm: MainViewModel = hiltViewModel()
 ) {
+  val coroutineScope = rememberCoroutineScope()
+
   ModalNavigationDrawer(
     drawerState = drawerState,
     drawerContent = {
-      AppDrawerContent(
-        drawerState = drawerState,
-        menuItems = DrawerParams.drawerButtons,
-        defaultPick = MainNavOption.TopScreen
-      ) { onUserPickedOption ->
-        when (onUserPickedOption) {
-          MainNavOption.TopScreen -> {
-            // navController.navigate(NavRoutes.MainRoute.name) {
-            //   popUpTo(NavRoutes.MainRoute.name)
-            // }
-            // TODO ↑ Nested Navigationをしたいみたいだけど、現状のコードが謎なので^^; TopScreen出します。
-            navController.navigate(MainNavOption.TopScreen.name)
-          }
+      ModalDrawerSheet {
+        Text("圭菜メニュー", modifier = Modifier.padding(16.dp))
 
-          MainNavOption.EditScreen -> {
-            // navController.navigate(NavRoutes.EditRoute.name) {
-            //   popUpTo(NavRoutes.MainRoute.name)
-            // }
-            navController.navigate(MainNavOption.EditScreen.name)
-          }
+        Divider()
 
-          MainNavOption.PreviewScreen -> {
-            // navController.navigate(NavRoutes.PreviewRoute.name) {
-            //   popUpTo(NavRoutes.MainRoute.name)
-            // }
-            navController.navigate(MainNavOption.PreviewScreen.name)
+        NavigationDrawerItem(
+          label = { Text(text = "圭菜トップ画面だよん") },
+          selected = false,
+          onClick = {
+            navController.navigate(MainNavOption.TopScreen.name) {
+              // バックスタックに遷移履歴を積まないように遷移前の履歴を全部消す
+              popUpTo(id = navController.graph.id)
+            }
+            coroutineScope.launch { drawerState.close() }
           }
-        }
+        )
+
+        Divider()
+
+        NavigationDrawerItem(
+          label = { Text(text = "圭菜へんしゅう開くんよ") },
+          selected = false,
+          onClick = {
+            navController.navigate(MainNavOption.EditScreen.name) {
+              popUpTo(id = navController.graph.id)
+            }
+            coroutineScope.launch { drawerState.close() }
+          }
+        )
+
+        Divider()
+
+        NavigationDrawerItem(
+          label = { Text(text = "圭菜プレビュー出します") },
+          selected = false,
+          onClick = {
+            navController.navigate(MainNavOption.PreviewScreen.name) {
+              popUpTo(id = navController.graph.id)
+            }
+            coroutineScope.launch { drawerState.close() }
+          }
+        )
       }
     }
   ) {
@@ -82,55 +103,8 @@ fun MainNav(
   }
 }
 
-enum class NavRoutes {
-  MainRoute,
-  EditRoute,
-  PreviewRoute,
-}
-
-@Composable
-fun NavGraphBuilder.mainGraph(drawerState: DrawerState) {
-  navigation(startDestination = MainNavOption.TopScreen.name, route = NavRoutes.MainRoute.name) {
-    composable(MainNavOption.TopScreen.name) {
-      // TopScreen(drawerState)
-      Text(text = "TopScreen")
-    }
-    composable(MainNavOption.EditScreen.name) {
-      // EditScreen(drawerState)
-      Text(text = "EditScreen")
-    }
-    composable(MainNavOption.PreviewScreen.name) {
-      // PreviewScreen(drawerState)
-      Text(text = "PreviewScreen")
-    }
-  }
-}
-
 enum class MainNavOption {
   TopScreen,
   EditScreen,
   PreviewScreen,
-}
-
-object DrawerParams {
-  val drawerButtons = arrayListOf(
-    AppDrawerItemInfo(
-      MainNavOption.TopScreen,
-      R.string.drawer_top,
-      R.drawable.ic_launcher_foreground,
-      R.string.drawer_top,
-    ),
-    AppDrawerItemInfo(
-      MainNavOption.EditScreen,
-      R.string.drawer_edit,
-      R.drawable.ic_launcher_foreground,
-      R.string.description_edit
-    ),
-    AppDrawerItemInfo(
-      MainNavOption.PreviewScreen,
-      R.string.drawer_preview,
-      R.drawable.ic_launcher_foreground,
-      R.string.description_preview
-    )
-  )
 }
