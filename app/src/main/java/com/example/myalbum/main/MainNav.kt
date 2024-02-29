@@ -15,12 +15,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
@@ -84,7 +82,7 @@ fun MainNav(
         ) {
             composable(MainNavOption.TopScreen.name) {
                 TopScreen(
-                    viewModel = TopViewModel(),
+                    viewModel = viewModel.,
                     drawerState = drawerState,
                     onNavigationToEditScreen = { /*TODO*/ }
                 ) {
@@ -102,8 +100,31 @@ fun MainNav(
     }
 }
 
-enum class NavRoutes {
-    MainRoute,
-    EditRoute,
-    PreviewRoute,
+enum class MainNavOption {
+    TopScreen,
+    EditScreen,
+    PreviewScreen,
+}
+
+object DrawerParams {
+    val drawerButtons = arrayListOf(
+        AppDrawerItemInfo(
+            MainNavOption.TopScreen,
+            R.string.drawer_top,
+            R.drawable.ic_launcher_foreground,
+            R.string.drawer_top,
+        ),
+        AppDrawerItemInfo(
+            MainNavOption.EditScreen,
+            R.string.drawer_edit,
+            R.drawable.ic_launcher_foreground,
+            R.string.description_edit
+        ),
+        AppDrawerItemInfo(
+            MainNavOption.PreviewScreen,
+            R.string.drawer_preview,
+            R.drawable.ic_launcher_foreground,
+            R.string.description_preview
+        )
+    )
 }
