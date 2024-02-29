@@ -81,12 +81,13 @@ fun MainNav(
             startDestination = MainNavOption.TopScreen.name,
         ) {
             composable(MainNavOption.TopScreen.name) {
-                TopScreen(
-                    viewModel = viewModel.,
-                    drawerState = drawerState,
-                    onNavigationToEditScreen = { /*TODO*/ }
-                ) {
-                }
+               // TopScreen(
+                 //   viewModel = viewModel.,
+                   // drawerState = drawerState,
+                    //onNavigationToEditScreen = {  }
+              //  ) {
+             //   }
+                Text(text = "TOP")
             }
             composable(MainNavOption.EditScreen.name) {
                 EditScreen(onNavigationToTopScreen = { /*TODO*/ }) {
