@@ -43,10 +43,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 
 @Composable
 fun TopScreen(
+    viewModel: TopViewModel,
     drawerState: DrawerState,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit
@@ -178,6 +180,7 @@ fun DrawerMenuItem(icon: ImageVector, label: String) {
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
+        viewModel = viewModel(),
         drawerState = DrawerState(initialValue = DrawerValue.Closed),
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
