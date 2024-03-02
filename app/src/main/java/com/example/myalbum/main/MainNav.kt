@@ -77,17 +77,16 @@ fun MainNav(
     {
         val isOnboarded = viewModel.isOnboarded.collectAsState()
         NavHost(
-            navController,
+            navController = navController,
             startDestination = MainNavOption.TopScreen.name,
         ) {
             composable(MainNavOption.TopScreen.name) {
-               // TopScreen(
-                 //   viewModel = viewModel.,
-                   // drawerState = drawerState,
-                    //onNavigationToEditScreen = {  }
-              //  ) {
-             //   }
-                Text(text = "TOP")
+               TopScreen(
+                 viewModel = hiltViewModel(),
+                   drawerState = drawerState,
+                    onNavigationToEditScreen = {  },
+                ) {
+                }
             }
             composable(MainNavOption.EditScreen.name) {
                 EditScreen(onNavigationToTopScreen = { /*TODO*/ }) {

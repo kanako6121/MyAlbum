@@ -53,6 +53,7 @@ fun TopScreen(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val photos = listOf(
         R.drawable.seigo1,
         R.drawable.seigo2,
