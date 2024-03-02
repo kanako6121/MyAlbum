@@ -4,7 +4,6 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.myalbum.core.data.PhotoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TopViewModel @Inject constructor(
   private val repository: PhotoRepository,
-  savedStateHandle: SavedStateHandle,
   ) : ViewModel() {
   private val _uiState = MutableStateFlow(TopScreenUiState())
   val uiState: StateFlow<TopScreenUiState> = _uiState.asStateFlow()

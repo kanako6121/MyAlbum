@@ -15,22 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,11 +40,9 @@ import com.example.myalbum.R
 @Composable
 fun TopScreen(
     viewModel: TopViewModel,
-    drawerState: DrawerState,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val photos = listOf(
         R.drawable.seigo1,
         R.drawable.seigo2,
@@ -64,7 +52,6 @@ fun TopScreen(
         R.drawable.seigo9,
     )
     TopScreenContent(
-        drawerState = drawerState,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
     )
@@ -72,7 +59,6 @@ fun TopScreen(
 
 @Composable
 fun TopScreenContent(
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
 ) {
@@ -87,14 +73,8 @@ fun TopScreenContent(
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopBar(
-                title = {},
-                navigationIcon = { drawerState.isOpen },
+        topBar = {},
             )
-            Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-        },
-    )
     { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
@@ -128,7 +108,7 @@ fun TopScreenContent(
     }
 }
 
-@Composable
+/*@Composable
 fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -163,7 +143,7 @@ fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
             }
         },
     )
-}
+}*/
 @Composable
 fun DrawerMenuItem(icon: ImageVector, label: String) {
     Row(
@@ -183,7 +163,6 @@ fun DrawerMenuItem(icon: ImageVector, label: String) {
 fun ShowPhotoGrid() {
     TopScreen(
         viewModel = viewModel(),
-        drawerState = DrawerState(initialValue = DrawerValue.Closed),
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
     )

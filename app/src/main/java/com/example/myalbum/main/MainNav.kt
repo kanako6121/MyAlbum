@@ -83,7 +83,6 @@ fun MainNav(
             composable(MainNavOption.TopScreen.name) {
                TopScreen(
                  viewModel = hiltViewModel(),
-                   drawerState = drawerState,
                     onNavigationToEditScreen = {  },
                 ) {
                 }
