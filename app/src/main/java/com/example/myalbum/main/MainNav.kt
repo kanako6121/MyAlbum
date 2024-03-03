@@ -10,27 +10,22 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myalbum.R
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.preview.PreviewScreen
 import com.example.myalbum.feature.top.TopScreen
-import com.example.myalbum.feature.top.TopViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainNav(
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    viewModel: MainViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -75,17 +70,15 @@ fun MainNav(
         }
     )
     {
-        val isOnboarded = viewModel.isOnboarded.collectAsState()
         NavHost(
             navController = navController,
             startDestination = MainNavOption.TopScreen.name,
         ) {
             composable(MainNavOption.TopScreen.name) {
-               TopScreen(
-                 viewModel = hiltViewModel(),
-                    onNavigationToEditScreen = {  },
-                ) {
-                }
+                TopScreen(
+                    onNavigationToEditScreen = { },
+                    onNavigationToPreviewScreen = { },
+                )
             }
             composable(MainNavOption.EditScreen.name) {
                 EditScreen(onNavigationToTopScreen = { /*TODO*/ }) {
@@ -103,27 +96,4 @@ enum class MainNavOption {
     TopScreen,
     EditScreen,
     PreviewScreen,
-}
-
-object DrawerParams {
-    val drawerButtons = arrayListOf(
-        AppDrawerItemInfo(
-            MainNavOption.TopScreen,
-            R.string.drawer_top,
-            R.drawable.ic_launcher_foreground,
-            R.string.drawer_top,
-        ),
-        AppDrawerItemInfo(
-            MainNavOption.EditScreen,
-            R.string.drawer_edit,
-            R.drawable.ic_launcher_foreground,
-            R.string.description_edit
-        ),
-        AppDrawerItemInfo(
-            MainNavOption.PreviewScreen,
-            R.string.drawer_preview,
-            R.drawable.ic_launcher_foreground,
-            R.string.description_preview
-        )
-    )
 }

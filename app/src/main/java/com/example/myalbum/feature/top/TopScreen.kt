@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,12 +32,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 
 @Composable
 fun TopScreen(
-    viewModel: TopViewModel,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit
 ) {
@@ -108,42 +104,6 @@ fun TopScreenContent(
     }
 }
 
-/*@Composable
-fun TopBar(title: () -> Unit, navigationIcon: () -> Unit) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = drawerState.isOpen,
-        drawerContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(16.dp)
-            ) {
-                ModalDrawerSheet(
-                    drawerShape = MaterialTheme.shapes.small,
-                    drawerContentColor = MaterialTheme.colorScheme.primaryContainer,
-                    drawerContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    drawerTonalElevation = 4.dp,
-                ) {
-                    Text("menu", modifier = Modifier.padding(16.dp))
-                    Divider(color = Color.Gray, thickness = 0.5.dp)
-                    DrawerMenuItem(icon = Icons.Default.Edit, label = "menu")
-                    DrawerMenuItem(icon = Icons.Default.Check, label = "プレビュー")
-                }
-            }
-        },
-        content = {
-            TopScreenContent(
-                drawerState = drawerState,
-                onNavigationToEditScreen = { },
-            ) {
-
-            }
-        },
-    )
-}*/
 @Composable
 fun DrawerMenuItem(icon: ImageVector, label: String) {
     Row(
@@ -162,7 +122,6 @@ fun DrawerMenuItem(icon: ImageVector, label: String) {
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
-        viewModel = viewModel(),
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
     )
