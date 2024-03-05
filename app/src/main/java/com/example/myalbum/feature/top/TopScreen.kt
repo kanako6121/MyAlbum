@@ -15,9 +15,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,8 +48,9 @@ import com.example.myalbum.R
 @Composable
 fun TopScreen(
     onNavigationToEditScreen: () -> Unit,
-    onNavigationToPreviewScreen: () -> Unit
-) {
+    onNavigationToPreviewScreen: () -> Unit,
+    onUpPress: () -> Unit,
+    ) {
     val photos = listOf(
         R.drawable.seigo1,
         R.drawable.seigo2,
@@ -48,6 +60,7 @@ fun TopScreen(
         R.drawable.seigo9,
     )
     TopScreenContent(
+        onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
     )
@@ -55,6 +68,7 @@ fun TopScreen(
 
 @Composable
 fun TopScreenContent(
+    onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
 ) {
@@ -69,9 +83,13 @@ fun TopScreenContent(
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {},
+        topBar = {
+            TopBar(
+                title = "Menu",
+                onUpPress = onUpPress,
             )
-    { paddings ->
+        }
+    ) { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
         ) {
@@ -105,7 +123,10 @@ fun TopScreenContent(
 }
 
 @Composable
-fun DrawerMenuItem(icon: ImageVector, label: String) {
+fun DrawerMenuItem(
+    icon: ImageVector,
+    label: String
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,10 +139,34 @@ fun DrawerMenuItem(icon: ImageVector, label: String) {
         Text(text = label)
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(
+    title: String,
+    onUpPress: () -> Unit,
+) {
+    TopAppBar(
+        title = { Text(text = title) },
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+        ),
+        navigationIcon = {
+            IconButton(onClick = onUpPress) {
+                Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
+            }
+        }
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
+        onUpPress = {},
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
     )

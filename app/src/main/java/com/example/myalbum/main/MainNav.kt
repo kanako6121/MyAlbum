@@ -32,7 +32,7 @@ fun MainNav(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Text("Menu", modifier = Modifier.padding(16.dp))
+                Text("Top", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
                     label = { Text(text = "Top") },
@@ -76,6 +76,7 @@ fun MainNav(
         ) {
             composable(MainNavOption.TopScreen.name) {
                 TopScreen(
+                    onUpPress = { },
                     onNavigationToEditScreen = { },
                     onNavigationToPreviewScreen = { },
                 )
