@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,10 +30,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun TopScreen(
@@ -146,6 +150,8 @@ fun TopBar(
     title: String,
     onUpPress: () -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     TopAppBar(
         title = { Text(text = title) },
         modifier = Modifier
@@ -155,7 +161,15 @@ fun TopBar(
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
         ),
         navigationIcon = {
-            IconButton(onClick = onUpPress) {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
+                }
+            ) {
                 Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
             }
         }
