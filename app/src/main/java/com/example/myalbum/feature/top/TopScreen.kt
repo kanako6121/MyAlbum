@@ -170,7 +170,17 @@ fun TopBar(
                     }
                 }
             ) {
-                Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
+                Icon(
+                    modifier = Modifier.clickable {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    },
+                    imageVector = Icons.Rounded.Menu,
+                    contentDescription = null
+                )
             }
         }
     )
