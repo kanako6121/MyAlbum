@@ -16,18 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -91,15 +85,10 @@ fun TopScreenContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            ModalNavigationDrawer(
-                drawerContent = { /*TODO*/ }
-            ) {
-
-            }
-           // TopBar(
-           //     title = "Menu",
-            //    onUpPress = onUpPress,
-        //    )
+            TopBar(
+                title = "Menu",
+                onUpPress = onUpPress,
+            )
         }
     ) { paddings ->
         Column(
@@ -160,34 +149,6 @@ fun TopBar(
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            Column {
-                Text("Menu")
-                Button(onClick = {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }) {
-                    Text("Close")
-                }
-            }
-        },
-        content = {
-            Column {
-                Text("MyAlbum")
-                Button(onClick = {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                }) {
-                    Text("Click to open")
-                }
-            }
-        }
-    )
 
     TopAppBar(
         title = { Text(text = title) },
