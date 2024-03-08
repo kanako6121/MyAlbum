@@ -91,10 +91,15 @@ fun TopScreenContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopBar(
-                title = "Menu",
-                onUpPress = onUpPress,
-            )
+            ModalNavigationDrawer(
+                drawerContent = { /*TODO*/ }
+            ) {
+
+            }
+           // TopBar(
+           //     title = "Menu",
+            //    onUpPress = onUpPress,
+        //    )
         }
     ) { paddings ->
         Column(
