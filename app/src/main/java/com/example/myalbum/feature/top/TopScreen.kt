@@ -147,9 +147,6 @@ fun TopBar(
     title: String,
     onUpPress: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
     TopAppBar(
         title = { Text(text = title) },
         modifier = Modifier
@@ -159,23 +156,8 @@ fun TopBar(
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
         ),
         navigationIcon = {
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        drawerState.apply {
-                            if (isClosed) open() else close()
-                        }
-                    }
-                }
-            ) {
+            IconButton(onClick = onUpPress) {
                 Icon(
-                    modifier = Modifier.clickable {
-                        scope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
-                        }
-                    },
                     imageVector = Icons.Rounded.Menu,
                     contentDescription = null
                 )
