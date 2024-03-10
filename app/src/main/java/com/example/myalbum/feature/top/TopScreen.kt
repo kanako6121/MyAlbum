@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
@@ -145,42 +146,17 @@ fun DrawerMenuItem(
 @Composable
 fun TopBar(
     title: String,
-    onUpPress: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     TopAppBar(
-        title = { Text(text = title) },
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
-        ),
         navigationIcon = {
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        drawerState.apply {
-                            if (isClosed) open() else close()
-                        }
-                    }
-                }
-            ) {
-                Icon(
-                    modifier = Modifier.clickable {
-                        scope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
-                        }
-                    },
-                    imageVector = Icons.Rounded.Menu,
-                    contentDescription = null
-                )
-            }
-        }
+            Icon(
+                imageVector = Icons.Rounded.Menu,
+                contentDescription = null
+        },
+        title = {
+            Text(text = stringResource(id = R.string.label_title))
+        },
     )
 }
 

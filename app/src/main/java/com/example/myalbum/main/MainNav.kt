@@ -32,10 +32,10 @@ fun MainNav(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Text("Top", modifier = Modifier.padding(16.dp))
+                Text("Menu", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "Top") },
+                    label = { Text(text = "MyAlbum") },
                     selected = false,
                     onClick = {
                         navController.navigate(MainNavOption.TopScreen.name) {
@@ -46,7 +46,7 @@ fun MainNav(
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "Edit") },
+                    label = { Text(text = "アルバムを編集する") },
                     selected = false,
                     onClick = {
                         navController.navigate(MainNavOption.EditScreen.name) {
@@ -57,7 +57,7 @@ fun MainNav(
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "Preview") },
+                    label = { Text(text = "アルバムを切り替える") },
                     selected = false,
                     onClick = {
                         navController.navigate(MainNavOption.PreviewScreen.name) {
