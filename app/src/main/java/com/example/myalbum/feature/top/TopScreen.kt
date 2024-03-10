@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,12 +16,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -57,6 +62,7 @@ fun TopScreen(
     )
     TopScreenContent(
         onUpPress = onUpPress,
+        onClick = {},
         onNavigationToEditScreen = onNavigationToSecondScreen,
         onNavigationToPreviewScreen = onNavigationToThirdScreen,
     )
@@ -65,6 +71,7 @@ fun TopScreen(
 @Composable
 fun TopScreenContent(
     onUpPress: () -> Unit,
+    onClick: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
 ) {
@@ -114,6 +121,9 @@ fun TopScreenContent(
                     }
                 }
             )
+            AddPhotoButton {
+                onClick
+            }
         }
     }
 }
@@ -142,7 +152,6 @@ fun TopBar(
     title: String,
     onUpPress: () -> Unit,
 ) {
-
     TopAppBar(
         title = { Text(text = title) },
         modifier = Modifier.fillMaxWidth(),
@@ -156,8 +165,17 @@ fun TopBar(
                 contentDescription = null
             )
         },
-
         )
+}
+
+@Composable
+fun AddPhotoButton(onClick: () -> Unit) {
+    SmallFloatingActionButton(
+        onClick = { onClick() },
+        shape = CircleShape,
+    ) {
+        Icon(Icons.Filled.Add, "Small floating action button")
+    }
 }
 
 @Preview(showBackground = true)
