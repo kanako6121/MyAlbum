@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,8 +27,7 @@ import com.example.myalbum.R
 
 @Composable
 fun EditScreen(
-    onNavigationToTopScreen: () -> Unit,
-    onNavigationToPreviewScreen: () ->Unit,
+    onUpPress: () -> Unit,
 ) {
     EditContentScreen(
     )
@@ -42,7 +40,7 @@ fun EditContentScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             EditTopBar(
-                title = stringResource(id = R.string.label_edit),
+                title = "Myアルバム",
             )
         }
     ) { paddings ->

@@ -17,8 +17,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myalbum.feature.edit.EditScreen
-import com.example.myalbum.feature.preview.PreviewScreen
+import com.example.myalbum.feature.second.SecondScreen
+import com.example.myalbum.feature.third.ThirdScreen
 import com.example.myalbum.feature.top.TopScreen
 import kotlinx.coroutines.launch
 
@@ -32,10 +32,10 @@ fun MainNav(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Text("Menu", modifier = Modifier.padding(16.dp))
+                Text("Myアルバム", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "MyAlbum") },
+                    label = { Text(text = "アルバム１") },
                     selected = false,
                     onClick = {
                         navController.navigate(MainNavOption.TopScreen.name) {
@@ -46,10 +46,10 @@ fun MainNav(
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "アルバムを編集する") },
+                    label = { Text(text = "アルバム２") },
                     selected = false,
                     onClick = {
-                        navController.navigate(MainNavOption.EditScreen.name) {
+                        navController.navigate(MainNavOption.SecondScreen.name) {
                             popUpTo(id = navController.graph.id)
                         }
                         coroutineScope.launch { drawerState.close() }
@@ -57,10 +57,10 @@ fun MainNav(
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "アルバムを切り替える") },
+                    label = { Text(text = "アルバム３") },
                     selected = false,
                     onClick = {
-                        navController.navigate(MainNavOption.PreviewScreen.name) {
+                        navController.navigate(MainNavOption.ThirdScreen.name) {
                             popUpTo(id = navController.graph.id)
                         }
                         coroutineScope.launch { drawerState.close() }
@@ -77,17 +77,15 @@ fun MainNav(
             composable(MainNavOption.TopScreen.name) {
                 TopScreen(
                     onUpPress = { },
-                    onNavigationToEditScreen = { },
-                    onNavigationToPreviewScreen = { },
+                    onNavigationToSecondScreen = { },
+                    onNavigationToThirdScreen = { },
                 )
             }
-            composable(MainNavOption.EditScreen.name) {
-                EditScreen(onNavigationToTopScreen = { /*TODO*/ }) {
-                }
+            composable(MainNavOption.SecondScreen.name) {
+                SecondScreen(onUpPress = { /*TODO*/ })
             }
-            composable(MainNavOption.PreviewScreen.name) {
-                PreviewScreen(onNavigationToTopScreen = { /*TODO*/ }) {
-                }
+            composable(MainNavOption.ThirdScreen.name) {
+                ThirdScreen(onUpPress = { /*TODO*/ })
             }
         }
     }
@@ -95,6 +93,6 @@ fun MainNav(
 
 enum class MainNavOption {
     TopScreen,
-    EditScreen,
-    PreviewScreen,
+    SecondScreen,
+    ThirdScreen,
 }
