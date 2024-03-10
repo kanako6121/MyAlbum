@@ -146,18 +146,24 @@ fun DrawerMenuItem(
 @Composable
 fun TopBar(
     title: String,
+    onUpPress: () -> Unit,
 ) {
 
     TopAppBar(
+        title = { Text(text = title) },
+        modifier = Modifier.fillMaxWidth(),
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+        ),
         navigationIcon = {
             Icon(
                 imageVector = Icons.Rounded.Menu,
                 contentDescription = null
+            )
         },
-        title = {
-            Text(text = stringResource(id = R.string.label_title))
-        },
-    )
+
+        )
 }
 
 @Preview(showBackground = true)
