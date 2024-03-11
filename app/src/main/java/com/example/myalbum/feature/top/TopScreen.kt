@@ -7,10 +7,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,10 +22,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Send
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
@@ -32,6 +37,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myalbum.R
@@ -63,6 +70,7 @@ fun TopScreen(
     TopScreenContent(
         onUpPress = onUpPress,
         onClick = {},
+        onAddPhoto = {},
         onNavigationToEditScreen = onNavigationToSecondScreen,
         onNavigationToPreviewScreen = onNavigationToThirdScreen,
     )
@@ -72,10 +80,12 @@ fun TopScreen(
 fun TopScreenContent(
     onUpPress: () -> Unit,
     onClick: () -> Unit,
+    onAddPhoto: (Int) -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
+    var isAdded by remember { mutableStateOf(false) }
     val photos = listOf(
         R.drawable.seigo1,
         R.drawable.seigo2,
@@ -90,6 +100,14 @@ fun TopScreenContent(
             TopBar(
                 title = "Menu",
                 onUpPress = onUpPress,
+            )
+        },
+        bottomBar = {
+            AddPhotoButton(
+               onAddPhoto = {
+                   onAddPhoto(it)
+                   isAdded = true
+               }
             )
         }
     ) { paddings ->
@@ -121,9 +139,6 @@ fun TopScreenContent(
                     }
                 }
             )
-            AddPhotoButton {
-                onClick
-            }
         }
     }
 }
@@ -165,18 +180,31 @@ fun TopBar(
                 contentDescription = null
             )
         },
-        )
+    )
 }
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPhotoButton(onClick: () -> Unit) {
-    SmallFloatingActionButton(
-        onClick = { onClick() },
-        shape = CircleShape,
+fun AddPhotoButton(
+    onAddPhoto: (Int) -> Unit
+) {
+    var photoId by remember { mutableIntStateOf(0) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
-        Icon(Icons.Filled.Add, "Small floating action button")
+        SmallFloatingActionButton(
+            onClick = {
+                onAddPhoto(photoId)
+            },
+            modifier = Modifier.size(56.dp),
+        ) {
+            Icon(Icons.Filled.Add, "Small floating action button")
+        }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
