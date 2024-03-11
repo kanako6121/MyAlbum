@@ -76,9 +76,13 @@ fun MainNav(
         ) {
             composable(MainNavOption.TopScreen.name) {
                 TopScreen(
-                    onUpPress = { },
+                    onUpPress = {
+                        coroutineScope.launch {
+                            drawerState.apply { if (isClosed) open() else close() }
+                        }
+                    },
                     onNavigationToSecondScreen = { },
-                    onNavigationToThirdScreen = { },
+                    onNavigationToThirdScreen =  { },
                 )
             }
             composable(MainNavOption.SecondScreen.name) {
