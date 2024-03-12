@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,6 +42,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import com.example.myalbum.R
 
 @Composable
@@ -142,9 +146,25 @@ fun DrawerMenuItem(
 fun TopBar(
     title: String,
     onUpPress: () -> Unit,
+    navController: NavController,
+    navBackStackEntry: NavBackStackEntry?,
 ) {
+    val navigationIcon: (@Composable () -> Unit)? =
+        if () {
+            {
+                IconButton(onClick = { open }) {
+                    Icon(
+                        imageVector = Icons.Outlined.ArrowBack,
+                        contentDescription = ""
+                    )
+                }
+            }
+        } else {
+            close
+        }
     TopAppBar(
         title = { Text(text = title) },
+        navigationIcon = navigationIcon,
         modifier = Modifier
             .fillMaxWidth(),
         colors = TopAppBarDefaults.smallTopAppBarColors(
