@@ -152,7 +152,9 @@ fun TopBar(
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
         ),
         navigationIcon = {
-            IconButton(onClick = onUpPress) {
+            IconButton(
+                onClick = onUpPress
+            ) {
                 Icon(
                     imageVector = Icons.Rounded.Menu,
                     contentDescription = null

@@ -81,8 +81,8 @@ fun MainNav(
                             drawerState.apply { if (isClosed) open() else close() }
                         }
                     },
-                    onNavigationToSecondScreen = { },
-                    onNavigationToThirdScreen =  { },
+                    onNavigationToEditScreen = {},
+                    onNavigationToPreviewScreen = {},
                 )
             }
             composable(MainNavOption.SecondScreen.name) {
