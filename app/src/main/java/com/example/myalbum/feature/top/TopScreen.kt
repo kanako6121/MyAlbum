@@ -4,35 +4,38 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,8 +44,8 @@ import com.example.myalbum.R
 
 @Composable
 fun TopScreen(
-    onNavigationToSecondScreen: () -> Unit,
-    onNavigationToThirdScreen: () -> Unit,
+    onNavigationToEditScreen: () -> Unit,
+    onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
 ) {
     val photos = listOf(
@@ -55,23 +58,18 @@ fun TopScreen(
     )
     TopScreenContent(
         onUpPress = onUpPress,
-        onClick = {},
-        onAddPhoto = {},
-        onNavigationToEditScreen = onNavigationToSecondScreen,
-        onNavigationToPreviewScreen = onNavigationToThirdScreen,
+        onNavigationToEditScreen = onNavigationToEditScreen,
+        onNavigationToPreviewScreen = onNavigationToPreviewScreen,
     )
 }
 
 @Composable
 fun TopScreenContent(
     onUpPress: () -> Unit,
-    onClick: () -> Unit,
-    onAddPhoto: (Int) -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
-    var isAdded by remember { mutableStateOf(false) }
     val photos = listOf(
         R.drawable.seigo1,
         R.drawable.seigo2,
@@ -86,15 +84,6 @@ fun TopScreenContent(
             TopBar(
                 title = "Menu",
                 onUpPress = onUpPress,
-            )
-        },
-        bottomBar = {
-            AddPhotoButton(
-                modifier = Modifier.padding(start = 150.dp),
-                onAddPhoto = {
-                    onAddPhoto(it)
-                    isAdded = true
-                }
             )
         }
     ) { paddings ->
@@ -130,6 +119,24 @@ fun TopScreenContent(
     }
 }
 
+@Composable
+fun DrawerMenuItem(
+    icon: ImageVector,
+    label: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = label)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
@@ -138,49 +145,29 @@ fun TopBar(
 ) {
     TopAppBar(
         title = { Text(text = title) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
         ),
         navigationIcon = {
-            Icon(
-                imageVector = Icons.Rounded.Menu,
-                contentDescription = null
-            )
-        },
+            IconButton(onClick = onUpPress) {
+                Icon(
+                    imageVector = Icons.Rounded.Menu,
+                    contentDescription = null
+                )
+            }
+        }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AddPhotoButton(
-    onAddPhoto: (Int) -> Unit,
-    modifier: Modifier,
-) {
-    var photoId by remember { mutableIntStateOf(0) }
-
-    Row {
-        SmallFloatingActionButton(
-            onClick = {
-                onAddPhoto(photoId)
-            },
-            modifier = Modifier
-                .size(56.dp)
-        ) {
-            Icon(
-                Icons.Rounded.Add, "Small floating action button"
-            )
-        }
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
     TopScreen(
         onUpPress = {},
-        onNavigationToSecondScreen = {},
-        onNavigationToThirdScreen = {},
+        onNavigationToEditScreen = {},
+        onNavigationToPreviewScreen = {},
     )
 }
