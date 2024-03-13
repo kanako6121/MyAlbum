@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 
 @Composable
@@ -64,6 +65,7 @@ fun TopScreen(
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
+        navController = rememberNavController(),
     )
 }
 
@@ -72,6 +74,7 @@ fun TopScreenContent(
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
+    navController: NavController,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
     val photos = listOf(
@@ -88,6 +91,8 @@ fun TopScreenContent(
             TopBar(
                 title = "Menu",
                 onUpPress = onUpPress,
+                navController = navController,
+                navBackStackEntry = null,
             )
         }
     ) { paddings ->
@@ -149,22 +154,14 @@ fun TopBar(
     navController: NavController,
     navBackStackEntry: NavBackStackEntry?,
 ) {
-    val navigationIcon: (@Composable () -> Unit)? =
-        if () {
-            {
-                IconButton(onClick = { open }) {
-                    Icon(
-                        imageVector = Icons.Outlined.ArrowBack,
-                        contentDescription = ""
-                    )
-                }
-            }
-        } else {
-            close
-        }
+    IconButton(onClick = { }) {
+        Icon(
+            imageVector = Icons.Outlined.ArrowBack,
+            contentDescription = ""
+        )
+    }
     TopAppBar(
         title = { Text(text = title) },
-        navigationIcon = navigationIcon,
         modifier = Modifier
             .fillMaxWidth(),
         colors = TopAppBarDefaults.smallTopAppBarColors(
