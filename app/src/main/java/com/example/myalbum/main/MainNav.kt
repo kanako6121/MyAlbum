@@ -1,8 +1,9 @@
 package com.example.myalbum.main
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -79,7 +80,7 @@ fun MainNav(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     text = { Text("Menu") },
-                    icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+                    icon = { Icon(Icons.Filled.Menu, contentDescription = "") },
                     onClick = {
                         coroutineScope.launch {
                             drawerState.apply {
@@ -90,34 +91,39 @@ fun MainNav(
                 )
             }
         ) { contentPadding ->
-            TopScreen(
-                onNavigationToEditScreen = { /*TODO*/ },
-                onNavigationToPreviewScreen = { /*TODO*/ },
-                onUpPress = {},
-            )
-    NavHost(
-        navController = navController,
-        startDestination = MainNavOption.TopScreen.name,
-    ) {
-        composable(MainNavOption.TopScreen.name) {
-            TopScreen(
-                onUpPress = {
-                    coroutineScope.launch {
-                        drawerState.apply { if (isClosed) open() else close() }
+            Column(
+                modifier = Modifier.padding(contentPadding),
+            ) {
+                TopScreen(
+                    onNavigationToEditScreen = { /*TODO*/ },
+                    onNavigationToPreviewScreen = { /*TODO*/ },
+                    onUpPress = {},
+                )
+                NavHost(
+                    navController = navController,
+                    startDestination = MainNavOption.TopScreen.name,
+                ) {
+                    composable(MainNavOption.TopScreen.name) {
+                        TopScreen(
+                            onUpPress = {
+                                coroutineScope.launch {
+                                    drawerState.apply { if (isClosed) open() else close() }
+                                }
+                            },
+                            onNavigationToEditScreen = {},
+                            onNavigationToPreviewScreen = {},
+                        )
                     }
-                },
-                onNavigationToEditScreen = {},
-                onNavigationToPreviewScreen = {},
-            )
-        }
-        composable(MainNavOption.SecondScreen.name) {
-            SecondScreen(onUpPress = { /*TODO*/ })
-        }
-        composable(MainNavOption.ThirdScreen.name) {
-            ThirdScreen(onUpPress = { /*TODO*/ })
+                    composable(MainNavOption.SecondScreen.name) {
+                        SecondScreen(onUpPress = { /*TODO*/ })
+                    }
+                    composable(MainNavOption.ThirdScreen.name) {
+                        ThirdScreen(onUpPress = { /*TODO*/ })
+                    }
+                }
+            }
         }
     }
-}
 }
 
 enum class MainNavOption {
