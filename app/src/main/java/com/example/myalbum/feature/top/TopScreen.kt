@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.rounded.Menu
@@ -87,14 +88,6 @@ fun TopScreenContent(
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopBar(
-                title = "Menu",
-                onUpPress = onUpPress,
-                navController = navController,
-                navBackStackEntry = null,
-            )
-        }
     ) { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
@@ -150,9 +143,8 @@ fun DrawerMenuItem(
 @Composable
 fun TopBar(
     title: String,
-    onUpPress: () -> Unit,
-    navController: NavController,
-    navBackStackEntry: NavBackStackEntry?,
+    icon: ImageVector,
+    onClick: () -> Unit,
 ) {
     IconButton(onClick = { }) {
         Icon(
@@ -170,7 +162,7 @@ fun TopBar(
         ),
         navigationIcon = {
             IconButton(
-                onClick = onUpPress
+                onClick = {},
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Menu,

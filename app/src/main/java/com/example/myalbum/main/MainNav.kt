@@ -1,6 +1,7 @@
 package com.example.myalbum.main
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -25,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.feature.second.SecondScreen
 import com.example.myalbum.feature.third.ThirdScreen
+import com.example.myalbum.feature.top.TopBar
 import com.example.myalbum.feature.top.TopScreen
 import kotlinx.coroutines.launch
 
@@ -77,20 +79,37 @@ fun MainNav(
     )
     {
         Scaffold(
-            floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    text = { Text("Menu") },
-                    icon = { Icon(Icons.Filled.Menu, contentDescription = "") },
+            modifier = Modifier.fillMaxWidth(),
+            topBar = {
+                TopBar(
+                    title = "Menu",
+                    icon = Icons.Filled.Menu,
                     onClick = {
                         coroutineScope.launch {
                             drawerState.apply {
                                 if (isClosed) open() else close()
                             }
                         }
-                    }
+                    },
                 )
             }
-        ) { contentPadding ->
+        )
+
+        //   floatingActionButton = {
+        //       ExtendedFloatingActionButton(
+        //           text = { Text("Menu") },
+        //           icon = { Icon(Icons.Filled.Menu, contentDescription = "") },
+        //           onClick = {
+        //                coroutineScope.launch {
+        //                   drawerState.apply {
+        //                       if (isClosed) open() else close()
+        //                   }
+        //               }
+        //            }
+        //        )
+        //     }
+        //  )
+        { contentPadding ->
             Column(
                 modifier = Modifier.padding(contentPadding),
             ) {
