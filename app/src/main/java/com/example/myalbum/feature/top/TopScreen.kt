@@ -88,6 +88,13 @@ fun TopScreenContent(
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                title = "Menu",
+                icon = Icons.Filled.Menu,
+                onClick = onUpPress,
+            )
+        }
     ) { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
@@ -146,7 +153,9 @@ fun TopBar(
     icon: ImageVector,
     onClick: () -> Unit,
 ) {
-    IconButton(onClick = { }) {
+    IconButton(
+        onClick = { }
+    ) {
         Icon(
             imageVector = Icons.Outlined.ArrowBack,
             contentDescription = ""
