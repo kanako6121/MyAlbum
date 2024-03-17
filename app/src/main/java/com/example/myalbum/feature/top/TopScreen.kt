@@ -15,20 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
@@ -137,42 +125,6 @@ fun DrawerMenuItem(
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = label)
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(
-    title: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
-    IconButton(
-        onClick = { }
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.ArrowBack,
-            contentDescription = ""
-        )
-    }
-    TopAppBar(
-        title = { Text(text = title) },
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
-        ),
-        navigationIcon = {
-            IconButton(
-                onClick = {},
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Menu,
-                    contentDescription = null
-                )
-            }
-        }
-    )
 }
 
 @Preview(showBackground = true)
