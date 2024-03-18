@@ -4,31 +4,28 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,8 +73,18 @@ fun TopScreenContent(
         R.drawable.seigo9,
     )
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-    ) { paddings ->
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+    )
+    { paddings ->
         Column(
             modifier = Modifier.padding(paddings),
         ) {
@@ -108,29 +115,6 @@ fun TopScreenContent(
             )
         }
     }
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
-            }
-        },
-            topBar{
-                TopAppBar(title = {
-                    Box(modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center) {
-                        Text(text = "Add")
-                    }
-                },
-            }
-        }
-    )
-
-@Composable
-fun AddButton() {
-    FloatingActionButton(onClick = { /*do something*/ }) {
-        Icon(Icons.Filled.Add, contentDescription = "追加")
-    }
-}
 }
 
 @Preview(showBackground = true)
