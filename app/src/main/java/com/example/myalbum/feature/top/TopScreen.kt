@@ -1,7 +1,6 @@
 package com.example.myalbum.feature.top
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,28 +37,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myalbum.R
 
 @Composable
 fun TopScreen(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
+    topViewModel: TopViewModel,
 ) {
-    val photos = listOf(
-        R.drawable.seigo1,
-        R.drawable.seigo2,
-        R.drawable.seigo3,
-        R.drawable.seigo4,
-        R.drawable.seigo5,
-        R.drawable.seigo9,
-    )
     TopScreenContent(
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         navController = rememberNavController(),
-        onPhotoSelected = {},
+        onPhotoSelected = topViewModel::onPhotoSelected,
     )
 }
 
@@ -69,7 +60,7 @@ fun TopScreenContent(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     navController: NavController,
-    onPhotoSelected: () -> Unit,
+    onPhotoSelected: (uri: Uri) -> Unit,
 ) {
     var pickedImageUri by remember { mutableStateOf(Uri.EMPTY) }
     val launcher = rememberLauncherForActivityResult(
@@ -82,22 +73,22 @@ fun TopScreenContent(
     LaunchedEffect(true) {
         launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
-    var selectedPhoto by remember { mutableStateOf(-1) }
-    val photos = listOf(
-        R.drawable.seigo1,
-        R.drawable.seigo2,
-        R.drawable.seigo3,
-        R.drawable.seigo4,
-        R.drawable.seigo5,
-        R.drawable.seigo9,
-    )
+    // var selectedPhoto by remember { mutableStateOf(-1) }
+    //val photos = listOf(
+    //   R.drawable.seigo1,
+    // R.drawable.seigo2,
+    //  R.drawable.seigo3,
+    // R.drawable.seigo4,
+    // R.drawable.seigo5,
+    // R.drawable.seigo9,
+    //)
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            FloatingActionButton(onClick = { onPhotoSelected }) {
+            FloatingActionButton(onClick = { onPhotoSelected() }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         },
@@ -110,7 +101,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items(photos.size) { index ->
+                    items() { index ->
                         Column(
                             modifier = Modifier
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
@@ -143,5 +134,6 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
+        topViewModel =
     )
 }

@@ -83,4 +83,6 @@ dependencies {
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.50")
     kspAndroidTest("com.google.dagger:hilt-android-compiler:2.50")
+
+    implementation("io.coil-kt:coil-compose:2.2.2")
 }
