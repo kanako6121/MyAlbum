@@ -1,5 +1,10 @@
 package com.example.myalbum.feature.top
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +59,7 @@ fun TopScreen(
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         navController = rememberNavController(),
+        onPhotoSelected = {},
     )
 }
 
@@ -62,7 +69,19 @@ fun TopScreenContent(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     navController: NavController,
+    onPhotoSelected: () -> Unit,
 ) {
+    var pickedImageUri by remember { mutableStateOf(Uri.EMPTY) }
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let {
+            pickedImageUri = it
+        } ?: onPhotoSelected()
+    }
+    LaunchedEffect(true) {
+        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
     var selectedPhoto by remember { mutableStateOf(-1) }
     val photos = listOf(
         R.drawable.seigo1,
@@ -78,7 +97,7 @@ fun TopScreenContent(
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { onPhotoSelected }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         },
