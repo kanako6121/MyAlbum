@@ -50,7 +50,7 @@ fun TopScreen(
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         navController = rememberNavController(),
-        onPhotoSelected = topViewModel::onPhotoSelected,
+        onNothingSelected = {},
     )
 }
 
@@ -60,15 +60,15 @@ fun TopScreenContent(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     navController: NavController,
-    onPhotoSelected: (uri: Uri) -> Unit,
+    onNothingSelected: () -> Unit,
 ) {
     var pickedImageUri by remember { mutableStateOf(Uri.EMPTY) }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
-        uri?.let {
-            pickedImageUri = it
-        } ?: onPhotoSelected()
+       uri?.let {
+           pickedImageUri = it
+       } ?: onNothingSelected()
     }
     LaunchedEffect(true) {
         launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -88,7 +88,7 @@ fun TopScreenContent(
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            FloatingActionButton(onClick = { onPhotoSelected() }) {
+            FloatingActionButton(onClick = { launcher.launch() }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         },
