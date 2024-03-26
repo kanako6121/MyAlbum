@@ -43,7 +43,6 @@ fun TopScreen(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
-    topViewModel: TopViewModel,
 ) {
     TopScreenContent(
         onUpPress = onUpPress,
@@ -88,7 +87,7 @@ fun TopScreenContent(
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            FloatingActionButton(onClick = { launcher.launch() }) {
+            FloatingActionButton(onClick = { }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         },
@@ -134,6 +133,5 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onNavigationToEditScreen = {},
         onNavigationToPreviewScreen = {},
-        topViewModel =
     )
 }
