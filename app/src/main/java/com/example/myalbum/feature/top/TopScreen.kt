@@ -61,33 +61,29 @@ fun TopScreenContent(
     navController: NavController,
     onNothingSelected: () -> Unit,
 ) {
-    var pickedImageUri by remember { mutableStateOf(Uri.EMPTY) }
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-       uri?.let {
-           pickedImageUri = it
-       } ?: onNothingSelected()
+    var pickedImageUri by remember {
+        mutableStateOf<List<Uri>>(emptyList())
     }
-    LaunchedEffect(true) {
-        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
-    // var selectedPhoto by remember { mutableStateOf(-1) }
-    //val photos = listOf(
-    //   R.drawable.seigo1,
-    // R.drawable.seigo2,
-    //  R.drawable.seigo3,
-    // R.drawable.seigo4,
-    // R.drawable.seigo5,
-    // R.drawable.seigo9,
-    //)
+
+    val photoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        onResult = {
+            pickedImageUri = it
+        }
+    )
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(
+                onClick = {
+                    photoPicker.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         },
@@ -100,7 +96,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items() { index ->
+                    items { index ->
                         Column(
                             modifier = Modifier
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
