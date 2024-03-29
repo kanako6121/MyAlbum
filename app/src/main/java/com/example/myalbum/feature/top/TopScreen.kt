@@ -98,24 +98,23 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items(pickedImageUri) { uri ->
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = null,
-                            modifier = Modifier.size(100.dp)
-                        )
-                        Column(
-                            modifier = Modifier
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
-                                .shadow(elevation = 4.dp)
-                                //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
-                                .background(Color.White)
-                                .border(
-                                    BorderStroke(width = 0.5.dp, color = Color.Gray)
-                                )
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
-                        ) {
-                            Text(text = "運動会")
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
+                            .shadow(elevation = 4.dp)
+                            //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
+                            .background(Color.White)
+                            .border(
+                                BorderStroke(width = 0.5.dp, color = Color.Gray)
+                            )
+                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
+                    ) {
+                        items(pickedImageUri) { uri ->
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                modifier = Modifier.size(100.dp)
+                            )
                         }
                     }
                 }
