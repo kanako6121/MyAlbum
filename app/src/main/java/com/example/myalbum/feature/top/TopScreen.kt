@@ -98,7 +98,6 @@ fun TopScreenContent(
                             model = uri,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(150.dp)
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
                                 .shadow(elevation = 4.dp)
                                 //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
