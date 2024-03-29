@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FabPosition
@@ -37,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 
 @Composable
 fun TopScreen(
@@ -64,7 +67,6 @@ fun TopScreenContent(
     var pickedImageUri by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
-
     val photoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
         onResult = {
@@ -96,7 +98,12 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items { index ->
+                    items(pickedImageUri) { uri ->
+                        AsyncImage(
+                            model = uri,
+                            contentDescription = null,
+                            modifier = Modifier.size(100.dp)
+                        )
                         Column(
                             modifier = Modifier
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
@@ -108,11 +115,6 @@ fun TopScreenContent(
                                 )
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
                         ) {
-                            Image(
-                                painter = painterResource(id = photos.get(index)),
-                                contentDescription = "Photo",
-                                contentScale = ContentScale.Fit
-                            )
                             Text(text = "運動会")
                         }
                     }
