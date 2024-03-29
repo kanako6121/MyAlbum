@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -23,9 +22,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,8 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -98,24 +93,21 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
-                            .shadow(elevation = 4.dp)
-                            //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
-                            .background(Color.White)
-                            .border(
-                                BorderStroke(width = 0.5.dp, color = Color.Gray)
-                            )
-                            .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
-                    ) {
-                        items(pickedImageUri) { uri ->
-                            AsyncImage(
-                                model = uri,
-                                contentDescription = null,
-                                modifier = Modifier.size(100.dp)
-                            )
-                        }
+                    items(pickedImageUri) { uri ->
+                        AsyncImage(
+                            model = uri,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(150.dp)
+                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
+                                .shadow(elevation = 4.dp)
+                                //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
+                                .background(Color.White)
+                                .border(
+                                    BorderStroke(width = 0.5.dp, color = Color.Gray)
+                                )
+                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
+                        )
                     }
                 }
             )
