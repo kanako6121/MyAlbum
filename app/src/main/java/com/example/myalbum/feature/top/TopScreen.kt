@@ -22,6 +22,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,6 +108,7 @@ fun TopScreenContent(
                                 )
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
                         )
+                        Text(text = "写真")
                     }
                 }
             )
