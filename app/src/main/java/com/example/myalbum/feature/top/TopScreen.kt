@@ -31,25 +31,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.myalbum.core.theme.MyAlbumTheme
 
 @Composable
 fun TopScreen(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
+    viewModel: TopViewModel,
 ) {
+    val context = LocalContext.current
+
     TopScreenContent(
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        navController = rememberNavController(),
-        onNothingSelected = {},
-    )
+        )
 }
 
 @Composable
@@ -57,9 +60,8 @@ fun TopScreenContent(
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
-    navController: NavController,
-    onNothingSelected: () -> Unit,
 ) {
+    val context = LocalContext.current
     var pickedImageUri by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
@@ -119,9 +121,11 @@ fun TopScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-    TopScreen(
-        onUpPress = {},
-        onNavigationToEditScreen = {},
-        onNavigationToPreviewScreen = {},
-    )
+    MyAlbumTheme {
+        TopScreenContent(
+            onUpPress = { /*TODO*/ },
+            onNavigationToEditScreen = { /*TODO*/ },
+            onNavigationToPreviewScreen = { /*TODO*/ },
+        )
+    }
 }

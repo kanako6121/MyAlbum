@@ -57,6 +57,8 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
+    implementation("android.arch.lifecycle:extensions:1.1.1")
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.datastore:datastore-preferences:1.1.0-beta02")
