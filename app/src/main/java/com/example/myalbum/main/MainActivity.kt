@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myalbum.core.theme.MyAlbumTheme
@@ -25,10 +26,7 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        topViewModel = ViewModelProviders.of(viewModelFactory {  })
-
-        setContent {
+       setContent {
             MyAlbumTheme {
                 MainNav()
                 TopScreenContent(
