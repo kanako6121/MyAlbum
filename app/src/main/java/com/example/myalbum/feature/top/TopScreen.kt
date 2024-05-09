@@ -1,5 +1,6 @@
 package com.example.myalbum.feature.top
 
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,7 +45,7 @@ fun TopScreen(
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        onClick = viewModel::savePhoto,
+        onClick = viewModel::savePhoto.,
     )
 }
 
@@ -114,7 +115,7 @@ fun ShowPhotoGrid() {
             )
         }
         TopScreenContent(
-            uiState = PictureData(),
+            uiState = PictureData(uri = Uri.EMPTY),
             onUpPress = {},
             onNavigationToPreviewScreen = {},
             onNavigationToEditScreen = {},

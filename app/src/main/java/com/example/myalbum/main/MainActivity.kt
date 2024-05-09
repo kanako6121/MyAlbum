@@ -1,5 +1,6 @@
 package com.example.myalbum.main
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             viewModel.viewModelScope.launch {
                 if (uri != null) {
-                    viewModel.savePhoto(PictureData(uri, comment = null))
+                    viewModel.savePhoto(PictureData(uri))
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
             MyAlbumTheme {
                 MainNav()
                 TopScreenContent(
-                    selectUri = "",
+                    uiState = PictureData(uri = Uri.EMPTY),
                     onUpPress = { /*TODO*/ },
                     onNavigationToEditScreen = { /*TODO*/ },
                     onNavigationToPreviewScreen = {},
