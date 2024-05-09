@@ -1,25 +1,32 @@
 package com.example.myalbum.feature.top
 
 import android.net.Uri
-import android.provider.ContactsContract
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.myalbum.main.MainIntent
-import com.example.myalbum.main.MainState
-import kotlinx.coroutines.channels.Channel
+import com.example.myalbum.core.data.PictureData
+import com.example.myalbum.core.data.PictureRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class TopViewModel(private val photo: ContactsContract.Contacts.Photo) : ViewModel() {
-    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            Log.d("PhotoPicker", "Selected URI: $uri")
-        } else {
-            Log.d("PhotoPicker", "No media selected")
+class TopViewModel @Inject constructor(
+    private val repository: PictureRepository,
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    private val _pickedPhoto = MutableStateFlow(PictureData(uri = Uri.EMPTY))
+    val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
+    private val intent: Int = checkNotNull(savedStateHandle["intent"])
+
+
+    fun savePhoto(photos: PictureData) {
+        val state = _pickedPhoto.value.copy(
+            uri = photos.uri,
+            comment = null,
+        )
+        _pickedPhoto.emit(state)
+        runCatching {
+            repository.pictures
         }
     }
 }

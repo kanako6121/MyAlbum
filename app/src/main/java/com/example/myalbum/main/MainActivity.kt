@@ -1,28 +1,28 @@
 package com.example.myalbum.main
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myalbum.core.theme.MyAlbumTheme
 import com.example.myalbum.feature.top.TopScreenContent
 import com.example.myalbum.feature.top.TopViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : FragmentActivity() {
-    private lateinit var topViewModel: TopViewModel
-    private val launcher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<TopViewModel>()
+    val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
     }
+    pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+    val mimeType = "image/gif"
+    pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.SingleMimeType(mimeType)))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,7 @@ class MainActivity : FragmentActivity() {
                     onUpPress = { /*TODO*/ },
                     onNavigationToEditScreen = { /*TODO*/ },
                     onNavigationToPreviewScreen = {},
+                    onClick = {},
                 )
             }
         }

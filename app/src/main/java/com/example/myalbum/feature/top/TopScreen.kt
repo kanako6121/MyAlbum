@@ -2,7 +2,6 @@ package com.example.myalbum.feature.top
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -34,10 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.myalbum.core.theme.MyAlbumTheme
+import com.example.myalbum.core.data.PictureSaveData
 
 @Composable
 fun TopScreen(
@@ -46,20 +42,23 @@ fun TopScreen(
     onUpPress: () -> Unit,
     viewModel: TopViewModel,
 ) {
-    val context = LocalContext.current
-
+val
     TopScreenContent(
+        selectUri = viewModel::pickedPhoto,
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
+        onClick = {},
         )
 }
 
 @Composable
 fun TopScreenContent(
+    selectUri: String,
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
     var pickedImageUri by remember {
@@ -78,11 +77,7 @@ fun TopScreenContent(
             .navigationBarsPadding(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    photoPicker.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
+                onClick = onClick
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
@@ -121,11 +116,20 @@ fun TopScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-    MyAlbumTheme {
+    val photos = mutableListOf<PictureSaveData>().apply {
+        for (i in 1..5) {
+       add(
+           PictureSaveData(
+               uriString = "",
+               comment = "$i",
+           )
+       )
+    }
         TopScreenContent(
+            selectUri = "",
             onUpPress = { /*TODO*/ },
             onNavigationToEditScreen = { /*TODO*/ },
             onNavigationToPreviewScreen = { /*TODO*/ },
+            onClick = {},
         )
-    }
 }
