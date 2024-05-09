@@ -1,8 +1,5 @@
 package com.example.myalbum.feature.top
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FabPosition
@@ -22,17 +18,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureSaveData
 
 @Composable
@@ -42,33 +38,26 @@ fun TopScreen(
     onUpPress: () -> Unit,
     viewModel: TopViewModel,
 ) {
-    val
+    val uiState by viewModel.pickedPhoto.collectAsState()
     TopScreenContent(
-        selectUri = ,
+        uiState = uiState,
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        onClick = {},
+        onClick = viewModel::savePhoto,
     )
 }
 
 @Composable
 fun TopScreenContent(
-    selectUri: String,
+    uiState: PictureData,
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
-    onClick: () -> Unit,
+    onClick: (PictureData) -> Unit,
 ) {
-    var pickedImageUri by remember {
-        mutableStateOf<List<Uri>>(emptyList())
-    }
-    val photoPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = {
-            pickedImageUri = it
-        }
-    )
+    val pickedImageUri by remember(uiState) { mutableStateOf(uiState.uri) }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -125,11 +114,11 @@ fun ShowPhotoGrid() {
             )
         }
         TopScreenContent(
-            selectUri = ,
-            onUpPress = { /*TODO*/ },
-            onNavigationToEditScreen = { /*TODO*/ },
-            onNavigationToPreviewScreen = { /*TODO*/ },
-            onClick = {},
+            uiState = PictureData(),
+            onUpPress = {},
+            onNavigationToPreviewScreen = {},
+            onNavigationToEditScreen = {},
+            onClick = {}
         )
     }
 }

@@ -3,11 +3,13 @@ package com.example.myalbum.feature.top
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TopViewModel @Inject constructor(
@@ -18,10 +20,20 @@ class TopViewModel @Inject constructor(
     val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
 
     suspend fun savePhoto(photos: PictureData) {
-        val photoUri = _pickedPhoto.value.copy()
-        _pickedPhoto.emit(photoUri)
-        runCatching {
-            repository.pictures
+        viewModelScope.launch {
+            val photoUri = _pickedPhoto.value.copy(
+                uri = photos.uri,
+                comment = null
+            )
+            _pickedPhoto.emit(photoUri)
+            runCatching {
+                repository.addPicture(
+                    pictureData = PictureData(
+                        uri = photos.uri,
+                        comment = null
+                    )
+                )
+            }
         }
     }
 }
