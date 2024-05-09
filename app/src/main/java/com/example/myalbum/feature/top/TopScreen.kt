@@ -42,14 +42,14 @@ fun TopScreen(
     onUpPress: () -> Unit,
     viewModel: TopViewModel,
 ) {
-val
+    val
     TopScreenContent(
-        selectUri = viewModel::,
+        selectUri = ,
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         onClick = {},
-        )
+    )
 }
 
 @Composable
@@ -60,7 +60,6 @@ fun TopScreenContent(
     onNavigationToPreviewScreen: () -> Unit,
     onClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     var pickedImageUri by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
@@ -118,18 +117,19 @@ fun TopScreenContent(
 fun ShowPhotoGrid() {
     val photos = mutableListOf<PictureSaveData>().apply {
         for (i in 1..5) {
-       add(
-           PictureSaveData(
-               uriString = "",
-               comment = "$i",
-           )
-       )
-    }
+            add(
+                PictureSaveData(
+                    uriString = "",
+                    comment = "$i",
+                )
+            )
+        }
         TopScreenContent(
-            selectUri = "",
+            selectUri = ,
             onUpPress = { /*TODO*/ },
             onNavigationToEditScreen = { /*TODO*/ },
             onNavigationToPreviewScreen = { /*TODO*/ },
             onClick = {},
         )
+    }
 }
