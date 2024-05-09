@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.core.data.PictureData
-import com.example.myalbum.core.data.PictureSaveData
 
 @Composable
 fun TopScreen(
@@ -45,7 +44,8 @@ fun TopScreen(
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        onClick = viewModel::savePhoto.,
+        selectUri = "",
+        onClick = viewModel::savePhoto,
     )
 }
 
@@ -55,7 +55,8 @@ fun TopScreenContent(
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
-    onClick: (PictureData) -> Unit,
+    selectUri: String,
+    onClick: () -> Unit,
 ) {
     val pickedImageUri by remember(uiState) { mutableStateOf(uiState.uri) }
 
@@ -110,6 +111,7 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onNavigationToPreviewScreen = {},
         onNavigationToEditScreen = {},
+        selectUri = "",
         onClick = {}
     )
 }

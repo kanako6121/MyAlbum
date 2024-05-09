@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         setContent {
             MyAlbumTheme {
                 MainNav()
@@ -41,7 +40,8 @@ class MainActivity : ComponentActivity() {
                     onUpPress = { /*TODO*/ },
                     onNavigationToEditScreen = { /*TODO*/ },
                     onNavigationToPreviewScreen = {},
-                    onClick = {},
+                    selectUri = "",
+                    onClick = {pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},
                 )
             }
         }
