@@ -44,7 +44,7 @@ fun TopScreen(
 ) {
 val
     TopScreenContent(
-        selectUri = viewModel::pickedPhoto,
+        selectUri = viewModel::,
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
