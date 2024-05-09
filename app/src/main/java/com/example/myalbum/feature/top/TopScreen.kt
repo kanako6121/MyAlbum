@@ -51,7 +51,7 @@ fun TopScreen(
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         selectUri = "",
-        onClick = viewModel::savePhoto,
+        onClick = { },
     )
 }
 
