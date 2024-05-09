@@ -105,21 +105,11 @@ fun TopScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-    val photos = mutableListOf<PictureSaveData>().apply {
-        for (i in 1..5) {
-            add(
-                PictureSaveData(
-                    uriString = "",
-                    comment = "$i",
-                )
-            )
-        }
-        TopScreenContent(
-            uiState = PictureData(uri = Uri.EMPTY),
-            onUpPress = {},
-            onNavigationToPreviewScreen = {},
-            onNavigationToEditScreen = {},
-            onClick = {}
-        )
-    }
+    TopScreenContent(
+        uiState = PictureData(uri = Uri.EMPTY),
+        onUpPress = {},
+        onNavigationToPreviewScreen = {},
+        onNavigationToEditScreen = {},
+        onClick = {}
+    )
 }
