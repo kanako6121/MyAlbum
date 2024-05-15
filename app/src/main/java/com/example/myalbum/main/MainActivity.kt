@@ -15,6 +15,7 @@ import com.example.myalbum.feature.top.TopScreenContent
 import com.example.myalbum.feature.top.TopViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -23,9 +24,11 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             viewModel.viewModelScope.launch {
                 if (uri != null) {
-                    viewModel.savePhoto(PictureData(uri))
+                    viewModel.runCatching {
+                        savePhoto(uri = uri, comment = "")
+                    }
                 } else {
-                    Log.d("PhotoPicker", "No media selected")
+                    Timber.tag("PhotoPicker").d("No media selected")
                 }
             }
         }
@@ -36,7 +39,6 @@ class MainActivity : ComponentActivity() {
             MyAlbumTheme {
                 MainNav()
                 TopScreenContent(
-                    uiState = PictureData(uri = Uri.EMPTY),
                     onUpPress = { /*TODO*/ },
                     onNavigationToEditScreen = { /*TODO*/ },
                     onNavigationToPreviewScreen = {},

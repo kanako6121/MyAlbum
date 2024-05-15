@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FabPosition
@@ -99,7 +100,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items(pickedImageUri) { uri ->
+                 items(pickedImageUri.)  { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,
@@ -125,7 +126,6 @@ fun TopScreenContent(
 @Composable
 fun ShowPhotoGrid() {
     TopScreenContent(
-        uiState = PictureData(uri = Uri.EMPTY),
         onUpPress = {},
         onNavigationToPreviewScreen = {},
         onNavigationToEditScreen = {},
