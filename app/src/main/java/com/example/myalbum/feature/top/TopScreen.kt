@@ -52,7 +52,7 @@ fun TopScreen(
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         selectUri = "",
-        onClick = viewModel.savePhoto(uri = Urit, comment = ),
+        onClick = viewModel::savePhoto,
     )
 }
 
@@ -63,7 +63,7 @@ fun TopScreenContent(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     selectUri: String,
-    onClick: () -> Unit,
+    onClick: (PictureData) -> Unit,
 ) {
     var pickedImageUri by remember { mutableStateOf(Uri.EMPTY) }
 
