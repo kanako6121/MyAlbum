@@ -52,7 +52,7 @@ fun TopScreen(
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         selectUri = "",
-        onClick = { },
+        onClick = viewModel.savePhoto(uri = Urit, comment = ),
     )
 }
 
