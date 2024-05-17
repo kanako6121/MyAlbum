@@ -43,14 +43,13 @@ fun TopScreen(
     onUpPress: () -> Unit,
     viewModel: TopViewModel,
 ) {
-    val uiState by viewModel.
     TopScreenContent(
   //      uiState = uiState,
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         selectUri = "",
-        onClick = viewModel::savePhoto,
+        onClick = {},
     )
 }
 
@@ -98,7 +97,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                 items(pickedImageUri.)  { uri ->
+                 items(pickedImageUri)  { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,
