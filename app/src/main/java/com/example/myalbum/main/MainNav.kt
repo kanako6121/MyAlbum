@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
 fun MainNav(
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    startDestinagtion: MainNavOption = MainNavOption.TopScreen,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val coroutineScope = rememberCoroutineScope()
@@ -128,6 +130,7 @@ fun MainNav(
                         onNavigationToEditScreen = { /*TODO*/ },
                         onNavigationToPreviewScreen = { /*TODO*/ },
                         onUpPress = {},
+                        viewModel = hiltViewModel(),
                     )
                     NavHost(
                         navController = navController,
@@ -142,6 +145,7 @@ fun MainNav(
                                 },
                                 onNavigationToEditScreen = {},
                                 onNavigationToPreviewScreen = {},
+                                viewModel = hiltViewModel(),
                             )
                         }
                         composable(MainNavOption.SecondScreen.name) {
