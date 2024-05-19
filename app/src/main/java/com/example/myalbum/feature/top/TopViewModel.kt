@@ -20,23 +20,15 @@ class TopViewModel @Inject constructor(
     val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
     private val photoUri: Uri = checkNotNull(savedStateHandle["photouri"])
 
-    suspend fun savePhoto(photo: PictureData) {
+    suspend fun savePhoto() {
         viewModelScope.launch {
             val photos = _pickedPhoto.value.copy(
-                uri = photoUri,
-                comment = null,
+
             )
             _pickedPhoto.emit(photos)
             runCatching {
-                repository.addPicture(photo)
+                repository.addPicture()
             }
-        }
-        loadUri(photoUri)
-    }
-
-    fun loadUri(photoUri: Uri? = null) {
-        viewModelScope.launch {
-            repository.pictures
         }
     }
 }

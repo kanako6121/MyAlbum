@@ -33,10 +33,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import com.example.myalbum.core.data.PictureData
-import com.example.myalbum.core.data.PictureSaveData
 
 @Composable
 fun TopScreen(
@@ -61,10 +59,10 @@ fun TopScreenContent(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     pictureData: PictureData,
-    onSaveData: (PictureData) -> Unit,
+    onSaveData: ,
 ) {
     var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
-    var comment by remember (pictureData){ mutableStateOf(pictureData.comment) }
+    val comment by remember (pictureData){ mutableStateOf(pictureData.comment) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -84,7 +82,13 @@ fun TopScreenContent(
             .navigationBarsPadding(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {}
+                onClick = {
+                    val current = PictureData(
+                        uri = pickedImageUri,
+                        comment = comment,
+                    )
+                    onSaveData(current)
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
@@ -127,6 +131,7 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onNavigationToPreviewScreen = {},
         onNavigationToEditScreen = {},
-        onClick = {}
+        pictureData = {},
+        onSaveData = {},
     )
 }
