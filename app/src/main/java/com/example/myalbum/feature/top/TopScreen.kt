@@ -102,7 +102,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items(pickedImageUri) { uri ->
+                    items() { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,
@@ -131,7 +131,7 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onNavigationToPreviewScreen = {},
         onNavigationToEditScreen = {},
-        pictureData = {},
+        pictureData = PictureData(uri = Uri.EMPTY, comment = null),
         onSaveData = {},
     )
 }
