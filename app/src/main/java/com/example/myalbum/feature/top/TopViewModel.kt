@@ -17,12 +17,12 @@ class TopViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _pickedPhoto = MutableStateFlow(PictureData(uri = Uri.EMPTY, comment = null))
-    private val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
+    val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
     private val photoUri: Uri = checkNotNull(savedStateHandle["photouri"])
 
     suspend fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
-            val photos = pickedPhoto.value.copy(
+            val photos = _pickedPhoto.value.copy(
                 uri = photoUri,
                 comment = null,
             )

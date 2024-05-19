@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import com.example.myalbum.core.data.PictureData
+import com.example.myalbum.core.data.PictureSaveData
 
 @Composable
 fun TopScreen(
@@ -44,12 +45,13 @@ fun TopScreen(
     onUpPress: () -> Unit,
     viewModel: TopViewModel,
 ) {
-    val pictureData by viewModel.
+    val pictureData by viewModel.pickedPhoto.collectAsState()
     TopScreenContent(
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        onClick = {},
+        pictureData = pictureData,
+        onSaveData = viewModel::savePhoto
     )
 }
 
@@ -58,14 +60,15 @@ fun TopScreenContent(
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
-    onClick: (PictureData) -> Unit,
+    pictureData: PictureData,
+    onSaveData: (PictureData) -> Unit,
 ) {
-    var pickedImageUri by remember { mutableStateOf(Uri.EMPTY) }
+    var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
+    var comment by remember (pictureData){ mutableStateOf(pictureData.comment) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
-    ) {
-        uri: Uri? ->
+    ) { uri: Uri? ->
         uri?.let {
             pickedImageUri = it
         }
@@ -81,7 +84,7 @@ fun TopScreenContent(
             .navigationBarsPadding(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick =
+                onClick = {}
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
@@ -95,7 +98,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                 items(pickedImageUri)  { uri ->
+                    items(pickedImageUri) { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,
