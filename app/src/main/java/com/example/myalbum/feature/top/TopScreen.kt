@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FabPosition
@@ -49,7 +50,7 @@ fun TopScreen(
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         pictureData = pictureData,
-        onSaveData = viewModel::savePhoto
+        onSaveData = viewModel::savePhoto,
     )
 }
 
@@ -59,10 +60,10 @@ fun TopScreenContent(
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     pictureData: PictureData,
-    onSaveData: ,
+    onSaveData: (PictureData) -> Unit,
 ) {
     var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
-    val comment by remember (pictureData){ mutableStateOf(pictureData.comment) }
+    val comment by remember(pictureData) { mutableStateOf(pictureData.comment) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -102,7 +103,7 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items() { uri ->
+                    items(listOf(pickedImageUri)) { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,

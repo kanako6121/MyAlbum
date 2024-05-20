@@ -18,16 +18,12 @@ class TopViewModel @Inject constructor(
 ) : ViewModel() {
     private val _pickedPhoto = MutableStateFlow(PictureData(uri = Uri.EMPTY, comment = null))
     val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
-    private val photoUri: Uri = checkNotNull(savedStateHandle["photouri"])
 
-    suspend fun savePhoto() {
+    fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
-            val photos = _pickedPhoto.value.copy(
-
-            )
-            _pickedPhoto.emit(photos)
+            _pickedPhoto.emit(photo)
             runCatching {
-                repository.addPicture()
+                repository.addPicture(photo)
             }
         }
     }

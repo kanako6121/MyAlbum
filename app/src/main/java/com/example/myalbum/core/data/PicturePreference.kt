@@ -17,28 +17,28 @@ import javax.inject.Inject
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "picture_pref")
 
 class PicturePreference @Inject constructor(
-  @ApplicationContext context: Context
+    @ApplicationContext context: Context
 ) {
-  private val store = context.dataStore
-  private val picturesKey = stringPreferencesKey("pictures")
-  private val json = Json {
-    ignoreUnknownKeys = true
-    coerceInputValues = true
-    encodeDefaults = true
-    explicitNulls = false
-  }
-
-  val pictures: Flow<List<PictureSaveData>> = store.data.map { prefs ->
-    val jsonString: String = prefs[picturesKey] ?: return@map emptyList<PictureSaveData>()
-    runCatching {
-      json.decodeFromString<List<PictureSaveData>>(jsonString)
-    }.getOrDefault(emptyList())
-  }
-
-  suspend fun addPicture(pictureSaveData: PictureSaveData) {
-    val newList = pictures.first() + pictureSaveData
-    store.edit { prefs ->
-      prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
+    private val store = context.dataStore
+    private val picturesKey = stringPreferencesKey("pictures")
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        encodeDefaults = true
+        explicitNulls = false
     }
-  }
+
+    val pictures: Flow<List<PictureSaveData>> = store.data.map { prefs ->
+        val jsonString: String = prefs[picturesKey] ?: return@map emptyList<PictureSaveData>()
+        runCatching {
+            json.decodeFromString<List<PictureSaveData>>(jsonString)
+        }.getOrDefault(emptyList())
+    }
+
+    suspend fun addPicture(pictureSaveData: PictureSaveData) {
+        val newList = pictures.first() + pictureSaveData
+        store.edit { prefs ->
+            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
+        }
+    }
 }

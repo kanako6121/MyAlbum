@@ -1,12 +1,13 @@
 package com.example.myalbum.main
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.viewModelScope
+import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.theme.MyAlbumTheme
 import com.example.myalbum.feature.top.TopScreenContent
 import com.example.myalbum.feature.top.TopViewModel
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
             viewModel.viewModelScope.launch {
                 if (uri != null) {
                     viewModel.runCatching {
-                        savePhoto(uri = uri, comment = "")
+                        savePhoto(photo = PictureData(uri = Uri.EMPTY, comment = ""))
                     }
                 } else {
                     Timber.tag("PhotoPicker").d("No media selected")
@@ -39,8 +40,8 @@ class MainActivity : ComponentActivity() {
                     onUpPress = { /*TODO*/ },
                     onNavigationToEditScreen = { /*TODO*/ },
                     onNavigationToPreviewScreen = {},
-                    selectUri = "",
-                    onClick = {pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},
+                    pictureData = PictureData(uri = Uri.EMPTY, comment = null),
+                    onSaveData = {},
                 )
             }
         }
