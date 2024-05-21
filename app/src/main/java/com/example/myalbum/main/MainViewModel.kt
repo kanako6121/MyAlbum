@@ -1,29 +1,28 @@
-package com.example.myalbum.feature.top
+package com.example.myalbum.main
 
-import android.net.Uri
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class TopViewModel @Inject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val repository: PictureRepository,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val _pickedPhoto = MutableStateFlow(PictureData(uri = Uri.EMPTY, comment = null))
-    val pickedPhoto: StateFlow<PictureData> = _pickedPhoto.asStateFlow()
+    val pictures: StateFlow<List<PictureData>> = repository.pictures
 
     fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
-            _pickedPhoto.emit(photo)
             runCatching {
                 repository.addPicture(photo)
+            }.onSuccess {
+                // TODO 保存しました的なメッセージをSnackbarで表示するとか？
+            }.onFailure {
+                // TODO エラーメッセージをSnackbarで表示するとか？
             }
         }
     }

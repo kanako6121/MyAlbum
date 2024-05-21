@@ -1,5 +1,7 @@
 package com.example.myalbum.main
 
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +47,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNav(
+    mainViewModel: MainViewModel,
+    launchPicker: () -> Unit,
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     startDestinagtion: MainNavOption = MainNavOption.TopScreen,
@@ -117,8 +121,7 @@ fun MainNav(
                     )
                 }
             },
-        )
-        {
+        ) {
             Scaffold(
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -126,18 +129,14 @@ fun MainNav(
                 Column(
                     modifier = Modifier.padding(contentPadding),
                 ) {
-                    TopScreen(
-                        onNavigationToEditScreen = { /*TODO*/ },
-                        onNavigationToPreviewScreen = { /*TODO*/ },
-                        onUpPress = {},
-                        viewModel = hiltViewModel(),
-                    )
                     NavHost(
                         navController = navController,
                         startDestination = MainNavOption.TopScreen.name,
                     ) {
                         composable(MainNavOption.TopScreen.name) {
                             TopScreen(
+                                viewModel = mainViewModel,
+                                launchPicker = launchPicker,
                                 onUpPress = {
                                     coroutineScope.launch {
                                         drawerState.apply { if (isClosed) open() else close() }
@@ -145,7 +144,6 @@ fun MainNav(
                                 },
                                 onNavigationToEditScreen = {},
                                 onNavigationToPreviewScreen = {},
-                                viewModel = hiltViewModel(),
                             )
                         }
                         composable(MainNavOption.SecondScreen.name) {
