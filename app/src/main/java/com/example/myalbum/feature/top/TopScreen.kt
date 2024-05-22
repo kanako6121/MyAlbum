@@ -1,9 +1,5 @@
 package com.example.myalbum.feature.top
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,12 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -36,45 +28,49 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.core.data.PictureData
+import com.example.myalbum.main.MainViewModel
 
 @Composable
 fun TopScreen(
+    viewModel: MainViewModel,
+    launchPicker: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
-    viewModel: TopViewModel,
 ) {
-    val pictureData by viewModel.pickedPhoto.collectAsState()
+    val pictures by viewModel.pictures.collectAsState()
     TopScreenContent(
+        launchPicker = launchPicker,
         onUpPress = onUpPress,
         onNavigationToEditScreen = onNavigationToEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
-        pictureData = pictureData,
+        pictures = pictures,
         onSaveData = viewModel::savePhoto,
     )
 }
 
 @Composable
 fun TopScreenContent(
+    launchPicker: () -> Unit,
     onUpPress: () -> Unit,
     onNavigationToEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
-    pictureData: PictureData,
+    pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
 ) {
-    var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
-    val comment by remember(pictureData) { mutableStateOf(pictureData.comment) }
+    // var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
+    //val comment by remember(pictureData) { mutableStateOf(pictureData.comment) }
 
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-        uri?.let {
-            pickedImageUri = it
-        }
-    }
-    LaunchedEffect(true) {
-        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
+    //val launcher = rememberLauncherForActivityResult(
+    //   ActivityResultContracts.PickVisualMedia()
+    //) { uri: Uri? ->
+    //   uri?.let {
+    //      pickedImageUri = it
+    //  }
+    // }
+    // LaunchedEffect(true) {
+    //    launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    // }
 
     Scaffold(
         modifier = Modifier
@@ -83,13 +79,7 @@ fun TopScreenContent(
             .navigationBarsPadding(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    val current = PictureData(
-                        uri = pickedImageUri,
-                        comment = comment,
-                    )
-                    onSaveData(current)
-                }
+                onClick = launchPicker
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
@@ -103,9 +93,9 @@ fun TopScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items(listOf(pickedImageUri)) { uri ->
+                    items(pictures) { pictureData ->
                         AsyncImage(
-                            model = uri,
+                            model = pictureData.uri,
                             contentDescription = null,
                             modifier = Modifier
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
@@ -117,7 +107,7 @@ fun TopScreenContent(
                                 )
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
                         )
-                        Text(text = "写真")
+                        Text(text = pictureData.comment.orEmpty())
                     }
                 }
             )
@@ -129,10 +119,11 @@ fun TopScreenContent(
 @Composable
 fun ShowPhotoGrid() {
     TopScreenContent(
+        launchPicker = {},
         onUpPress = {},
         onNavigationToPreviewScreen = {},
         onNavigationToEditScreen = {},
-        pictureData = PictureData(uri = Uri.EMPTY, comment = null),
+        pictures = emptyList(),
         onSaveData = {},
     )
 }
