@@ -1,8 +1,10 @@
 package com.example.myalbum.feature.top
 
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -34,18 +36,15 @@ import com.example.myalbum.main.MainViewModel
 fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
-    onNavigationToEditScreen: () -> Unit,
-    onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
 ) {
     val pictures by viewModel.pictures.collectAsState()
     TopScreenContent(
         launchPicker = launchPicker,
         onUpPress = onUpPress,
-        onNavigationToEditScreen = onNavigationToEditScreen,
-        onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         pictures = pictures,
         onSaveData = viewModel::savePhoto,
+        onEditScreen = viewModel::onImageClick
     )
 }
 
@@ -53,24 +52,10 @@ fun TopScreen(
 fun TopScreenContent(
     launchPicker: () -> Unit,
     onUpPress: () -> Unit,
-    onNavigationToEditScreen: () -> Unit,
-    onNavigationToPreviewScreen: () -> Unit,
     pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
+    onEditScreen: (Uri) -> Unit,
 ) {
-    // var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
-    //val comment by remember(pictureData) { mutableStateOf(pictureData.comment) }
-
-    //val launcher = rememberLauncherForActivityResult(
-    //   ActivityResultContracts.PickVisualMedia()
-    //) { uri: Uri? ->
-    //   uri?.let {
-    //      pickedImageUri = it
-    //  }
-    // }
-    // LaunchedEffect(true) {
-    //    launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    // }
 
     Scaffold(
         modifier = Modifier
@@ -105,7 +90,8 @@ fun TopScreenContent(
                                 .border(
                                     BorderStroke(width = 0.5.dp, color = Color.Gray)
                                 )
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
+                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp)
+                                .clickable{ onEditScreen(pictureData.uri) },
                         )
                         Text(text = pictureData.comment.orEmpty())
                     }
@@ -121,9 +107,8 @@ fun ShowPhotoGrid() {
     TopScreenContent(
         launchPicker = {},
         onUpPress = {},
-        onNavigationToPreviewScreen = {},
-        onNavigationToEditScreen = {},
         pictures = emptyList(),
         onSaveData = {},
+        onEditScreen = {},
     )
 }

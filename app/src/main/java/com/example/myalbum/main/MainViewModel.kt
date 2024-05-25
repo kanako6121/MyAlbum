@@ -1,5 +1,6 @@
 package com.example.myalbum.main
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
@@ -14,12 +15,16 @@ class MainViewModel @Inject constructor(
     private val repository: PictureRepository,
 ) : ViewModel() {
     val pictures: StateFlow<List<PictureData>> = repository.pictures
-
     fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
             runCatching {
                 repository.addPicture(photo)
             }
         }
+    }
+
+    fun onImageClick(imageUri: Uri) {
+        val getImage = repository.pictures.value
+        val currentImage = getImage.firstOrNull()?.uri
     }
 }
