@@ -27,7 +27,7 @@ fun EditScreen(
     EditScreenContent(
         selectUri = selectUri,
         onClick = viewModel::onImageClick,
-        onChange =,
+        onChange = ,
         onNavigateTopScreen = {},
     )
 }

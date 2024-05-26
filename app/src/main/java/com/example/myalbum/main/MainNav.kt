@@ -130,7 +130,25 @@ fun MainNav(
                         navController = navController,
                         startDestination = MainNavOption.TopScreen.name,
                     ) {
-                        composable(MainNavOption.TopScreen.name) {
+                        //composable("album") {
+                        //            PhotoAlbumScreen { uri ->
+                        //                navController.navigate("edit/${uri.toString()}")
+                        //            }
+                        //        }
+                        //        composable("edit/{uri}") { backStackEntry ->
+                        //            val uriString = backStackEntry.arguments?.getString("uri") ?: return@composable
+                        //            val uri = Uri.parse(uriString)
+                        //
+                        //            EditScreen(uri) { editedUri ->
+                        //                navController.popBackStack()
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        composable(MainNavOption.TopScreen.name) { uri ->
+                            navController.navigate("edit/${uri.toString()}")
+                    }
+                            }
                             TopScreen(
                                 viewModel = mainViewModel,
                                 launchPicker = launchPicker,
@@ -160,6 +178,7 @@ enum class MainNavOption {
     TopScreen,
     SecondScreen,
     ThirdScreen,
+    EditScreen,
 }
 
 @Composable
