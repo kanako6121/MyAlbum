@@ -34,7 +34,7 @@ import com.example.myalbum.main.MainViewModel
 fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
-    onNavigationToEditScreen: () -> Unit,
+    onEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
 ) {
@@ -42,7 +42,7 @@ fun TopScreen(
     TopScreenContent(
         launchPicker = launchPicker,
         onUpPress = onUpPress,
-        onNavigationToEditScreen = onNavigationToEditScreen,
+        onEditScreen = onEditScreen,
         onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         pictures = pictures,
         onSaveData = viewModel::savePhoto,
@@ -53,7 +53,7 @@ fun TopScreen(
 fun TopScreenContent(
     launchPicker: () -> Unit,
     onUpPress: () -> Unit,
-    onNavigationToEditScreen: () -> Unit,
+    onEditScreen: () -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
@@ -122,7 +122,7 @@ fun ShowPhotoGrid() {
         launchPicker = {},
         onUpPress = {},
         onNavigationToPreviewScreen = {},
-        onNavigationToEditScreen = {},
+        onEditScreen = {},
         pictures = emptyList(),
         onSaveData = {},
     )
