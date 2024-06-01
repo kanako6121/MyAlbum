@@ -1,5 +1,6 @@
 package com.example.myalbum.main
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,11 +33,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myalbum.feature.second.SecondScreen
+import androidx.navigation.navArgument
+import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.third.ThirdScreen
 import com.example.myalbum.feature.top.TopScreen
 import kotlinx.coroutines.launch
@@ -48,7 +52,6 @@ fun MainNav(
     launchPicker: () -> Unit,
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    startDestinagtion: MainNavOption = MainNavOption.TopScreen,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val coroutineScope = rememberCoroutineScope()
@@ -130,25 +133,7 @@ fun MainNav(
                         navController = navController,
                         startDestination = MainNavOption.TopScreen.name,
                     ) {
-                        //composable("album") {
-                        //            PhotoAlbumScreen { uri ->
-                        //                navController.navigate("edit/${uri.toString()}")
-                        //            }
-                        //        }
-                        //        composable("edit/{uri}") { backStackEntry ->
-                        //            val uriString = backStackEntry.arguments?.getString("uri") ?: return@composable
-                        //            val uri = Uri.parse(uriString)
-                        //
-                        //            EditScreen(uri) { editedUri ->
-                        //                navController.popBackStack()
-                        //            }
-                        //        }
-                        //    }
-                        //}
-                        composable(MainNavOption.TopScreen.name) { uri ->
-                            navController.navigate("edit/${uri.toString()}")
-                    }
-                            }
+                        composable(MainNavOption.TopScreen.name) {
                             TopScreen(
                                 viewModel = mainViewModel,
                                 launchPicker = launchPicker,
@@ -157,12 +142,25 @@ fun MainNav(
                                         drawerState.apply { if (isClosed) open() else close() }
                                     }
                                 },
-                                onNavigationToEditScreen = {},
-                                onNavigationToPreviewScreen = {},
+                                onNavigateToEditScreen = { uri ->
+                                    navController.navigate("edit/$uri")
+                                },
                             )
                         }
-                        composable(MainNavOption.SecondScreen.name) {
-                            SecondScreen(onUpPress = { /*TODO*/ })
+                        composable(
+                            "edit/{uri}",
+                            arguments = listOf(
+                                navArgument("uri") { type = NavType.StringType },
+                            ),
+                        ) { backStackEntry ->
+                            val uriString =
+                                backStackEntry.arguments?.getString("uri") ?: return@composable
+                            val uri = Uri.parse(uriString)
+
+                            EditScreen(
+                                viewModel = hiltViewModel(),
+                                selectUri = uri.toString()
+                            )
                         }
                         composable(MainNavOption.ThirdScreen.name) {
                             ThirdScreen(onUpPress = { /*TODO*/ })
@@ -178,7 +176,6 @@ enum class MainNavOption {
     TopScreen,
     SecondScreen,
     ThirdScreen,
-    EditScreen,
 }
 
 @Composable

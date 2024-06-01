@@ -37,6 +37,7 @@ fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
     onUpPress: () -> Unit,
+    onNavigateToEditScreen : (Uri) -> Unit,
 ) {
     val pictures by viewModel.pictures.collectAsState()
     TopScreenContent(

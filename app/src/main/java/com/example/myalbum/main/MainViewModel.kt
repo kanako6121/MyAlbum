@@ -25,6 +25,5 @@ class MainViewModel @Inject constructor(
 
     fun onImageClick(imageUri: Uri) {
         val getcurrentImageUri = imageUri
-        val currentImage = getImage.lastOrNull()?.uri
     }
 }
