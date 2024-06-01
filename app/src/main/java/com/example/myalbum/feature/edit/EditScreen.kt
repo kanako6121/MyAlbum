@@ -1,6 +1,5 @@
 package com.example.myalbum.feature.edit
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,9 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import coil.transform.RoundedCornersTransformation
 import com.example.myalbum.main.MainViewModel
 
 @Composable
@@ -27,7 +30,8 @@ fun EditScreen(
 ) {
     EditScreenContent(
         selectUri = selectUri,
-        onClick = viewModel::onImageClick,
+        onClick = { },
+        onChange = {},
         onNavigateToTopScreen = {},
     )
 }
@@ -35,16 +39,22 @@ fun EditScreen(
 @Composable
 fun EditScreenContent(
     selectUri: String? = null,
-    onClick: (Uri) -> Unit,
+    onClick: () -> Unit,
+    onChange: (String) -> Unit,
     onNavigateToTopScreen: () -> Unit,
 ) {
     var comment by remember { mutableStateOf("") }
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
-            model = selectUri,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(selectUri)
+                .crossfade(true)
+                .diskCachePolicy(CachePolicy.DISABLED).transformations(
+                    RoundedCornersTransformation(40f)
+                )
+                .build(),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,6 +67,7 @@ fun EditScreenContent(
             value = comment,
             onValueChange = { newComment ->
                 comment = newComment
+                onChange(newComment)
             },
             label = { Text(text = "コメントを入力してください") }
         )
@@ -72,6 +83,7 @@ fun EditScreenPreview() {
     EditScreenContent(
         selectUri = "",
         onClick = {},
+        onChange = {},
         onNavigateToTopScreen = {},
     )
 }
