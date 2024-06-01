@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.main.MainViewModel
@@ -63,4 +64,14 @@ fun EditScreenContent(
             Text(text = "投稿する")
         }
     }
+}
+
+@Preview
+@Composable
+fun EditScreenPreview() {
+    EditScreenContent(
+        selectUri = "",
+        onClick = {},
+        onNavigateToTopScreen = {},
+    )
 }
