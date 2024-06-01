@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.theme.MyAlbumTheme
+import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.top.TopScreenContent
 import com.example.myalbum.feature.top.TopViewModel
 import dagger.hilt.android.AndroidEntryPoint

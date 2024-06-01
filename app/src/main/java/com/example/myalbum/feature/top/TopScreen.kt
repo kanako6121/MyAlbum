@@ -21,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -58,8 +60,8 @@ fun TopScreenContent(
     pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
 ) {
-    // var pickedImageUri by remember(pictureData) { mutableStateOf(pictureData.uri) }
-    //val comment by remember(pictureData) { mutableStateOf(pictureData.comment) }
+     val pickedImageUri =
+     //remember(pictureData) { mutableStateOf(pictureData.uri) }
 
     //val launcher = rememberLauncherForActivityResult(
     //   ActivityResultContracts.PickVisualMedia()
