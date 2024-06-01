@@ -27,8 +27,7 @@ fun EditScreen(
     EditScreenContent(
         selectUri = selectUri,
         onClick = viewModel::onImageClick,
-        onChange = ,
-        onNavigateTopScreen = {},
+        onNavigateToTopScreen = {},
     )
 }
 
@@ -36,8 +35,7 @@ fun EditScreen(
 fun EditScreenContent(
     selectUri: String? = null,
     onClick: (Uri) -> Unit,
-    onChange: (String) -> Unit,
-    onNavigateTopScreen: () -> Unit,
+    onNavigateToTopScreen: () -> Unit,
 ) {
     var comment by remember { mutableStateOf("") }
     Column(
@@ -58,11 +56,10 @@ fun EditScreenContent(
             value = comment,
             onValueChange = { newComment ->
                 comment = newComment
-                onChange(newComment)
             },
             label = { Text(text = "コメントを入力してください") }
         )
-        Button(onClick = onNavigateTopScreen) {
+        Button(onClick = onNavigateToTopScreen) {
             Text(text = "投稿する")
         }
     }
