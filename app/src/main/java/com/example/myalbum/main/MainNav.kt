@@ -1,5 +1,6 @@
 package com.example.myalbum.main
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -139,7 +140,7 @@ fun MainNav(
                                         drawerState.apply { if (isClosed) open() else close() }
                                     }
                                 },
-                                onEditScreen = { navController.navigate() },
+                                onEditScreen = { navController.navigate(Uri) },
                                 onNavigationToPreviewScreen = {},
                             )
                         }
