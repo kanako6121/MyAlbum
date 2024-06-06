@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +20,19 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 repository.addPicture(photo)
+            }
+        }
+    }
+
+    private val _selectedPhoto = MutableStateFlow<PictureData?>(value = null)
+    val selectePhoto: StateFlow<PictureData?>
+        get() = _selectedPhoto
+
+    fun updateSelectPhoto(name: String) {
+        viewModelScope.launch {
+            val selectedPhoto: PictureData? = repository.getPhotoUri(name)
+            if (selectedPhoto != null) {
+                _selectedPhoto.value = selectedPhoto
             }
         }
     }

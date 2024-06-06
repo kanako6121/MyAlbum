@@ -12,19 +12,23 @@ import javax.inject.Singleton
 
 @Singleton
 class PictureRepository @Inject constructor(
-  private val preference: PicturePreference
+    private val preference: PicturePreference
 ) {
-  private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-  val pictures: StateFlow<List<PictureData>> = preference.pictures.map { saveList ->
-    saveList.map { it.toPictureData() }
-  }.stateIn(
-    scope = scope,
-    started = SharingStarted.Eagerly,
-    initialValue = emptyList(),
-  )
+    val pictures: StateFlow<List<PictureData>> = preference.pictures.map { saveList ->
+        saveList.map { it.toPictureData() }
+    }.stateIn(
+        scope = scope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList(),
+    )
 
-  suspend fun addPicture(pictureData: PictureData) {
-    preference.addPicture(pictureData.toPictureSaveData())
-  }
+    suspend fun addPicture(pictureData: PictureData) {
+        preference.addPicture(pictureData.toPictureSaveData())
+    }
+
+    fun getPhotoUri(name: String): PictureData? {
+
+    }
 }
