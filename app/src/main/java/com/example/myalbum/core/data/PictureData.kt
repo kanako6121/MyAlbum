@@ -25,3 +25,21 @@ fun PictureSaveData.toPictureData() =
         uri = Uri.parse(uriString),
         comment = comment,
     )
+
+@Serializable
+data class PictureEditData(
+    val uriString: String,
+    val comment: String? = null,
+)
+
+fun PictureData.toPictureEditData() =
+    PictureEditData(
+        uriString = uri.toString(),
+        comment = comment,
+    )
+
+fun PictureEditData.toPictureData() =
+    PictureData(
+        uri = Uri.parse(uriString),
+        comment = comment,
+    )

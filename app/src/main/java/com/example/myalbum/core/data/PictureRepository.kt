@@ -29,6 +29,6 @@ class PictureRepository @Inject constructor(
     }
 
     fun getPhotoUri(name: String): PictureData? {
-
+        preference.editPictures(name.toPictreEditData())
     }
 }
