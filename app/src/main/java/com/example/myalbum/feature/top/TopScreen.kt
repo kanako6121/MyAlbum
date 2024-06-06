@@ -3,6 +3,7 @@ package com.example.myalbum.feature.top
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -107,7 +108,10 @@ fun TopScreenContent(
                                 .border(
                                     BorderStroke(width = 0.5.dp, color = Color.Gray)
                                 )
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
+                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp)
+                                .clickable {
+                                           main
+                                },
                         )
                         Text(text = pictureData.comment.orEmpty())
                     }

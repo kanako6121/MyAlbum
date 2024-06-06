@@ -44,18 +44,4 @@ class PicturePreference @Inject constructor(
             prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
         }
     }
-
-    private val editPictures: Flow<List<PictureEditData>> = store.data.map { prefs ->
-        val jsonString: String = prefs[picturesKey] ?: return@map emptyList<PictureEditData>()
-        runCatching {
-            json.decodeFromString<List<PictureEditData>>(jsonString)
-        }.getOrDefault(emptyList())
-    }
-
-    suspend fun editPictures(pictureEditData: PictureEditData) {
-        val newEditList: List<PictureEditData> = editPictures.first() + pictureEditData
-        store.edit { prefs ->
-            prefs[picturesKey] = json.encodeToString<List<PictureEditData>>(newEditList)
-        }
-    }
 }

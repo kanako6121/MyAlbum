@@ -28,8 +28,4 @@ class PictureRepository @Inject constructor(
     suspend fun addPicture(pictureData: PictureData) {
         preference.addPicture(pictureData.toPictureSaveData())
     }
-
-    suspend fun getPhotoUri(name: Uri) {
-        preference.editPictures(name.to())
-    }
 }
