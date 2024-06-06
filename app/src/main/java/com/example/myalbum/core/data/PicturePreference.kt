@@ -22,6 +22,7 @@ class PicturePreference @Inject constructor(
 ) {
     private val store = context.dataStore
     private val picturesKey = stringPreferencesKey("pictures")
+
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
         ignoreUnknownKeys = true
@@ -44,14 +45,15 @@ class PicturePreference @Inject constructor(
         }
     }
 
-    val editPictures: Flow<List<PictureEditData>> = store.data.map { prefs ->
+    private val editPictures: Flow<List<PictureEditData>> = store.data.map { prefs ->
         val jsonString: String = prefs[picturesKey] ?: return@map emptyList<PictureEditData>()
         runCatching {
             json.decodeFromString<List<PictureEditData>>(jsonString)
         }.getOrDefault(emptyList())
     }
+
     suspend fun editPictures(pictureEditData: PictureEditData) {
-        val newEditList = pictures.first() + pictureEditData
+        val newEditList: List<PictureEditData> = editPictures.first() + pictureEditData
         store.edit { prefs ->
             prefs[picturesKey] = json.encodeToString<List<PictureEditData>>(newEditList)
         }

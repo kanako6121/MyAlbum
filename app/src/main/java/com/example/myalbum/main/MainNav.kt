@@ -140,7 +140,7 @@ fun MainNav(
                                         drawerState.apply { if (isClosed) open() else close() }
                                     }
                                 },
-                                onEditScreen = { navController.navigate(Uri) },
+                                onEditScreen = { navController.navigate() },
                                 onNavigationToPreviewScreen = {},
                             )
                         }

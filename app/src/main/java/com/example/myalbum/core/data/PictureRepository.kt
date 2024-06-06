@@ -1,5 +1,6 @@
 package com.example.myalbum.core.data
 
+import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,7 +29,7 @@ class PictureRepository @Inject constructor(
         preference.addPicture(pictureData.toPictureSaveData())
     }
 
-    fun getPhotoUri(name: String): PictureData? {
-        preference.editPictures(name.toPictreEditData())
+    suspend fun getPhotoUri(name: Uri) {
+        preference.editPictures(name.to())
     }
 }
