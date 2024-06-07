@@ -37,7 +37,7 @@ import com.example.myalbum.main.MainViewModel
 fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
-    onEditScreen: () -> Unit,
+    onEditScreen: (PictureData) -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
 ) {
@@ -56,7 +56,7 @@ fun TopScreen(
 fun TopScreenContent(
     launchPicker: () -> Unit,
     onUpPress: () -> Unit,
-    onEditScreen: () -> Unit,
+    onEditScreen: (PictureData) -> Unit,
     onNavigationToPreviewScreen: () -> Unit,
     pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
@@ -109,9 +109,7 @@ fun TopScreenContent(
                                     BorderStroke(width = 0.5.dp, color = Color.Gray)
                                 )
                                 .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp)
-                                .clickable {
-                                           main
-                                },
+                                .clickable { onEditScreen(pictureData)},
                         )
                         Text(text = pictureData.comment.orEmpty())
                     }
