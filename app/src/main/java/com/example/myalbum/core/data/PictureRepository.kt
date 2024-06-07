@@ -28,4 +28,8 @@ class PictureRepository @Inject constructor(
     suspend fun addPicture(pictureData: PictureData) {
         preference.addPicture(pictureData.toPictureSaveData())
     }
+
+    suspend fun updatePicture(pictureData: PictureData) {
+        preference.
+    }
 }

@@ -24,21 +24,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private val _selectedPhoto = MutableStateFlow<PictureData?>(value = null)
-    val selectePhoto: StateFlow<PictureData?>
-        get() = _selectedPhoto
-
-    fun updateSelectPhoto(name: String) {
-        viewModelScope.launch {
-            val selectedPhoto: PictureData? = repository.getPhotoUri(name)
-            if (selectedPhoto != null) {
-                _selectedPhoto.value = selectedPhoto
-            }
-        }
+    fun getPhotoId(): Int {
+        val lastId = pictures.value.lastOrNull()?.id
+        val nextId = if (lastId == null) 0 else lastId + 1
     }
 
     fun getPictureData(selectedId: Int): PictureData?  {
-        val data = pictures.value.firstOrNull { if.id == id}
+        val data = pictures.value.firstOrNull { it.id == selectedId }
         return data
+    }
+
+    fun saveEditPhoto(pictureData: PictureData) {
+        viewModelScope.launch {
+            repository.updatePicture(pictureData)
+        }
     }
 }
