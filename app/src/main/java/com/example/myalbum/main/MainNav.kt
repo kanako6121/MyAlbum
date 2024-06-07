@@ -140,7 +140,9 @@ fun MainNav(
                                         drawerState.apply { if (isClosed) open() else close() }
                                     }
                                 },
-                                onEditScreen = { navController.navigate() },
+                                onEditScreen = { pictureData ->
+                                               navController.navigate("edit/${ pictureData.id}")
+                                },
                                 onNavigationToPreviewScreen = {},
                             )
                         }
@@ -150,6 +152,7 @@ fun MainNav(
                         composable(MainNavOption.ThirdScreen.name) {
                             ThirdScreen(onUpPress = { /*TODO*/ })
                         }
+                        composable()
                     }
                 }
             }
