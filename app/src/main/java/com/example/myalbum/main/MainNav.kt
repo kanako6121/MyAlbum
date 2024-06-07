@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.second.SecondScreen
 import com.example.myalbum.feature.third.ThirdScreen
 import com.example.myalbum.feature.top.TopScreen
@@ -152,7 +153,14 @@ fun MainNav(
                         composable(MainNavOption.ThirdScreen.name) {
                             ThirdScreen(onUpPress = { /*TODO*/ })
                         }
-                        composable()
+                        composable("edit/{selectId}") { backStackEntry ->
+                            EditScreen(
+                                selectUri = ,
+                                onClick = { /*TODO*/ }
+                            ) {
+
+                            }
+                        }
                     }
                 }
             }

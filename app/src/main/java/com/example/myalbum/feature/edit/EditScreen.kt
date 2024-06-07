@@ -20,14 +20,15 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
+import com.example.myalbum.core.data.PictureData
 
 @Composable
 fun EditScreen(
-    selectUri: String,
+    selectedId: String,
     onClick: () -> Unit,
     onChange: (String) -> Unit,
 ) {
-    var comment by remember { mutableStateOf("") }
+    var comment by remember { mutableStateOf(PictureData) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,14 +38,7 @@ fun EditScreen(
                 .aspectRatio(1f)
                 .padding(16.dp)
                 .fillMaxWidth(),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(selectUri)
-                .crossfade(true)
-                .diskCachePolicy(CachePolicy.DISABLED)
-                .transformations(
-                    RoundedCornersTransformation(40f)
-                )
-                .build(),
+            model = selectedId,
             contentDescription = null
         )
         TextField(
