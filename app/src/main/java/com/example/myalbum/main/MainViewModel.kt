@@ -36,4 +36,9 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun getPictureData(selectedId: Int): PictureData?  {
+        val data = pictures.value.firstOrNull { if.id == id}
+        return data
+    }
 }

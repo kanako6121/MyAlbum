@@ -14,21 +14,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 import com.example.myalbum.core.data.PictureData
+import com.example.myalbum.main.MainViewModel
 
 @Composable
 fun EditScreen(
-    selectedId: String,
-    onClick: () -> Unit,
-    onChange: (String) -> Unit,
+    viewModel: MainViewModel = hiltViewModel(),
+    selectedId: Int?,
+    onClick: (PictureData) -> Unit,
 ) {
-    var comment by remember { mutableStateOf(PictureData) }
+    if (selectedId == null) return
+    val pictureData = viewModel.getPictureData(selectedId)
+    var comment by remember { mutableStateOf(pictureData) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +48,6 @@ fun EditScreen(
             value = comment,
             onValueChange = { newComment ->
                 comment = newComment
-                onChange(newComment)
             },
             label = { Text(text = "コメントを入力してください") }
         )
