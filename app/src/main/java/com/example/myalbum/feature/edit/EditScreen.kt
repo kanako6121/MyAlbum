@@ -27,8 +27,8 @@ fun EditScreen(
     onClick: (PictureData) -> Unit,
 ) {
     if (selectedId == null) return
-    val pictureData = viewModel.getPictureData(selectedId)
-    var comment by remember { mutableStateOf(pictureData) }
+    val pictureData = viewModel.getPictureData(selectedId) ?: return
+    var comment by remember { mutableStateOf(pictureData.comment) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,13 +45,18 @@ fun EditScreen(
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
-            value = comment,
+            value = comment.orEmpty(),
             onValueChange = { newComment ->
                 comment = newComment
             },
             label = { Text(text = "コメントを入力してください") }
         )
-        Button(onClick = onClick) {
+        Button(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
+            onClick = { onClick(pictureData.copy(comment = comment)) }
+        ) {
             Text(text = "投稿する")
         }
     }

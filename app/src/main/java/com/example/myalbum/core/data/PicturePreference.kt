@@ -45,10 +45,13 @@ class PicturePreference @Inject constructor(
         }
     }
 
-    suspend fun editPictures(picthreEditData: PictureSaveData) {
+    suspend fun editPictures(pictureEditData: PictureSaveData) {
         val current = pictures.first()
         val newList = current.map {
-            if(it.id == picthreEditData.id) picthreEditData else it
+            if(it.id == pictureEditData.id) pictureEditData else it
+        }
+        store.edit { prefs ->
+            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
         }
     }
 }

@@ -30,6 +30,6 @@ class PictureRepository @Inject constructor(
     }
 
     suspend fun updatePicture(pictureData: PictureData) {
-        preference.
+        preference.editPictures(pictureData.toPictureSaveData())
     }
 }
