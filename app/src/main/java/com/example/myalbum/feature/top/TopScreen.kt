@@ -22,8 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -38,7 +36,6 @@ fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
     onEditScreen: (PictureData) -> Unit,
-    onNavigationToPreviewScreen: () -> Unit,
     onUpPress: () -> Unit,
 ) {
     val pictures by viewModel.pictures.collectAsState()
@@ -46,7 +43,6 @@ fun TopScreen(
         launchPicker = launchPicker,
         onUpPress = onUpPress,
         onEditScreen = onEditScreen,
-        onNavigationToPreviewScreen = onNavigationToPreviewScreen,
         pictures = pictures,
         onSaveData = viewModel::savePhoto,
     )
@@ -57,7 +53,6 @@ fun TopScreenContent(
     launchPicker: () -> Unit,
     onUpPress: () -> Unit,
     onEditScreen: (PictureData) -> Unit,
-    onNavigationToPreviewScreen: () -> Unit,
     pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
 ) {
@@ -125,7 +120,6 @@ fun ShowPhotoGrid() {
     TopScreenContent(
         launchPicker = {},
         onUpPress = {},
-        onNavigationToPreviewScreen = {},
         onEditScreen = {},
         pictures = emptyList(),
         onSaveData = {},
