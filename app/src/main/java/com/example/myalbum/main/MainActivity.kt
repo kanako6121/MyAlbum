@@ -19,7 +19,8 @@ class MainActivity : ComponentActivity() {
             if (uri == null) return@registerForActivityResult
 
             contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val pictureData = PictureData(uri = uri)
+            val nextId = viewModel.getPhotoId()
+            val pictureData = PictureData(uri = uri, id = nextId)
             viewModel.savePhoto(pictureData)
         }
 

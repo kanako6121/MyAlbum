@@ -1,6 +1,5 @@
 package com.example.myalbum.main
 
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -142,7 +141,7 @@ fun MainNav(
                                     }
                                 },
                                 onEditScreen = { pictureData ->
-                                               navController.navigate("edit/${ pictureData.id}")
+                                    navController.navigate("edit/${pictureData.id}")
                                 },
                                 onNavigationToPreviewScreen = {},
                             )
@@ -155,11 +154,13 @@ fun MainNav(
                         }
                         composable("edit/{selectId}") { backStackEntry ->
                             EditScreen(
-                                selectUri = ,
-                                onClick = { /*TODO*/ }
-                            ) {
-
-                            }
+                                selectedId = backStackEntry.arguments?.getString("selectId")
+                                    ?.toInt(),
+                                onClick = { pictureData ->
+                                    mainViewModel.saveEditPhoto(pictureData)
+                                    navController.popBackStack()
+                                },
+                            )
                         }
                     }
                 }
