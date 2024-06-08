@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,9 +26,10 @@ class MainViewModel @Inject constructor(
     fun getPhotoId(): Int {
         val lastId = pictures.value.lastOrNull()?.id
         val nextId = if (lastId == null) 0 else lastId + 1
+        return nextId
     }
 
-    fun getPictureData(selectedId: Int): PictureData?  {
+    fun getPictureData(selectedId: Int): PictureData? {
         val data = pictures.value.firstOrNull { it.id == selectedId }
         return data
     }
