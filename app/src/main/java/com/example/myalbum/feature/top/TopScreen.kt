@@ -45,7 +45,8 @@ fun TopScreen(
         onEditScreen = onEditScreen,
         pictures = pictures,
         onSaveData = viewModel::savePhoto,
-    )
+        onRemove = viewModel::removePhoto,
+        )
 }
 
 @Composable
@@ -55,6 +56,7 @@ fun TopScreenContent(
     onEditScreen: (PictureData) -> Unit,
     pictures: List<PictureData>,
     onSaveData: (PictureData) -> Unit,
+    onRemove: (PictureData) -> Unit,
 ) {
      val pickedImageUri =
      //remember(pictureData) { mutableStateOf(pictureData.uri) }
@@ -96,14 +98,14 @@ fun TopScreenContent(
                             model = pictureData.uri,
                             contentDescription = null,
                             modifier = Modifier
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
+                                .
                                 .shadow(elevation = 4.dp)
                                 //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
                                 .background(Color.White)
                                 .border(
                                     BorderStroke(width = 0.5.dp, color = Color.Gray)
                                 )
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp)
+                                .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 24.dp)
                                 .clickable { onEditScreen(pictureData)},
                         )
                         Text(text = pictureData.comment.orEmpty())
@@ -123,5 +125,6 @@ fun ShowPhotoGrid() {
         onEditScreen = {},
         pictures = emptyList(),
         onSaveData = {},
+        onRemove = {},
     )
 }

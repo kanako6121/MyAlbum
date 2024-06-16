@@ -39,4 +39,8 @@ class MainViewModel @Inject constructor(
             repository.updatePicture(pictureData)
         }
     }
+
+    fun removePhoto(photo: PictureData) {
+
+    }
 }
