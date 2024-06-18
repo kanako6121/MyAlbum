@@ -49,8 +49,9 @@ fun EditScreen(
             onValueChange = { newComment ->
                 comment = newComment
             },
-            label = { Text(text = "コメントを入力してください") }
-        )
+            label = { Text(text = "コメントを入力してください") },
+            singleLine = true,
+            )
         Button(
             modifier = Modifier
                 .padding(16.dp)
