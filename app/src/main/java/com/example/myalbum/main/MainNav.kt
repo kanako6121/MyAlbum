@@ -143,7 +143,6 @@ fun MainNav(
                                 onEditScreen = { pictureData ->
                                     navController.navigate("edit/${pictureData.id}")
                                 },
-                                onNavigationToPreviewScreen = {},
                             )
                         }
                         composable(MainNavOption.SecondScreen.name) {

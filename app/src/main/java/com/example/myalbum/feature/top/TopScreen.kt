@@ -4,24 +4,30 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -46,7 +52,7 @@ fun TopScreen(
         pictures = pictures,
         onSaveData = viewModel::savePhoto,
         onRemove = viewModel::removePhoto,
-        )
+    )
 }
 
 @Composable
@@ -58,8 +64,8 @@ fun TopScreenContent(
     onSaveData: (PictureData) -> Unit,
     onRemove: (PictureData) -> Unit,
 ) {
-     val pickedImageUri =
-     //remember(pictureData) { mutableStateOf(pictureData.uri) }
+    // val pickedImageUri =
+    //remember(pictureData) { mutableStateOf(pictureData.uri) }
 
     //val launcher = rememberLauncherForActivityResult(
     //   ActivityResultContracts.PickVisualMedia()
@@ -94,21 +100,46 @@ fun TopScreenContent(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
                     items(pictures) { pictureData ->
-                        AsyncImage(
-                            model = pictureData.uri,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .
-                                .shadow(elevation = 4.dp)
-                                //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
-                                .background(Color.White)
-                                .border(
-                                    BorderStroke(width = 0.5.dp, color = Color.Gray)
+                        Box(modifier = Modifier.padding(8.dp)) {
+                            AsyncImage(
+                                model = pictureData.uri,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .shadow(elevation = 4.dp)
+                                    // .aspectRatio(1.5f, matchHeightConstraintsFirst = false)
+                                    .background(Color.White)
+                                    .border(
+                                        BorderStroke(width = 0.5.dp, color = Color.Gray)
+                                    )
+                                    .padding(
+                                        start = 8.dp,
+                                        top = 8.dp,
+                                        end = 8.dp,
+                                        bottom = 40.dp
+                                    )
+                                    .clickable { onEditScreen(pictureData) },
+                            )
+                            Box(
+                                modifier = Modifier.align(Alignment.BottomStart)
+                                    .padding(start = 8.dp, bottom = 8.dp)
+                            ) {
+                                Text(
+                                    text = pictureData.comment.orEmpty()
                                 )
-                                .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 24.dp)
-                                .clickable { onEditScreen(pictureData)},
-                        )
-                        Text(text = pictureData.comment.orEmpty())
+                            }
+                            Box(
+                                modifier = Modifier.align(Alignment.BottomEnd)
+                            )
+                            {
+                                IconButton(onClick = { }) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             )
