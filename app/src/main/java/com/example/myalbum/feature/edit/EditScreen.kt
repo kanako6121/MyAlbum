@@ -48,10 +48,10 @@ fun EditScreen(
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
             value = comment.orEmpty(),
-            if (comment?.length!! <= maxChar)
-            onValueChange = { newComment ->
+            onValueChange = if (comment?.length!! <= maxChar)
+            { newComment ->
                 comment = newComment
-            },
+            } else(),
             label = { Text(text = "コメントを入力してください") },
             singleLine = true,
             )
