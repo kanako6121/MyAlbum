@@ -29,6 +29,8 @@ fun EditScreen(
     if (selectedId == null) return
     val pictureData = viewModel.getPictureData(selectedId) ?: return
     var comment by remember { mutableStateOf(pictureData.comment) }
+    var text by remember { mutableStateOf("") }
+    val maxChar = 8
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,6 +48,7 @@ fun EditScreen(
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
             value = comment.orEmpty(),
+            if (comment?.length!! <= maxChar)
             onValueChange = { newComment ->
                 comment = newComment
             },
