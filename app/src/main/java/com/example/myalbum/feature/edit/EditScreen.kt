@@ -29,7 +29,6 @@ fun EditScreen(
     if (selectedId == null) return
     val pictureData = viewModel.getPictureData(selectedId) ?: return
     var comment by remember { mutableStateOf(pictureData.comment) }
-    var text by remember { mutableStateOf("") }
     val maxChar = 8
     Column(
         modifier = Modifier
@@ -48,10 +47,11 @@ fun EditScreen(
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
             value = comment.orEmpty(),
-            onValueChange = { if (comment?.length!! <= maxChar)
-             newComment ->
-                comment = newComment
-            } else(),
+            onValueChange = { newComment ->
+                if (newComment.length <= maxChar) {
+                    comment = newComment
+                }
+            },
             label = { Text(text = "コメントを入力してください") },
             singleLine = true,
             )
