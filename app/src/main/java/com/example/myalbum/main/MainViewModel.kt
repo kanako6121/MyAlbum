@@ -41,6 +41,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun removePhoto(photo: PictureData) {
-
+        val currentPhoto = pictures.value[]
+        val result = currentPhoto.removeIf
     }
 }
