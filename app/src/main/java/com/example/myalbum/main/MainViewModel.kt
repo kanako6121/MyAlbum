@@ -40,8 +40,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun removePhoto(photo: PictureData) {
-        val currentPhoto = pictures.value[]
-        val result = currentPhoto.removeIf
+    fun removePhoto(pictureData: PictureData) {
+        viewModelScope.launch {
+            repository.removePicture(pictureData)
+        }
     }
 }

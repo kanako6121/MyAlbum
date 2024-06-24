@@ -48,10 +48,22 @@ class PicturePreference @Inject constructor(
     suspend fun editPictures(pictureEditData: PictureSaveData) {
         val current = pictures.first()
         val newList = current.map {
-            if(it.id == pictureEditData.id) pictureEditData else it
+            if (it.id == pictureEditData.id) pictureEditData else it
         }
         store.edit { prefs ->
             prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
         }
     }
+
+    suspend fun removePicture(pictureSaveData: PictureSaveData) {
+        val current = pictures.first()
+        val newList = current.map {
+            if (it.id == pictureSaveData.id) pictureSaveData else it
+        }
+        store.edit { prefs ->
+            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
+        }
+    }
+}
+}
 }

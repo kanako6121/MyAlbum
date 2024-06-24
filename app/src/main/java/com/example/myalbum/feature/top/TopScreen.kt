@@ -67,22 +67,6 @@ fun TopScreenContent(
     onSaveData: (PictureData) -> Unit,
     onRemove: (PictureData) -> Unit,
 ) {
-    var selectedPhoto by remember { mutableStateOf(pictures) }
-
-    // val pickedImageUri =
-    //remember(pictureData) { mutableStateOf(pictureData.uri) }
-
-    //val launcher = rememberLauncherForActivityResult(
-    //   ActivityResultContracts.PickVisualMedia()
-    //) { uri: Uri? ->
-    //   uri?.let {
-    //      pickedImageUri = it
-    //  }
-    // }
-    // LaunchedEffect(true) {
-    //    launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    // }
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -136,7 +120,7 @@ fun TopScreenContent(
                                 modifier = Modifier.align(Alignment.BottomEnd)
                             )
                             {
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = { onRemove(pictureData) } ) {
                                     Icon(
                                         imageVector = Icons.Default.MoreVert,
                                         contentDescription = "",
