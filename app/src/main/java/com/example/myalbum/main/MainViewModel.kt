@@ -40,15 +40,8 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun removePhoto(pictureData: PictureData) {
-        val selectedPhoto = getMutableCurrentList()
-        val result = selectedPhoto.removeIf { it.id == pictureData.id }
-        if(result) {
-            this.pictures.value = selectedPhoto
-            repository.updatePicture(selectedPhoto)
+        viewModelScope.launch {
+            repository.removePhoto(pictureData)
         }
-    }
-
-    private fun getMutableCurrentList(): MutableList<PictureData> {
-        return pictures.value.toMutableList()
     }
 }
