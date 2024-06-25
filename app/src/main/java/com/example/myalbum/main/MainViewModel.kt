@@ -1,13 +1,9 @@
 package com.example.myalbum.main
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
-import com.example.myalbum.core.data.PictureSaveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,8 +14,6 @@ class MainViewModel @Inject constructor(
     private val repository: PictureRepository,
 ) : ViewModel() {
     val pictures: StateFlow<List<PictureData>> = repository.pictures
-    val _savePhotoLisst = MutableLiveData(repository.pictures)
-
     fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
             runCatching {
@@ -49,7 +43,7 @@ class MainViewModel @Inject constructor(
         val selectedPhoto = getMutableCurrentList()
         val result = selectedPhoto.removeIf { it.id == pictureData.id }
         if(result) {
-            pictures.value = selectedPhoto
+            this.pictures.value = selectedPhoto
             repository.updatePicture(selectedPhoto)
         }
     }

@@ -1,6 +1,5 @@
 package com.example.myalbum.core.data
 
-import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -29,7 +28,7 @@ class PictureRepository @Inject constructor(
         preference.addPicture(pictureData.toPictureSaveData())
     }
 
-    suspend fun updatePicture(pictureData: PictureData) {
+    suspend fun updatePicture(pictureData: MutableList<PictureData>) {
         preference.editPictures(pictureData.toPictureSaveData())
     }
 }
