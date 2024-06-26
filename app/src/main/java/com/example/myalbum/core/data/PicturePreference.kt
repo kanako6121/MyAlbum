@@ -8,6 +8,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -57,9 +59,9 @@ class PicturePreference @Inject constructor(
 
     suspend fun removePicture(pictureSaveData: PictureSaveData) {
         val current = pictures.first()
-        val newList = current.filter { it.id != pictureSaveData.id }
+        val newList = current.filterNot { it.id == pictureSaveData.id }
         store.edit { prefs ->
-            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
+            prefs[picturesKey] = json.encodeToString(newList)
         }
     }
 }

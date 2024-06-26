@@ -16,7 +16,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -89,6 +92,7 @@ fun TopScreenContent(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
                     items(pictures) { pictureData ->
+                        var expanded by remember { mutableStateOf(false) }
                         Box(modifier = Modifier.padding(8.dp)) {
                             AsyncImage(
                                 model = pictureData.uri,
@@ -109,7 +113,8 @@ fun TopScreenContent(
                                     .clickable { onEditScreen(pictureData) },
                             )
                             Box(
-                                modifier = Modifier.align(Alignment.BottomStart)
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
                                     .padding(start = 8.dp, bottom = 8.dp)
                             ) {
                                 Text(
@@ -118,14 +123,32 @@ fun TopScreenContent(
                             }
                             Box(
                                 modifier = Modifier.align(Alignment.BottomEnd)
-                            )
-                            {
-                                IconButton(onClick = { onRemove(pictureData) } ) {
+                            ) {
+                                IconButton(onClick = { expanded = true }) {
                                     Icon(
                                         imageVector = Icons.Default.MoreVert,
                                         contentDescription = "",
                                         tint = MaterialTheme.colorScheme.onSurface
                                     )
+                                }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            onRemove(pictureData)
+                                            expanded = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = null,
+                                            )
+                                        }
+                                    ) {
+                                        Text("削除")
+                                    }
                                 }
                             }
                         }
