@@ -38,7 +38,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun removePhoto(pictureData: PictureData) {
+    fun removePhoto(pictureData: PictureData) {
         viewModelScope.launch {
             repository.removePhoto(pictureData)
         }
