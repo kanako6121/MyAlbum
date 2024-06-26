@@ -89,72 +89,70 @@ fun TopScreenContent(
             modifier = Modifier.padding(paddings),
         ) {
             LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                content = {
-                    items(pictures) { pictureData ->
-                        var expanded by remember { mutableStateOf(false) }
-                        Box(modifier = Modifier.padding(8.dp)) {
-                            AsyncImage(
-                                model = pictureData.uri,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .shadow(elevation = 4.dp)
-                                    // .aspectRatio(1.5f, matchHeightConstraintsFirst = false)
-                                    .background(Color.White)
-                                    .border(
-                                        BorderStroke(width = 0.5.dp, color = Color.Gray)
-                                    )
-                                    .padding(
-                                        start = 8.dp,
-                                        top = 8.dp,
-                                        end = 8.dp,
-                                        bottom = 40.dp
-                                    )
-                                    .clickable { onEditScreen(pictureData) },
+                columns = StaggeredGridCells.Fixed(2)
+            ) {
+                items(pictures) { pictureData ->
+                    var expanded by remember { mutableStateOf(false) }
+                    Box(modifier = Modifier.padding(8.dp)) {
+                        AsyncImage(
+                            model = pictureData.uri,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .shadow(elevation = 4.dp)
+                                // .aspectRatio(1.5f, matchHeightConstraintsFirst = false)
+                                .background(Color.White)
+                                .border(
+                                    BorderStroke(width = 0.5.dp, color = Color.Gray)
+                                )
+                                .padding(
+                                    start = 8.dp,
+                                    top = 8.dp,
+                                    end = 8.dp,
+                                    bottom = 40.dp
+                                )
+                                .clickable { onEditScreen(pictureData) },
+                        )
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(start = 8.dp, bottom = 8.dp)
+                        ) {
+                            Text(
+                                text = pictureData.comment.orEmpty()
                             )
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(start = 8.dp, bottom = 8.dp)
-                            ) {
-                                Text(
-                                    text = pictureData.comment.orEmpty()
+                        }
+                        Box(
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                        ) {
+                            IconButton(onClick = { expanded = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
-                            Box(
-                                modifier = Modifier.align(Alignment.BottomEnd)
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
                             ) {
-                                IconButton(onClick = { expanded = true }) {
-                                    Icon(
-                                        imageVector = Icons.Default.MoreVert,
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            onRemove(pictureData)
-                                            expanded = false
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = null,
-                                            )
-                                        }
-                                    ) {
-                                        Text("削除")
+                                DropdownMenuItem(
+                                    text = { },
+                                    onClick = {
+                                        onRemove(pictureData)
+                                        expanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null
+                                        )
                                     }
-                                }
+                                )
                             }
                         }
                     }
                 }
-            )
+            }
         }
     }
 }

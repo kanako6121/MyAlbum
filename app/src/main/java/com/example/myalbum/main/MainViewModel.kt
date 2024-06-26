@@ -24,8 +24,7 @@ class MainViewModel @Inject constructor(
 
     fun getPhotoId(): Int {
         val lastId = pictures.value.lastOrNull()?.id
-        val nextId = if (lastId == null) 0 else lastId + 1
-        return nextId
+        return if (lastId == null) 0 else lastId + 1
     }
 
     fun getPictureData(selectedId: Int): PictureData? {
