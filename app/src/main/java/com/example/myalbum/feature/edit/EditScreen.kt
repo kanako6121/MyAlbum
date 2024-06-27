@@ -29,7 +29,7 @@ fun EditScreen(
     if (selectedId == null) return
     val pictureData = viewModel.getPictureData(selectedId) ?: return
     var comment by remember { mutableStateOf(pictureData.comment) }
-    val maxChar = 8
+    val maxChar = 9
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +39,7 @@ fun EditScreen(
                 .aspectRatio(1f)
                 .padding(16.dp)
                 .fillMaxWidth(),
-            model = selectedId,
+            model = pictureData.id,
             contentDescription = null
         )
         TextField(
