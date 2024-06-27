@@ -41,6 +41,7 @@ import com.example.myalbum.feature.second.SecondScreen
 import com.example.myalbum.feature.third.ThirdScreen
 import com.example.myalbum.feature.top.TopScreen
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,6 +142,7 @@ fun MainNav(
                                     }
                                 },
                                 onEditScreen = { pictureData ->
+                                    Timber.d("＊＊＊ $pictureData")
                                     navController.navigate("edit/${pictureData.id}")
                                 },
                             )
@@ -151,10 +153,9 @@ fun MainNav(
                         composable(MainNavOption.ThirdScreen.name) {
                             ThirdScreen(onUpPress = { /*TODO*/ })
                         }
-                        composable("edit/{selectId}") { backStackEntry ->
+                        composable("edit/{selectedId}") { backStackEntry ->
                             EditScreen(
-                                selectedId = backStackEntry.arguments?.getString("selectId")
-                                    ?.toInt(),
+                                selectedId = backStackEntry.arguments?.getString("selectedId")?.toInt(),
                                 onClick = { pictureData ->
                                     mainViewModel.saveEditPhoto(pictureData)
                                     navController.popBackStack()
