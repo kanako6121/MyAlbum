@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ fun EditScreen(
     if (selectedId == null) return
     val pictureData = viewModel.getPictureData(selectedId) ?: return
     var comment by remember { mutableStateOf(pictureData.comment) }
-    val maxChar = 9
+    val maxChar = 10
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +43,7 @@ fun EditScreen(
             model = pictureData.uri,
             contentDescription = null
         )
-        TextField(
+        OutlinedTextField(
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
@@ -52,9 +53,9 @@ fun EditScreen(
                     comment = newComment
                 }
             },
-            label = { Text(text = "コメントを入力してください") },
+            placeholder = { Text(text = "10文字までコメントできます") },
             singleLine = true,
-            )
+        )
         Button(
             modifier = Modifier
                 .padding(16.dp)

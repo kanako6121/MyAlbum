@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -92,13 +93,12 @@ fun TopScreenContent(
             ) {
                 items(pictures) { pictureData ->
                     var expanded by remember { mutableStateOf(false) }
-                    Box(modifier = Modifier.padding(8.dp)) {
+                    Box(modifier = Modifier.padding(4.dp)) {
                         AsyncImage(
                             model = pictureData.uri,
                             contentDescription = null,
                             modifier = Modifier
                                 .shadow(elevation = 4.dp)
-                                // .aspectRatio(1.5f, matchHeightConstraintsFirst = false)
                                 .background(Color.White)
                                 .border(
                                     BorderStroke(width = 0.5.dp, color = Color.Gray)
@@ -114,14 +114,17 @@ fun TopScreenContent(
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .padding(start = 8.dp, bottom = 8.dp)
+                                .padding(start = 4.dp, bottom = 4.dp)
                         ) {
                             Text(
                                 text = pictureData.comment.orEmpty()
                             )
                         }
                         Box(
-                            modifier = Modifier.align(Alignment.BottomEnd)
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(bottom = 4.dp, end = 0.dp)
+                                .align(Alignment.BottomEnd)
                         ) {
                             IconButton(onClick = { expanded = true }) {
                                 Icon(
