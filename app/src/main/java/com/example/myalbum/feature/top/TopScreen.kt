@@ -94,7 +94,7 @@ fun TopScreenContent(
                     var expanded by remember { mutableStateOf(false) }
                     Box(modifier = Modifier.padding(8.dp)) {
                         AsyncImage(
-                            model = pictureData.id,
+                            model = pictureData.uri,
                             contentDescription = null,
                             modifier = Modifier
                                 .shadow(elevation = 4.dp)

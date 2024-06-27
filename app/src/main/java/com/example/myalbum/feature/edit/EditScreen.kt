@@ -39,7 +39,7 @@ fun EditScreen(
                 .aspectRatio(1f)
                 .padding(16.dp)
                 .fillMaxWidth(),
-            model = selectedId,
+            model = pictureData.uri,
             contentDescription = null
         )
         TextField(
