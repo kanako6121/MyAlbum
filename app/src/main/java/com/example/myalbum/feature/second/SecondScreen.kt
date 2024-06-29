@@ -1,9 +1,5 @@
 package com.example.myalbum.feature.second
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,27 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myalbum.R
 
 @Composable
 fun SecondScreen(
     onUpPress: () -> Unit,
 ) {
-    val photos = listOf(
-        R.drawable.seigo1,
-        R.drawable.seigo2,
-        R.drawable.seigo3,
-        R.drawable.seigo4,
-        R.drawable.seigo5,
-        R.drawable.seigo9,
-    )
     SecondScreenContent(
         onUpPress = onUpPress,
     )
@@ -63,14 +46,6 @@ fun SecondScreenContent(
     onUpPress: () -> Unit,
 ) {
     var selectedPhoto by remember { mutableStateOf(-1) }
-    val photos = listOf(
-        R.drawable.seigo1,
-        R.drawable.seigo2,
-        R.drawable.seigo3,
-        R.drawable.seigo4,
-        R.drawable.seigo5,
-        R.drawable.seigo9,
-    )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { paddings ->
@@ -80,26 +55,26 @@ fun SecondScreenContent(
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 content = {
-                    items(photos.size) { index ->
-                        Column(
-                            modifier = Modifier
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
-                                .shadow(elevation = 4.dp)
-                                //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
-                                .background(Color.White)
-                                .border(
-                                    BorderStroke(width = 0.5.dp, color = Color.Gray)
-                                )
-                                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
-                        ) {
-                            Image(
-                                painter = painterResource(id = photos.get(index)),
-                                contentDescription = "Photo",
-                                contentScale = ContentScale.Fit
-                            )
-                            Text(text = "運動会")
-                        }
-                    }
+                    //  items() { index ->
+                    //       Column(
+                    //            modifier = Modifier
+                    //              .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 16.dp)
+                    //               .shadow(elevation = 4.dp)
+                    //.aspectRatio(1.5f, matchHeightConstraintsFirst = false)
+                    //               .background(Color.White)
+                    //               .border(
+                    //                    BorderStroke(width = 0.5.dp, color = Color.Gray)
+                    //               )
+                    //              .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 24.dp),
+                    //        ) {
+                    //           Image(
+                    //               painter = painterResource(),
+                    //               contentDescription = "Photo",
+                    //               contentScale = ContentScale.Fit
+                    //            )
+                    //             Text(text = "運動会")
+                    //         }
+                    //    }
                 }
             )
         }

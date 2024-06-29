@@ -24,11 +24,13 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myalbum.R
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.second.SecondScreen
 import com.example.myalbum.feature.third.ThirdScreen
@@ -79,7 +81,7 @@ fun MainNav(
                     Text("Myアルバム", modifier = Modifier.padding(16.dp))
                     Divider()
                     NavigationDrawerItem(
-                        label = { Text(text = "アルバム１") },
+                        label = { Text(text = stringResource(R.string.album1)) },
                         selected = false,
                         onClick = {
                             navController.navigate(MainNavOption.TopScreen.name) {
@@ -90,7 +92,7 @@ fun MainNav(
                     )
                     Divider()
                     NavigationDrawerItem(
-                        label = { Text(text = "アルバム２") },
+                        label = { Text(text = stringResource(R.string.album2)) },
                         selected = false,
                         onClick = {
                             navController.navigate(MainNavOption.SecondScreen.name) {
@@ -101,7 +103,7 @@ fun MainNav(
                     )
                     Divider()
                     NavigationDrawerItem(
-                        label = { Text(text = "アルバム３") },
+                        label = { Text(text = stringResource(R.string.album3)) },
                         selected = false,
                         onClick = {
                             navController.navigate(MainNavOption.ThirdScreen.name) {
