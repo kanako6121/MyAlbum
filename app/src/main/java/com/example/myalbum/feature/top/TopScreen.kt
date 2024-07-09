@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -22,19 +22,20 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -44,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.main.MainViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun TopScreen(
@@ -73,21 +73,27 @@ fun TopScreenContent(
     onSaveData: (PictureData) -> Unit,
     onRemove: (PictureData) -> Unit,
 ) {
+    val scrollState = rememberLazyStaggeredGridState()
+    var showButton by remember{ mutableStateOf(true) }
+
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.isScrollInProgress }
+            .collect { scrolling ->
+                showButton = !scrolling
+            }
+    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            val scrollState = rememberLazyListState()
-            val coroutineScope = rememberCoroutineScope()
-            SmallFloatingActionButton(
-                onClick = launchPicker,
-                        coroutineScope.launch {
-                    scrollState.animateScrollToItem(-1)
+            if(showButton) {
+                FloatingActionButton(
+                    onClick = launchPicker,
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "add")
                 }
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
             }
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -97,6 +103,7 @@ fun TopScreenContent(
             modifier = Modifier.padding(paddings),
         ) {
             LazyVerticalStaggeredGrid(
+                state = scrollState,
                 columns = StaggeredGridCells.Fixed(2)
             ) {
                 items(pictures) { pictureData ->
