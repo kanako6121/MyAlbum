@@ -141,6 +141,7 @@ fun TopScreenContent(
                             modifier = Modifier
                                 .size(32.dp)
                                 .align(Alignment.BottomStart)
+                                .padding(start = 0.dp, bottom = 4.dp)
                         ) {
                             IconButton(onClick = { expanded = true }) {
                                 Icon(
