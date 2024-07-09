@@ -5,6 +5,7 @@
     <string name="description_top">Topへ</string>
     <string name="label_edit">Edit</string>
     <string name="description_edit">編集する</string>
+    <string name="description_delete">消去する</string>
     <string name="label_preview">Preview</string>
     <string name="description_preview">写真を見る</string>
     <string name="drawer_top">TOP</string>

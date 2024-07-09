@@ -1,5 +1,11 @@
 package com.example.myalbum.feature.top
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +20,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -28,18 +35,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.main.MainViewModel
 
@@ -70,16 +81,35 @@ fun TopScreenContent(
     onSaveData: (PictureData) -> Unit,
     onRemove: (PictureData) -> Unit,
 ) {
+    val scrollState = rememberLazyStaggeredGridState()
+    var showButton by remember { mutableStateOf(true) }
+
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.isScrollInProgress }
+            .collect { scrolling ->
+                showButton = !scrolling
+            }
+    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = launchPicker
+            AnimatedVisibility(
+                visible = showButton,
+                enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
+                    animationSpec = tween(
+                        delayMillis = 1000
+                    )
+                ),
+                exit = scaleOut() + fadeOut(),
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+                FloatingActionButton(
+                    onClick = launchPicker,
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -89,11 +119,19 @@ fun TopScreenContent(
             modifier = Modifier.padding(paddings),
         ) {
             LazyVerticalStaggeredGrid(
+                state = scrollState,
                 columns = StaggeredGridCells.Fixed(2)
             ) {
                 items(pictures) { pictureData ->
                     var expanded by remember { mutableStateOf(false) }
-                    Box(modifier = Modifier.padding(4.dp)) {
+                    Box(
+                        modifier = Modifier.padding(
+                            start = 8.dp,
+                            top = 8.dp,
+                            end = 4.dp,
+                            bottom = 8.dp
+                        )
+                    ) {
                         AsyncImage(
                             model = pictureData.uri,
                             contentDescription = null,
@@ -107,14 +145,14 @@ fun TopScreenContent(
                                     start = 8.dp,
                                     top = 8.dp,
                                     end = 8.dp,
-                                    bottom = 40.dp
+                                    bottom = 32.dp
                                 )
                                 .clickable { onEditScreen(pictureData) },
                         )
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .padding(start = 4.dp, bottom = 4.dp)
+                                .padding(start = 24.dp, bottom = 4.dp)
                         ) {
                             Text(
                                 text = pictureData.comment.orEmpty()
@@ -123,8 +161,8 @@ fun TopScreenContent(
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
-                                .padding(bottom = 4.dp, end = 0.dp)
-                                .align(Alignment.BottomEnd)
+                                .align(Alignment.BottomStart)
+                                .padding(start = 0.dp, bottom = 4.dp)
                         ) {
                             IconButton(onClick = { expanded = true }) {
                                 Icon(
@@ -138,7 +176,7 @@ fun TopScreenContent(
                                 onDismissRequest = { expanded = false }
                             ) {
                                 DropdownMenuItem(
-                                    text = { },
+                                    text = { Text(stringResource(id = R.string.description_delete)) },
                                     onClick = {
                                         onRemove(pictureData)
                                         expanded = false
