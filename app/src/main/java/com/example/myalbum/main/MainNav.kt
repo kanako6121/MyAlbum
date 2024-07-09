@@ -49,7 +49,7 @@ fun MainNav(
     Column(modifier = Modifier.fillMaxWidth()) {
         val coroutineScope = rememberCoroutineScope()
         TopAppBar(
-            title = { Text(text = "Menu") },
+            title = { Text(text = stringResource(id = R.string.app_name)) },
             modifier = Modifier
                 .fillMaxWidth(),
             colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -78,8 +78,6 @@ fun MainNav(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
-                    Text("Myアルバム", modifier = Modifier.padding(16.dp))
-                    Divider()
                     NavigationDrawerItem(
                         label = { Text(text = stringResource(R.string.album1)) },
                         selected = false,

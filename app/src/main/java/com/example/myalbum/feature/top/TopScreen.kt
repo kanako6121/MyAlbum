@@ -40,9 +40,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.main.MainViewModel
 
@@ -108,7 +110,7 @@ fun TopScreenContent(
             ) {
                 items(pictures) { pictureData ->
                     var expanded by remember { mutableStateOf(false) }
-                    Box(modifier = Modifier.padding(4.dp)) {
+                    Box(modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)) {
                         AsyncImage(
                             model = pictureData.uri,
                             contentDescription = null,
@@ -122,14 +124,14 @@ fun TopScreenContent(
                                     start = 8.dp,
                                     top = 8.dp,
                                     end = 8.dp,
-                                    bottom = 40.dp
+                                    bottom = 32.dp
                                 )
                                 .clickable { onEditScreen(pictureData) },
                         )
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
-                                .padding(start = 4.dp, bottom = 4.dp)
+                                .padding(start = 24.dp, bottom = 4.dp)
                         ) {
                             Text(
                                 text = pictureData.comment.orEmpty()
@@ -138,8 +140,7 @@ fun TopScreenContent(
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
-                                .padding(bottom = 4.dp, end = 0.dp)
-                                .align(Alignment.BottomEnd)
+                                .align(Alignment.BottomStart)
                         ) {
                             IconButton(onClick = { expanded = true }) {
                                 Icon(
@@ -153,7 +154,7 @@ fun TopScreenContent(
                                 onDismissRequest = { expanded = false }
                             ) {
                                 DropdownMenuItem(
-                                    text = { },
+                                    text = { Text(stringResource(id = R.string.description_delete)) },
                                     onClick = {
                                         onRemove(pictureData)
                                         expanded = false
