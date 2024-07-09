@@ -1,5 +1,11 @@
 package com.example.myalbum.feature.top
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -76,7 +82,7 @@ fun TopScreenContent(
     onRemove: (PictureData) -> Unit,
 ) {
     val scrollState = rememberLazyStaggeredGridState()
-    var showButton by remember{ mutableStateOf(true) }
+    var showButton by remember { mutableStateOf(true) }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.isScrollInProgress }
@@ -90,7 +96,15 @@ fun TopScreenContent(
             .statusBarsPadding()
             .navigationBarsPadding(),
         floatingActionButton = {
-            if(showButton) {
+            AnimatedVisibility(
+                visible = showButton,
+                enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
+                    animationSpec = tween(
+                        delayMillis = 1000
+                    )
+                ),
+                exit = scaleOut() + fadeOut(),
+            ) {
                 FloatingActionButton(
                     onClick = launchPicker,
                 ) {
@@ -110,7 +124,14 @@ fun TopScreenContent(
             ) {
                 items(pictures) { pictureData ->
                     var expanded by remember { mutableStateOf(false) }
-                    Box(modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)) {
+                    Box(
+                        modifier = Modifier.padding(
+                            start = 8.dp,
+                            top = 8.dp,
+                            end = 4.dp,
+                            bottom = 8.dp
+                        )
+                    ) {
                         AsyncImage(
                             model = pictureData.uri,
                             contentDescription = null,
