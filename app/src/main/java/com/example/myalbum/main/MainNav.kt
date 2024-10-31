@@ -52,7 +52,7 @@ fun MainNav(
             title = { Text(text = stringResource(id = R.string.app_name)) },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = TopAppBarDefaults.smallTopAppBarColors(
+            colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
             ),
