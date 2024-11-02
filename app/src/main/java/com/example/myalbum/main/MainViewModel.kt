@@ -2,6 +2,7 @@ package com.example.myalbum.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +15,8 @@ class MainViewModel @Inject constructor(
     private val repository: PictureRepository,
 ) : ViewModel() {
     val pictures: StateFlow<List<PictureData>> = repository.pictures
+    val albums: StateFlow<List<AlbumData>> = repository.albums
+    
     fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
             runCatching {
