@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -51,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.main.MainViewModel
 
@@ -59,6 +61,7 @@ fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
     onEditScreen: (PictureData) -> Unit,
+    onSaveAlbum: (AlbumData) -> Unit,
     onUpPress: () -> Unit,
 ) {
     val pictures by viewModel.pictures.collectAsState()
@@ -83,6 +86,8 @@ fun TopScreenContent(
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     var showButton by remember { mutableStateOf(true) }
+    var albumTitle by remember { mutableStateOf("") }
+    var isDialogOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.isScrollInProgress }

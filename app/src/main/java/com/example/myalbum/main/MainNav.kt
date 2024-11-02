@@ -22,7 +22,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -30,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.second.SecondScreen
 import com.example.myalbum.feature.third.ThirdScreen
@@ -47,6 +52,8 @@ fun MainNav(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val coroutineScope = rememberCoroutineScope()
+        var albums by remember { mutableStateOf(listOf<AlbumData>()) }
+
         TopAppBar(
             title = { Text(text = stringResource(id = R.string.app_name)) },
             modifier = Modifier
@@ -134,6 +141,9 @@ fun MainNav(
                                 },
                                 onEditScreen = { pictureData ->
                                     navController.navigate("edit/${pictureData.id}")
+                                },
+                                onSaveAlbum = { album ->
+                                    albums = albums + album
                                 },
                             )
                         }
