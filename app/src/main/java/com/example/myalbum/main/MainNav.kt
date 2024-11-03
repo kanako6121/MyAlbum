@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Menu
@@ -37,6 +38,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
+import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.top.TopScreen
 import kotlinx.coroutines.launch
@@ -157,6 +159,15 @@ fun MainNav(
             )
         }
     }
+}
+
+@Composable
+fun AlbumDialog(
+    mainViewModel: MainViewModel,
+    pictures: List<PictureData>,
+    onDismiss: () -> Unit,
+    onSave: () -> Unit) {
+
 }
 
 enum class MainNavOption {
