@@ -35,20 +35,4 @@ class PictureRepository @Inject constructor(
     suspend fun removePhoto(pictureData: PictureData) {
         preference.removePicture(pictureData.toPictureSaveData())
     }
-
-    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
-        saveList.map { it.toAlbumData() }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList()
-    )
-
-    suspend fun addAlbum(id: Int, title: String, albumData: List<PictureData>) {
-        preference.addAlbum(id, title, albumData)
-    }
-
-    suspend fun removeAlbum(albumData: AlbumData) {
-        preference.removeAlbums(albumData.toAlbumSaveData())
-    }
 }
