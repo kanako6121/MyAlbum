@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +20,8 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
@@ -167,7 +170,44 @@ fun AlbumDialog(
     pictures: List<PictureData>,
     onDismiss: () -> Unit,
     onSave: () -> Unit) {
+    var albumTitle by remember { mutableStateOf("") }
 
+    AlertDialog(
+        title = {
+            Text(text = stringResource(R.string.make_album))
+        },
+        text = {
+            TextField(
+                value = albumTitle,
+                onValueChange = { albumTitle = it },
+                label = { Text(text = stringResource(R.string.make_album)) }
+            )
+        },
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (albumTitle.isNotEmpty()) {
+                        mainViewModel.saveAlbum(
+                            mainViewModel.getNewAlbumId(),
+                            albumTitle,
+                            pictures,
+                        )
+                    }
+                }
+            )
+            {
+                Text(text = stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 enum class MainNavOption {
