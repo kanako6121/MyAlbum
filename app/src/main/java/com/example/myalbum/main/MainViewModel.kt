@@ -3,6 +3,7 @@ package com.example.myalbum.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.AlbumData
+import com.example.myalbum.core.data.AlbumRepository
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,15 +13,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: PictureRepository,
+    private val pictureRepository: PictureRepository,
+    private val albumRepository: AlbumRepository,
 ) : ViewModel() {
-    val pictures: StateFlow<List<PictureData>> = repository.pictures
-    val albums: StateFlow<List<AlbumData>> = repository.albums
+    val pictures: StateFlow<List<PictureData>> = pictureRepository.pictures
+    val albums: StateFlow<List<AlbumData>> = albumRepository.albums
     
     fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
             runCatching {
-                repository.addPicture(photo)
+                pictureRepository.addPicture(photo)
             }
         }
     }
@@ -37,13 +39,13 @@ class MainViewModel @Inject constructor(
 
     fun saveEditPhoto(pictureData: PictureData) {
         viewModelScope.launch {
-            repository.updatePicture(pictureData)
+            pictureRepository.updatePicture(pictureData)
         }
     }
 
     fun removePhoto(pictureData: PictureData) {
         viewModelScope.launch {
-            repository.removePhoto(pictureData)
+            pictureRepository.removePhoto(pictureData)
         }
     }
 }

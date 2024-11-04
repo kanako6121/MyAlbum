@@ -17,18 +17,18 @@ class AlbumRepository @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
-        saveList.map { AlbumSaveData }
+        saveList.map { it.toAlbumData() }
     }.stateIn(
         scope = scope,
         started = SharingStarted.Eagerly,
         initialValue = emptyList()
     )
 
-    suspend fun addAlbum(id: Int, title: String, albumData: List<PictureData>) {
-        preference.addAlbum(id, title, albumData)
+    suspend fun addAlbum(albumData: AlbumData) {
+        preference.addAlbum(albumData.toAlbumSaveData())
     }
 
     suspend fun removeAlbum(albumData: AlbumData) {
-        preference.removeAlbums(albumData.toAlbumSaveData())
+        preference.removeAlbum(albumData.toAlbumSaveData())
     }
 }

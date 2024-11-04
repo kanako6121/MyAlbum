@@ -15,3 +15,15 @@ data class AlbumSaveData(
     val title: String,
     val pictures: List<PictureSaveData>
 )
+
+fun AlbumData.toAlbumSaveData() = AlbumSaveData(
+    id = id,
+    title = title,
+    pictures = pictures.map { it.toPictureSaveData() }
+)
+
+fun AlbumSaveData.toAlbumData() = AlbumData(
+    id = id,
+    title = title,
+    pictures = pictures.map { it.toPictureData() }
+)
