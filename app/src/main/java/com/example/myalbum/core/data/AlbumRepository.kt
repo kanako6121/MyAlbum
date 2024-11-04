@@ -5,6 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,10 +14,10 @@ import javax.inject.Singleton
 class AlbumRepository @Inject constructor(
     private val preference: AlbumPreference
 ) {
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    val albums: StateFlow<List<AlbumData>> = .al { saveList ->
-        saveList.map { it.toAlbumData() }
+    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
+        saveList.map { AlbumSaveData }
     }.stateIn(
         scope = scope,
         started = SharingStarted.Eagerly,
