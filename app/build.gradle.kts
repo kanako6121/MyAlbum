@@ -54,7 +54,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
