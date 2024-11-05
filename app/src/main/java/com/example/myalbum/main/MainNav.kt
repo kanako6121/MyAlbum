@@ -188,9 +188,12 @@ fun AlbumDialog(
             TextButton(
                 onClick = {
                     if (albumTitle.isNotEmpty()) {
-                        mainViewModel.addAlbums(
-                            pictures.map { it.id, }
+                        val saveAlbum = AlbumData(
+                            id = mainViewModel.getAlbumId(),
+                            title = albumTitle,
+                            pictures = pictures
                         )
+                        mainViewModel.addAlbums(saveAlbum)
                     }
                 }
             )

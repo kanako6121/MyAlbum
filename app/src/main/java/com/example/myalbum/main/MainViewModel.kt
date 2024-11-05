@@ -1,6 +1,5 @@
 package com.example.myalbum.main
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.AlbumData
