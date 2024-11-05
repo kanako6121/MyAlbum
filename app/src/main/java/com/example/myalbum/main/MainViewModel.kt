@@ -48,4 +48,18 @@ class MainViewModel @Inject constructor(
             pictureRepository.removePhoto(pictureData)
         }
     }
+
+    fun addAlbums(albums: AlbumData) {
+        viewModelScope.launch {
+            runCatching {
+                albumRepository.addAlbum(albums)
+            }
+        }
+    }
+
+    fun repoveAlbums(albums: AlbumData) {
+        viewModelScope.launch {
+            albumRepository.removeAlbum(albums)
+        }
+    }
 }

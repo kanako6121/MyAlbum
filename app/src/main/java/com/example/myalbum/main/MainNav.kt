@@ -54,7 +54,7 @@ fun MainNav(
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
-    val albumData by mainViewModel.albums.collectAsStateWithLifecycle()
+    val albumData by mainViewModel.albums.
     val pictures by mainViewModel.pictures.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
 
@@ -188,11 +188,7 @@ fun AlbumDialog(
             TextButton(
                 onClick = {
                     if (albumTitle.isNotEmpty()) {
-                        mainViewModel.saveAlbum(
-                            mainViewModel.getNewAlbumId(),
-                            albumTitle,
-                            pictures,
-                        )
+                        mainViewModel.addAlbums()
                     }
                 }
             )
