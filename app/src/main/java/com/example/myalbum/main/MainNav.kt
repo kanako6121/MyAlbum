@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -105,17 +106,16 @@ fun MainNav(
                         }
                     }
                 }
-            }
+                IconButton(
+                    onClick = { showDialog = true },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Album")
+                }
+            },
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxWidth(),
-                floatingActionButton = {
-                    IconButton(
-                        onClick = { showDialog = true }
-                    ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                    }
-                }
             ) { contentPadding ->
                 Column(modifier = Modifier.padding(contentPadding)) {
                     NavHost(
@@ -195,6 +195,7 @@ fun AlbumDialog(
                         )
                         mainViewModel.addAlbums(saveAlbum)
                     }
+                    onDismiss()
                 }
             )
             {

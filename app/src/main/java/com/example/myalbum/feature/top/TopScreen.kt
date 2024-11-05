@@ -86,8 +86,6 @@ fun TopScreenContent(
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     var showButton by remember { mutableStateOf(true) }
-    var albumTitle by remember { mutableStateOf("") }
-    var isDialogOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.isScrollInProgress }
