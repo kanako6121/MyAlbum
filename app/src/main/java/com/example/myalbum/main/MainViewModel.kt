@@ -7,6 +7,7 @@ import com.example.myalbum.core.data.AlbumRepository
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class MainViewModel @Inject constructor(
     private val pictureRepository: PictureRepository,
     private val albumRepository: AlbumRepository,
 ) : ViewModel() {
+
     val pictures: StateFlow<List<PictureData>> = pictureRepository.pictures
     val albums: StateFlow<List<AlbumData>> = albumRepository.albums
     
@@ -62,9 +64,20 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun repoveAlbums(albums: AlbumData) {
+    fun removeAlbums(albums: AlbumData) {
         viewModelScope.launch {
             albumRepository.removeAlbum(albums)
+        }
+    }
+
+    fun resetScreen() {
+        viewModelScope.launch {
+            val newAlbum = AlbumData(
+                id = getAlbumId(),
+                title = "",
+                pictures = pictures.value
+            )
+            addAlbums(newAlbum)
         }
     }
 }

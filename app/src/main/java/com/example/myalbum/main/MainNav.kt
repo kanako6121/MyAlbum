@@ -159,6 +159,7 @@ fun MainNav(
                 mainViewModel = mainViewModel,
                 pictures = pictures,
                 onDismiss = { showDialog = false },
+                resetScreen = { mainViewModel.resetScreen() }
             )
         }
     }
@@ -169,6 +170,7 @@ fun AlbumDialog(
     mainViewModel: MainViewModel,
     pictures: List<PictureData>,
     onDismiss: () -> Unit,
+    resetScreen:() -> Unit,
 ) {
     var albumTitle by remember { mutableStateOf("") }
 
@@ -196,6 +198,7 @@ fun AlbumDialog(
                         mainViewModel.addAlbums(saveAlbum)
                     }
                     onDismiss()
+                    resetScreen()
                 }
             )
             {
