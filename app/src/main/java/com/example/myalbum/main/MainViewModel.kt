@@ -1,5 +1,6 @@
 package com.example.myalbum.main
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.AlbumData
@@ -47,6 +48,11 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             pictureRepository.removePhoto(pictureData)
         }
+    }
+
+    fun getAlbumId(): Int {
+        val lastId = albums.value.lastOrNull()?.id
+        return if (lastId == null) 0 else lastId + 1
     }
 
     fun addAlbums(albums: AlbumData) {

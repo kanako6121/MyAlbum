@@ -41,6 +41,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.top.TopScreen
@@ -54,7 +55,7 @@ fun MainNav(
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
-    val albumData by mainViewModel.albums.
+    val albumData by mainViewModel.albums.collectAsStateWithLifecycle()
     val pictures by mainViewModel.pictures.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
 
@@ -158,7 +159,6 @@ fun MainNav(
                 mainViewModel = mainViewModel,
                 pictures = pictures,
                 onDismiss = { showDialog = false },
-                onSave = { showDialog = false }
             )
         }
     }
@@ -169,7 +169,7 @@ fun AlbumDialog(
     mainViewModel: MainViewModel,
     pictures: List<PictureData>,
     onDismiss: () -> Unit,
-    onSave: () -> Unit) {
+) {
     var albumTitle by remember { mutableStateOf("") }
 
     AlertDialog(
@@ -188,7 +188,9 @@ fun AlbumDialog(
             TextButton(
                 onClick = {
                     if (albumTitle.isNotEmpty()) {
-                        mainViewModel.addAlbums()
+                        mainViewModel.addAlbums(
+                            pictures.map { it.id, }
+                        )
                     }
                 }
             )
