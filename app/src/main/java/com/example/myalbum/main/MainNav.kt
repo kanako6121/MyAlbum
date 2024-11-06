@@ -1,6 +1,5 @@
 package com.example.myalbum.main
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -82,7 +81,6 @@ fun MainNav(
                 }
             }
         )
-
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
@@ -92,25 +90,21 @@ fun MainNav(
                             items = albumData,
                             key = { it.id }
                         ) { item ->
-                            Box(
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                ModalDrawerAlbumItem(
-                                    title = item.title,
-                                    thumbnailUri = item.pictures.lastOrNull().toString(),
-                                    onClick = {
-                                        navController.navigate("album/${item.id}")
-                                    },
-                                )
-                            }
+                            ModalDrawerAlbumItem(
+                                title = item.title,
+                                thumbnailUri = item.pictures.lastOrNull()?.toString(),
+                                onClick = {
+                                    navController.navigate("album/${item.id}")
+                                }
+                            )
                         }
                     }
-                }
-                IconButton(
-                    onClick = { showDialog = true },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Album")
+                    IconButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                    }
                 }
             },
         ) {
@@ -153,7 +147,6 @@ fun MainNav(
                 }
             }
         }
-
         if (showDialog) {
             AlbumDialog(
                 mainViewModel = mainViewModel,
@@ -170,7 +163,7 @@ fun AlbumDialog(
     mainViewModel: MainViewModel,
     pictures: List<PictureData>,
     onDismiss: () -> Unit,
-    resetScreen:() -> Unit,
+    resetScreen: () -> Unit,
 ) {
     var albumTitle by remember { mutableStateOf("") }
 
