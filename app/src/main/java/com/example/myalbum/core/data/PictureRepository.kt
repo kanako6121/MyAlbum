@@ -16,14 +16,6 @@ class PictureRepository @Inject constructor(
 ) {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    val pictures: StateFlow<List<PictureData>> = preference.pictures.map { saveList ->
-        saveList.map { it.toPictureData() }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList(),
-    )
-
     suspend fun addPicture(pictureData: PictureData) {
         preference.addPicture(pictureData.toPictureSaveData())
     }
@@ -36,8 +28,14 @@ class PictureRepository @Inject constructor(
         preference.removePicture(pictureData.toPictureSaveData())
     }
 
-    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
-        saveList.map { it.toAlbumData() }
+    suspend fun addPictureToAlbum(albumId: Int, pictureData: PictureData) {
+        val currentAlbum = albums.value.lastOrNull()
+        val newAlbum = currentAlbum?.pictures?.lastOrNull(
+        )
+        preference.addAlbum(currentAlbum.map { it.toAlbumSaveData() }
+    }
+
+    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList -> saveList.map { it.toAlbumData() }
     }.stateIn(
         scope = scope,
         started = SharingStarted.Eagerly,

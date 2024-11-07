@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
+import com.example.myalbum.core.data.toAlbumSaveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +16,6 @@ class MainViewModel @Inject constructor(
     private val pictureRepository: PictureRepository,
 ) : ViewModel() {
 
-    val pictures: StateFlow<List<PictureData>> = pictureRepository.pictures
     val albums: StateFlow<List<AlbumData>> = pictureRepository.albums
 
     fun savePhoto(photo: PictureData) {
@@ -27,12 +27,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun getPhotoId(): Int {
-        val lastId = pictures.value.lastOrNull()?.id
+        val lastId = albums.value.lastOrNull()?.id
         return if (lastId == null) 0 else lastId + 1
     }
 
-    fun getPictureData(selectedId: Int): PictureData? {
-        val data = pictures.value.firstOrNull { it.id == selectedId }
+    fun getPictureData(selectedId: Int): AlbumData? {
+        val data = albums.value.firstOrNull { it.id == selectedId }
         return data
     }
 
@@ -61,20 +61,20 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun addPicturesToAlbum(albumId: Int, pictures: PictureData) {
+        viewModelScope.launch {
+            pictureRepository.addPictureToAlbum(albumId, pictures)
+        }
+    }
+
     fun removeAlbums(albumsId: Int) {
         viewModelScope.launch {
             pictureRepository.removeAlbum(albumsId)
         }
     }
 
-    fun resetScreen() {
+    fun resetScreen(albumId: Int) {
         viewModelScope.launch {
-            val newAlbum = AlbumData(
-                id = getAlbumId(),
-                title = "",
-                pictures = pictures.value
-            )
-            addAlbums(newAlbum)
         }
     }
 }
