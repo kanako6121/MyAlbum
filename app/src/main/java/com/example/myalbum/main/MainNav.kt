@@ -186,8 +186,7 @@ fun AlbumDialog(
                             title = albumTitle,
                             pictures = pictures
                         )
-                        mainViewModel.addAlbums(saveAlbum)
-                    }
+                        mainViewModel.addPictureToAlbum(saveAlbum)                    }
                     onDismiss()
                     resetScreen()
                 }

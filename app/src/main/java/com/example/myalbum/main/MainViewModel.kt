@@ -49,11 +49,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun getAlbumId(): Int {
-        val lastId = albums.value.lastOrNull()?.id
-        return if (lastId == null) 0 else lastId + 1
+        val lastId = albums.value.lastOrNull()?.id ?: 0
+        return lastId + 1
     }
 
-    fun addAlbums(albums: AlbumData) {
+    fun addAlbum(albums: AlbumData) {
         viewModelScope.launch {
             runCatching {
                 pictureRepository.addAlbum(albums)
@@ -61,9 +61,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun addPicturesToAlbum(albumId: Int, pictures: PictureData) {
+    fun addPictureToAlbum(albumId: Int, picture: PictureData) {
         viewModelScope.launch {
-            pictureRepository.addPictureToAlbum(albumId, pictures)
+            pictureRepository.addPictureToAlbum(albumId, picture)
         }
     }
 

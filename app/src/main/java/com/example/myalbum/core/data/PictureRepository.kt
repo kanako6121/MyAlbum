@@ -15,6 +15,13 @@ class PictureRepository @Inject constructor(
     private val preference: PicturePreference
 ) {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
+        saveList.map { it.toAlbumData() }
+    }.stateIn(
+        scope = scope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList()
+    )
 
     suspend fun addPicture(pictureData: PictureData) {
         preference.addPicture(pictureData.toPictureSaveData())
@@ -24,29 +31,30 @@ class PictureRepository @Inject constructor(
         preference.editPictures(pictureData.toPictureSaveData())
     }
 
-    fun updateAlbum(updatedAlbum: AlbumData) {
-        val currentAlbums = albums.value
-        val albumId = currentAlbums.map { it.id }
-        preference.addAlbum(listOf(updatedAlbum.pictures))
+    suspend fun updateAlbums(updatedAlbums: List<AlbumData>) {
+        preference.updateAlbums(updatedAlbums.map { it.toAlbumSaveData() })
     }
 
+    suspend fun addPictureToAlbum(albumId: Int, pictureData: PictureData) {
+        val currentAlbums = albums.value.toMutableList()
+        val albumIndex = currentAlbums.indexOfFirst { it.id == albumId }
+
+        if (albumIndex != -1) {
+            val updatedAlbum = currentAlbums[albumIndex].copy(
+                pictures = currentAlbums[albumIndex].pictures + pictureData
+            )
+            currentAlbums[albumIndex] = updatedAlbum
+            updateAlbums(currentAlbums)
+        }
+    }
     //現状のアルバム一覧をまず取得する
     //その一覧から該当のIDのアルバムデータを取得する
     //アルバムデータ内の写真リストに、写真を保存する（これはいままで１つのアルバムでやったのと同じ）
     //３で更新したアルバムデータを、アルバム一覧内の該当IDのアルバム部分を置き換える
-    //更新されたアルバム一覧を保存する。
 
     suspend fun removePhoto(pictureData: PictureData) {
         preference.removePicture(pictureData.toPictureSaveData())
     }
-
-    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
-        saveList.map { it.toAlbumData() }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList()
-    )
 
     suspend fun addAlbum(albumData: AlbumData) {
         preference.addAlbum(albumData.toAlbumSaveData())

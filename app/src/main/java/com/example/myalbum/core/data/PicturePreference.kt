@@ -87,4 +87,8 @@ class PicturePreference @Inject constructor(
             prefs[albumsKey] = json.encodeToString(newList)
         }
     }
+
+    fun updateAlbums(map: List<AlbumSaveData>) {
+
+    }
 }
