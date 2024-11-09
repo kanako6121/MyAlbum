@@ -24,18 +24,18 @@ class PictureRepository @Inject constructor(
         preference.editPictures(pictureData.toPictureSaveData())
     }
 
+    suspend fun updateAlbum(updatedAlbum: AlbumData) {
+        val currentAlbums = albums.value.lastOrNull()
+        val albumId = updatedAlbum.id
+        currentAlbums[albumId] = updatedAlbum
+    }
+
     suspend fun removePhoto(pictureData: PictureData) {
         preference.removePicture(pictureData.toPictureSaveData())
     }
 
-    suspend fun addPictureToAlbum(albumId: Int, pictureData: PictureData) {
-        val currentAlbum = albums.value.lastOrNull()
-        val newAlbum = currentAlbum?.pictures?.lastOrNull(
-        )
-        preference.addAlbum(currentAlbum.map { it.toAlbumSaveData() }
-    }
-
-    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList -> saveList.map { it.toAlbumData() }
+    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
+        saveList.map { it.toAlbumData() }
     }.stateIn(
         scope = scope,
         started = SharingStarted.Eagerly,
