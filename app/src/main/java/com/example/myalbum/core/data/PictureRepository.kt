@@ -24,11 +24,17 @@ class PictureRepository @Inject constructor(
         preference.editPictures(pictureData.toPictureSaveData())
     }
 
-    suspend fun updateAlbum(updatedAlbum: AlbumData) {
-        val currentAlbums = albums.value.lastOrNull()
-        val albumId = updatedAlbum.id
-        currentAlbums[albumId] = updatedAlbum
+    fun updateAlbum(updatedAlbum: AlbumData) {
+        val currentAlbums = albums.value
+        val albumId = currentAlbums.map { it.id }
+        preference.addAlbum(listOf(updatedAlbum.pictures))
     }
+
+    //現状のアルバム一覧をまず取得する
+    //その一覧から該当のIDのアルバムデータを取得する
+    //アルバムデータ内の写真リストに、写真を保存する（これはいままで１つのアルバムでやったのと同じ）
+    //３で更新したアルバムデータを、アルバム一覧内の該当IDのアルバム部分を置き換える
+    //更新されたアルバム一覧を保存する。
 
     suspend fun removePhoto(pictureData: PictureData) {
         preference.removePicture(pictureData.toPictureSaveData())
