@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.core.data.PictureRepository
-import com.example.myalbum.core.data.toAlbumSaveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,8 +15,10 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val pictureRepository: PictureRepository,
 ) : ViewModel() {
-
+    private val _currentPictures = MutableStateFlow<List<PictureData>>(emptyList())
+    val currentPictures: StateFlow<List<PictureData>> = _currentPictures
     val albums: StateFlow<List<AlbumData>> = pictureRepository.albums
+
 
     fun savePhoto(photo: PictureData) {
         viewModelScope.launch {
@@ -53,13 +55,27 @@ class MainViewModel @Inject constructor(
         return lastId + 1
     }
 
-    fun addAlbum(albums: AlbumData) {
+    fun addNewAlbum(title: String) {
         viewModelScope.launch {
-            runCatching {
-                pictureRepository.addAlbum(albums)
+            val newAlbum = AlbumData(
+                id = getAlbumId(),
+                title = title,
+                pictures = _currentPictures.value
+            )
+            pictureRepository.addAlbum(newAlbum)
+            resetScreen()
+        }
+    }
+
+    fun loadAlbum(albumId: Int) {
+        viewModelScope.launch {
+            val album = albums.value.firstOrNull { it.id == albumId }
+            if (album != null) {
+                _currentPictures.value = album.pictures
             }
         }
     }
+
 
     fun addPictureToAlbum(albumId: Int, picture: PictureData) {
         viewModelScope.launch {
@@ -73,8 +89,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun resetScreen(albumId: Int) {
-        viewModelScope.launch {
-        }
+    private fun resetScreen() {
+        _currentPictures.value = emptyList()
     }
 }

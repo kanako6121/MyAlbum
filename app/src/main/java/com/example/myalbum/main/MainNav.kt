@@ -39,7 +39,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
-import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.edit.EditScreen
 import com.example.myalbum.feature.top.TopScreen
@@ -181,12 +180,9 @@ fun AlbumDialog(
             TextButton(
                 onClick = {
                     if (albumTitle.isNotEmpty()) {
-                        val saveAlbum = AlbumData(
-                            id = mainViewModel.getAlbumId(),
-                            title = albumTitle,
-                            pictures = pictures
-                        )
-                        mainViewModel.addPictureToAlbum(saveAlbum)                    }
+                        mainViewModel.addNewAlbum(albumTitle)
+                        onDismiss()
+                    }
                     onDismiss()
                     resetScreen()
                 }
