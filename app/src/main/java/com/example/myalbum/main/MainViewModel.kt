@@ -15,6 +15,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val pictureRepository: PictureRepository,
 ) : ViewModel() {
+    val pictures: StateFlow<List<PictureData>> = pictureRepository.pictures
     private val _currentPictures = MutableStateFlow<List<PictureData>>(emptyList())
     val currentPictures: StateFlow<List<PictureData>> = _currentPictures
     val albums: StateFlow<List<AlbumData>> = pictureRepository.albums
@@ -76,12 +77,16 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
-    fun addPictureToAlbum(albumId: Int, picture: PictureData) {
+    fun updateNewAlbum(albumId: Int, newPicture: PictureData) {
         viewModelScope.launch {
-            pictureRepository.addPictureToAlbum(albumId, picture)
+            val albun = albums.value.firstOrNull {it.id == albumId }
+            if(albun != null) {
+                val newPictures = albun.pictures + newPicture
+                pictureRepository.updateAlbumPictures(albumId, newPictures)
+            }
         }
     }
+
 
     fun removeAlbums(albumsId: Int) {
         viewModelScope.launch {

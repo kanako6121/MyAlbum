@@ -15,6 +15,14 @@ class PictureRepository @Inject constructor(
     private val preference: PicturePreference
 ) {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    val pictures: StateFlow<List<PictureData>> = preference.pictures.map { saveList ->
+        saveList.map { it.toPictureData() }
+    }.stateIn(
+        scope = scope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList(),
+    )
+
     val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
         saveList.map { it.toAlbumData() }
     }.stateIn(
@@ -31,26 +39,21 @@ class PictureRepository @Inject constructor(
         preference.editPictures(pictureData.toPictureSaveData())
     }
 
-    suspend fun updateAlbums(updatedAlbums: List<AlbumData>) {
+    private fun updateAlbums(updatedAlbums: List<AlbumData>) {
         preference.updateAlbums(updatedAlbums.map { it.toAlbumSaveData() })
     }
 
-    suspend fun addPictureToAlbum(albumId: Int, pictureData: PictureData) {
+    fun updateAlbumPictures(albumId: Int, newPictures: List<PictureData>) {
         val currentAlbums = albums.value.toMutableList()
-        val albumIndex = currentAlbums.indexOfFirst { it.id == albumId }
-
-        if (albumIndex != -1) {
-            val updatedAlbum = currentAlbums[albumIndex].copy(
-                pictures = currentAlbums[albumIndex].pictures + pictureData
+        val albumId = currentAlbums.indexOfFirst { it.id == albumId }
+        if( albumId !=null ) {
+            val updateAlbums = currentAlbums[albumId].copy(
+                pictures = newPictures
             )
-            currentAlbums[albumIndex] = updatedAlbum
+            currentAlbums[albumId] = updateAlbums
             updateAlbums(currentAlbums)
         }
     }
-    //現状のアルバム一覧をまず取得する
-    //その一覧から該当のIDのアルバムデータを取得する
-    //アルバムデータ内の写真リストに、写真を保存する（これはいままで１つのアルバムでやったのと同じ）
-    //３で更新したアルバムデータを、アルバム一覧内の該当IDのアルバム部分を置き換える
 
     suspend fun removePhoto(pictureData: PictureData) {
         preference.removePicture(pictureData.toPictureSaveData())
