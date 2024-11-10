@@ -79,11 +79,23 @@ class MainViewModel @Inject constructor(
 
     fun updateNewAlbum(albumId: Int, newPicture: PictureData) {
         viewModelScope.launch {
-            val albun = albums.value.firstOrNull {it.id == albumId }
-            if(albun != null) {
-                val newPictures = albun.pictures + newPicture
+            val album = albums.value.firstOrNull {it.id == albumId }
+            if(album != null) {
+                val newPictures = album.pictures + newPicture
                 pictureRepository.updateAlbumPictures(albumId, newPictures)
             }
+        }
+    }
+
+    fun updatedAlbums(albumId: Int, updatePicture: PictureData) {
+        viewModelScope.launch {
+            val album = albums.value.firstOrNull { it.id == albumId}
+            if(album != null) {
+                val updatePictures = album.pictures.map {
+                    if(it.id == updatePicture.id) updatePicture else it
+                }
+                pictureRepository.updateAlbumPictures(albumId, updatePictures)
+        }
         }
     }
 
