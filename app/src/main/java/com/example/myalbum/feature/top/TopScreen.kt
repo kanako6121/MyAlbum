@@ -60,7 +60,6 @@ fun TopScreen(
     viewModel: MainViewModel,
     launchPicker: () -> Unit,
     onEditScreen: (PictureData) -> Unit,
-    onSaveAlbum: (AlbumData) -> Unit,
     onUpPress: () -> Unit,
 ) {
     val pictures by viewModel.pictures.collectAsState()
@@ -69,7 +68,6 @@ fun TopScreen(
         onUpPress = onUpPress,
         onEditScreen = onEditScreen,
         pictures = pictures,
-        onSaveData = viewModel::savePhoto,
         onRemove = viewModel::removePhoto,
     )
 }
@@ -80,7 +78,6 @@ fun TopScreenContent(
     onUpPress: () -> Unit,
     onEditScreen: (PictureData) -> Unit,
     pictures: List<PictureData>,
-    onSaveData: (PictureData) -> Unit,
     onRemove: (PictureData) -> Unit,
 ) {
     val scrollState = rememberLazyStaggeredGridState()
@@ -207,7 +204,6 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onEditScreen = {},
         pictures = emptyList(),
-        onSaveData = {},
         onRemove = {},
     )
 }
