@@ -23,14 +23,6 @@ class PictureRepository @Inject constructor(
         initialValue = emptyList(),
     )
 
-    val albums: StateFlow<List<AlbumData>> = preference.albums.map { saveList ->
-        saveList.map { it.toAlbumData() }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList()
-    )
-
     suspend fun addPicture(pictureData: PictureData) {
         preference.addPicture(pictureData.toPictureSaveData())
     }
@@ -39,31 +31,35 @@ class PictureRepository @Inject constructor(
         preference.editPictures(pictureData.toPictureSaveData())
     }
 
-    private fun updateAlbums(updatedAlbums: List<AlbumData>) {
-        preference.updateAlbums(updatedAlbums.map { it.toAlbumSaveData() })
-    }
-
-    fun updateAlbumPictures(albumId: Int, newPictures: List<PictureData>) {
-        val currentAlbums = albums.value.toMutableList()
-        val albumId = currentAlbums.indexOfFirst { it.id == albumId }
-        if( albumId !=null ) {
-            val updateAlbums = currentAlbums[albumId].copy(
-                pictures = newPictures
-            )
-            currentAlbums[albumId] = updateAlbums
-            updateAlbums(currentAlbums)
-        }
-    }
-
     suspend fun removePhoto(pictureData: PictureData) {
         preference.removePicture(pictureData.toPictureSaveData())
     }
 
-    suspend fun addAlbum(albumData: AlbumData) {
-        preference.addAlbum(albumData.toAlbumSaveData())
+    fun createAlbum(title: String): {
+
     }
 
-    suspend fun removeAlbum(albumId: Int) {
-        preference.removeAlbum(albumId)
+    fun addPhotoToAlbum(albumId: Int, pictureData: PictureData): {
+
+    }
+
+    fun getAlbum(id: Int): AlbumData {
+
+    }
+
+    fun saveAlbumList(albumId: Int, updateAlbum: AlbumData): {
+
+    }
+
+    fun updateAlbumPictures(albumId: Int, newPictures: List<PictureData>): AlbumData {
+
+    }
+
+    fun removePhoto(id: Int) {
+
+    }
+
+    fun deleateAlbum(albumId: Int) {
+
     }
 }

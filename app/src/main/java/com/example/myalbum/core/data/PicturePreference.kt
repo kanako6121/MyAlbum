@@ -21,8 +21,7 @@ class PicturePreference @Inject constructor(
     @ApplicationContext context: Context
 ) {
     private val store = context.dataStore
-    private val picturesKey = stringPreferencesKey("pictures")
-    private val albumsKey = stringPreferencesKey("albums")
+    private val picturesKey = stringPreferencesKey("pictureKey")
 
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
@@ -39,18 +38,18 @@ class PicturePreference @Inject constructor(
         }.getOrDefault(emptyList())
     }
 
-    suspend fun addPicture(pictureSaveData: PictureSaveData) {
-        val newList = pictures.first() + pictureSaveData
-        store.edit { prefs ->
-            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
-        }
-    }
-
     suspend fun editPictures(pictureEditData: PictureSaveData) {
         val current = pictures.first()
         val newList = current.map {
             if (it.id == pictureEditData.id) pictureEditData else it
         }
+        store.edit { prefs ->
+            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
+        }
+    }
+
+    suspend fun addPicture(pictureSaveData: PictureSaveData) {
+        val newList = pictures.first() + pictureSaveData
         store.edit { prefs ->
             prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
         }
@@ -62,33 +61,5 @@ class PicturePreference @Inject constructor(
         store.edit { prefs ->
             prefs[picturesKey] = json.encodeToString(newList)
         }
-    }
-
-    val albums: Flow<List<AlbumSaveData>> = store.data.map { prefs ->
-        val jsonString: String = prefs[albumsKey] ?: return@map emptyList<AlbumSaveData>()
-        runCatching {
-            json.decodeFromString<List<AlbumSaveData>>(jsonString)
-        }.getOrDefault(emptyList())
-    }
-
-    suspend fun addAlbum(albumSaveData: AlbumSaveData) {
-        val newList = (listOf(albumSaveData) + albums.first())
-            .distinctBy { it.id }
-            .sortedBy { it.id }
-        store.edit { prefs ->
-            prefs[albumsKey] = json.encodeToString<List<AlbumSaveData>>(newList)
-        }
-    }
-
-    suspend fun removeAlbum(albumId: Int) {
-        val current = albums.first()
-        val newList = current.filterNot { it.id == albumId }
-        store.edit { prefs ->
-            prefs[albumsKey] = json.encodeToString(newList)
-        }
-    }
-
-    fun updateAlbums(map: List<AlbumSaveData>) {
-
     }
 }

@@ -149,7 +149,7 @@ fun MainNav(
                 mainViewModel = mainViewModel,
                 pictures = pictures,
                 onDismiss = { showDialog = false },
-                resetScreen = { mainViewModel.resetScreen() }
+                resetScreen = {  }
             )
         }
     }
