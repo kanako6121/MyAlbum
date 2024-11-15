@@ -36,20 +36,20 @@ class PictureRepository @Inject constructor(
     }
 
     fun createAlbum(title: String): AlbumData {
-//デフォルトアルバム　idは＋で
+//（１）
     }
 
     fun updateAlbumTitle(albumId: Int,  newTitle: String ) {
     }
-//別名のタイトルにするとき
+//（２）
 
     fun addPhotoToAlbum(albumId: Int, pictureData: PictureData): {
     }
-//指定のアルバムに新しい写真を追加
+//（３）
 
     fun updatePicture(pidtureId: Int, picture: PictureData): {
     }
-//指定のアルバムのコメントや写真を更新
+//（４）
 
     fun getAlbumId(albumId: Int): AlbumData {
 
@@ -61,10 +61,10 @@ class PictureRepository @Inject constructor(
 
 
     fun removePhoto(id: Int) {
-        //写真を削除
+        //（５）
     }
 
     fun deleateAlbum(albumId: Int) {
-        //アルバムを削除
+        //（６）
     }
 }
