@@ -35,25 +35,28 @@ class PictureRepository @Inject constructor(
         preference.removePicture(pictureData.toPictureSaveData())
     }
 
-    fun createAlbum(title: String, pictures: List<PictureData>): AlbumData{
-        //デフォルトのアルバムに名前をつけて、識別IDを付与して写真リストとセットになったアルバムデータを返す。
-        //そのidが保存用keyにもなる
+    fun createAlbum(title: String): AlbumData {
+//デフォルトアルバム　idは＋で
     }
 
-    fun updateAlbum(albumId: Int, currentPictures: List<PictureData>, newPictures: List<PictureData>): AlbumData {
-      //Idによって識別できているアルバムデータをTopScreenに呼び出すとき、書き換える。
+    fun updateAlbumTitle(albumId: Int,  newTitle: String ) {
     }
+//別名のタイトルにするとき
 
     fun addPhotoToAlbum(albumId: Int, pictureData: PictureData): {
-        //当該アルバムに写真を追加する
+    }
+//指定のアルバムに新しい写真を追加
+
+    fun updatePicture(pidtureId: Int, picture: PictureData): {
+    }
+//指定のアルバムのコメントや写真を更新
+
+    fun getAlbumId(albumId: Int): AlbumData {
+
     }
 
-    fun editAlbumData(albumId: Int, picture: PictureData): {
-        //当該アルバムのPictureData(idとコメントuriのどれかまたは全部）を編集する
-    }
+    fun getAlbumData(): List<AlbumData> {
 
-    fun saveAlbumList(albumId: Int, updateAlbum: AlbumData): {
-        //アルバムデータをアルバムごとに保存する
     }
 
 
