@@ -3,9 +3,12 @@ package com.example.myalbum.main
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material3.Divider
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,26 +17,30 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
+import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.edit.EditScreen
-import com.example.myalbum.feature.second.SecondScreen
-import com.example.myalbum.feature.third.ThirdScreen
 import com.example.myalbum.feature.top.TopScreen
 import kotlinx.coroutines.launch
 
@@ -44,15 +51,18 @@ fun MainNav(
     launchPicker: () -> Unit,
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    startDestinagtion: MainNavOption = MainNavOption.TopScreen,
 ) {
+    val albumData by mainViewModel.albums.collectAsStateWithLifecycle()
+    val pictures by mainViewModel.pictures.collectAsStateWithLifecycle()
+    var showDialog by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         val coroutineScope = rememberCoroutineScope()
+
         TopAppBar(
             title = { Text(text = stringResource(id = R.string.app_name)) },
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = TopAppBarDefaults.smallTopAppBarColors(
+            modifier = Modifier.fillMaxWidth(),
+            colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
             ),
@@ -60,66 +70,45 @@ fun MainNav(
                 IconButton(
                     onClick = {
                         coroutineScope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
+                            if (drawerState.isClosed) drawerState.open() else drawerState.close()
                         }
-                    },
+                    }
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Menu,
-                        contentDescription = null
-                    )
+                    Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
                 }
             }
         )
-
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
-                    NavigationDrawerItem(
-                        label = { Text(text = stringResource(R.string.album1)) },
-                        selected = false,
-                        onClick = {
-                            navController.navigate(MainNavOption.TopScreen.name) {
-                                popUpTo(id = navController.graph.id)
-                            }
-                            coroutineScope.launch { drawerState.close() }
+                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                        items(
+                            items = albumData,
+                            key = { it.id }
+                        ) { item ->
+                            ModalDrawerAlbumItem(
+                                title = item.title,
+                                thumbnailUri = item.pictures.lastOrNull()?.toString(),
+                                onClick = {
+                                    navController.navigate("album/${item.id}")
+                                }
+                            )
                         }
-                    )
-                    Divider()
-                    NavigationDrawerItem(
-                        label = { Text(text = stringResource(R.string.album2)) },
-                        selected = false,
-                        onClick = {
-                            navController.navigate(MainNavOption.SecondScreen.name) {
-                                popUpTo(id = navController.graph.id)
-                            }
-                            coroutineScope.launch { drawerState.close() }
-                        }
-                    )
-                    Divider()
-                    NavigationDrawerItem(
-                        label = { Text(text = stringResource(R.string.album3)) },
-                        selected = false,
-                        onClick = {
-                            navController.navigate(MainNavOption.ThirdScreen.name) {
-                                popUpTo(id = navController.graph.id)
-                            }
-                            coroutineScope.launch { drawerState.close() }
-                        }
-                    )
+                    }
+                    IconButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                    }
                 }
             },
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxWidth(),
-            )
-            { contentPadding ->
-                Column(
-                    modifier = Modifier.padding(contentPadding),
-                ) {
+            ) { contentPadding ->
+                Column(modifier = Modifier.padding(contentPadding)) {
                     NavHost(
                         navController = navController,
                         startDestination = MainNavOption.TopScreen.name,
@@ -130,19 +119,16 @@ fun MainNav(
                                 launchPicker = launchPicker,
                                 onUpPress = {
                                     coroutineScope.launch {
-                                        drawerState.apply { if (isClosed) open() else close() }
+                                        if (drawerState.isClosed) drawerState.open() else drawerState.close()
                                     }
                                 },
                                 onEditScreen = { pictureData ->
                                     navController.navigate("edit/${pictureData.id}")
                                 },
+                                onSaveAlbum = { albumData ->
+                                    navController.navigate("save/${albumData}")
+                                }
                             )
-                        }
-                        composable(MainNavOption.SecondScreen.name) {
-                            SecondScreen(onUpPress = { /*TODO*/ })
-                        }
-                        composable(MainNavOption.ThirdScreen.name) {
-                            ThirdScreen(onUpPress = { /*TODO*/ })
                         }
                         composable("edit/{selectId}") { backStackEntry ->
                             EditScreen(
@@ -158,11 +144,64 @@ fun MainNav(
                 }
             }
         }
+        if (showDialog) {
+            AlbumDialog(
+                mainViewModel = mainViewModel,
+                pictures = pictures,
+                onDismiss = { showDialog = false },
+                resetScreen = {  }
+            )
+        }
     }
+}
+
+@Composable
+fun AlbumDialog(
+    mainViewModel: MainViewModel,
+    pictures: List<PictureData>,
+    onDismiss: () -> Unit,
+    resetScreen: () -> Unit,
+) {
+    var albumTitle by remember { mutableStateOf("") }
+
+    AlertDialog(
+        title = {
+            Text(text = stringResource(R.string.make_album))
+        },
+        text = {
+            TextField(
+                value = albumTitle,
+                onValueChange = { albumTitle = it },
+                label = { Text(text = stringResource(R.string.make_album)) }
+            )
+        },
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    if (albumTitle.isNotEmpty()) {
+                        mainViewModel.addNewAlbum(albumTitle)
+                        onDismiss()
+                    }
+                    onDismiss()
+                    resetScreen()
+                }
+            )
+            {
+                Text(text = stringResource(R.string.save))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 enum class MainNavOption {
     TopScreen,
-    SecondScreen,
-    ThirdScreen,
+    EditScreen,
 }

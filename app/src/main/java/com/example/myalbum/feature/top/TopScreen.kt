@@ -51,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.main.MainViewModel
 
@@ -67,7 +68,6 @@ fun TopScreen(
         onUpPress = onUpPress,
         onEditScreen = onEditScreen,
         pictures = pictures,
-        onSaveData = viewModel::savePhoto,
         onRemove = viewModel::removePhoto,
     )
 }
@@ -78,7 +78,6 @@ fun TopScreenContent(
     onUpPress: () -> Unit,
     onEditScreen: (PictureData) -> Unit,
     pictures: List<PictureData>,
-    onSaveData: (PictureData) -> Unit,
     onRemove: (PictureData) -> Unit,
 ) {
     val scrollState = rememberLazyStaggeredGridState()
@@ -205,7 +204,6 @@ fun ShowPhotoGrid() {
         onUpPress = {},
         onEditScreen = {},
         pictures = emptyList(),
-        onSaveData = {},
         onRemove = {},
     )
 }

@@ -13,7 +13,14 @@
     <string name="drawer_preview">プレビュー</string>
     <string name="comment">10文字までコメントできます</string>
     <string name="post">投稿する</string>
-    <string name="album1">アルバム１</string>
-    <string name="album2">アルバム２</string>
+    <string name="save">保存する</string>
+    <string name="cancel">キャンセル</string>
+    <string name="make_album">このアルバムに名前をつけて保存する</string>
+    <string name="album1">アルバム１く</string>
+    <string name="album2">アルバム２く</string>
     <string name="album3">アルバム３</string>
+    <string name="album4">アルバム４</string>
+    <string name="album5">アルバム５</string>
+    <string name="new_album">新しいアルバム名</string>
+
 </resources>

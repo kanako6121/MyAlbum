@@ -21,7 +21,7 @@ class PicturePreference @Inject constructor(
     @ApplicationContext context: Context
 ) {
     private val store = context.dataStore
-    private val picturesKey = stringPreferencesKey("pictures")
+    private val picturesKey = stringPreferencesKey("pictureKey")
 
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
@@ -38,18 +38,18 @@ class PicturePreference @Inject constructor(
         }.getOrDefault(emptyList())
     }
 
-    suspend fun addPicture(pictureSaveData: PictureSaveData) {
-        val newList = pictures.first() + pictureSaveData
-        store.edit { prefs ->
-            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
-        }
-    }
-
     suspend fun editPictures(pictureEditData: PictureSaveData) {
         val current = pictures.first()
         val newList = current.map {
             if (it.id == pictureEditData.id) pictureEditData else it
         }
+        store.edit { prefs ->
+            prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
+        }
+    }
+
+    suspend fun addPicture(pictureSaveData: PictureSaveData) {
+        val newList = pictures.first() + pictureSaveData
         store.edit { prefs ->
             prefs[picturesKey] = json.encodeToString<List<PictureSaveData>>(newList)
         }
