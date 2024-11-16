@@ -37,27 +37,21 @@ class PictureRepository @Inject constructor(
         preference.removePicture(pictureData.toPictureSaveData())
     }
 
-    fun createAlbum(title: String):{
-//（１）
+    fun createAlbum(title: String) {
     }
 
-    fun updateAlbumTitle(albumId: Int,  newTitle: String ) ：AlbumData{
+    fun updateAlbumTitle(albumId: Int,  newTitle: String ) :AlbumData {
     }
-//（２）新しいタイトルにアップデート（ここでタイトルと一緒に固有のID付与
 
-    fun addPhotoToAlbum(pictures: List<PictureData>): AlbumData{
+    fun addPhotoToAlbum(albumId: Int, picture: PictureData) {
     }
-//（３）写真１枚追加　該当のアルバム（ID）に、クリックした写真（id.uri）のPictureData（コメントまだなし）を追加
 
-    fun updatePicture(id: Int, comment: String): PictureData{
+    fun updatePicture(albumId: Int, pictureData: PictureData) {
     }
-//（４）その指定のアルバムの写真を１枚更新（コメント更新）
 
-    fun removePhoto(id: Int) {
-        //（５）
+    fun removePhoto(albumId: Int, id: Int) {
     }
 
     fun deleateAlbum(albumId: Int) {
-        //（６）
     }
 }
