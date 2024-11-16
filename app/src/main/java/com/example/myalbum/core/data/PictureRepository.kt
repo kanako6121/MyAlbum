@@ -1,10 +1,10 @@
 package com.example.myalbum.core.data
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,37 +12,39 @@ import javax.inject.Singleton
 class PictureRepository @Inject constructor(
   private val preference: AlbumPreference
 ) {
-  private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
   val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
-  fun createAlbum(title: String) {
+  suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
   }
 
-  fun updateAlbumTitle(
+  suspend fun updateAlbumTitle(
     albumId: Int,
     newTitle: String
-  ) {
+  ) = withContext(Dispatchers.IO) {
   }
 
-  fun addPhotoToAlbum(
+  suspend fun addPhotoToAlbum(
     albumId: Int,
     pictureData: PictureData
-  ) {
+  ) = withContext(Dispatchers.IO) {
   }
 
-  fun updatePicture(
+  suspend fun updatePicture(
     albumId: Int,
     pictureData: PictureData
-  ) {
+  ) = withContext(Dispatchers.IO) {
   }
 
-  fun removePhoto(
+  suspend fun removePhoto(
     albumId: Int,
     pictureId: Int
-  ) {
+  ) = withContext(Dispatchers.IO) {
   }
 
-  fun deleateAlbum(albumId: Int) {
+  suspend fun deleateAlbum(albumId: Int) = withContext(Dispatchers.IO) {
+  }
+
+  private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
+    return preference.albumMap.first()[albumId]
   }
 }
