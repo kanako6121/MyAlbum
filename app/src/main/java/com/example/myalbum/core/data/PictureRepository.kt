@@ -4,6 +4,7 @@ import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -14,28 +15,11 @@ import javax.inject.Singleton
 
 @Singleton
 class PictureRepository @Inject constructor(
-    private val preference: PicturePreference
+    private val preference: AlbumPreference
 ) {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    val pictures: StateFlow<List<PictureData>> = preference.pictures.map { saveList ->
-        saveList.map { it.toPictureData() }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList(),
-    )
 
-    suspend fun addPicture(pictureData: PictureData) {
-        preference.addPicture(pictureData.toPictureSaveData())
-    }
-
-    suspend fun updatePicture(pictureData: PictureData) {
-        preference.editPictures(pictureData.toPictureSaveData())
-    }
-
-    suspend fun removePhoto(pictureData: PictureData) {
-        preference.removePicture(pictureData.toPictureSaveData())
-    }
+    val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
     fun createAlbum(title: String) {
     }
