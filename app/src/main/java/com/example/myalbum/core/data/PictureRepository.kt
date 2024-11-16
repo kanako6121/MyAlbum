@@ -1,57 +1,50 @@
 package com.example.myalbum.core.data
 
-import android.net.Uri
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import org.w3c.dom.Comment
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PictureRepository @Inject constructor(
-    private val preference: PicturePreference
+  private val preference: AlbumPreference
 ) {
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    val pictures: StateFlow<List<PictureData>> = preference.pictures.map { saveList ->
-        saveList.map { it.toPictureData() }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList(),
-    )
+  val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
-    suspend fun addPicture(pictureData: PictureData) {
-        preference.addPicture(pictureData.toPictureSaveData())
-    }
+  suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
+  }
 
-    suspend fun updatePicture(pictureData: PictureData) {
-        preference.editPictures(pictureData.toPictureSaveData())
-    }
+  suspend fun updateAlbumTitle(
+    albumId: Int,
+    newTitle: String
+  ) = withContext(Dispatchers.IO) {
+  }
 
-    suspend fun removePhoto(pictureData: PictureData) {
-        preference.removePicture(pictureData.toPictureSaveData())
-    }
+  suspend fun addPhotoToAlbum(
+    albumId: Int,
+    pictureData: PictureData
+  ) = withContext(Dispatchers.IO) {
+  }
 
-    fun createAlbum(title: String) {
-    }
+  suspend fun updatePicture(
+    albumId: Int,
+    pictureData: PictureData
+  ) = withContext(Dispatchers.IO) {
+  }
 
-    fun updateAlbumTitle(albumId: Int,  newTitle: String ) :AlbumData {
-    }
+  suspend fun removePhoto(
+    albumId: Int,
+    pictureId: Int
+  ) = withContext(Dispatchers.IO) {
+  }
 
-    fun addPhotoToAlbum(albumId: Int, picture: PictureData) {
-    }
+  suspend fun deleateAlbum(albumId: Int) = withContext(Dispatchers.IO) {
+  }
 
-    fun updatePicture(albumId: Int, pictureData: PictureData) {
-    }
-
-    fun removePhoto(albumId: Int, id: Int) {
-    }
-
-    fun deleateAlbum(albumId: Int) {
-    }
+  private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
+    return preference.albumMap.first()[albumId]
+  }
 }
