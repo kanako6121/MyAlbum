@@ -4,5 +4,6 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ThirdScreen(
-    onUpPress: () -> Unit,
-    ) { }
+  onUpPress: () -> Unit,
+) {
+}

@@ -13,28 +13,30 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModels()
-    private val pickMedia =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri == null) return@registerForActivityResult
+  private val viewModel: MainViewModel by viewModels()
+  private val pickMedia =
+    registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+      if (uri == null) return@registerForActivityResult
 
-            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val nextId = viewModel.getPhotoId()
-            val pictureData = PictureData(uri = uri, id = nextId)
-            viewModel.savePhoto(pictureData)
-        }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyAlbumTheme {
-                MainNav(
-                    mainViewModel = viewModel,
-                    launchPicker = {
-                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    }
-                )
-            }
-        }
+      contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+      val nextId = viewModel.getPhotoId()
+      val pictureData = PictureData(uri = uri, id = nextId)
+      viewModel.savePhoto(pictureData)
     }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      MyAlbumTheme {
+        MainNav(
+          mainViewModel = viewModel,
+          launchPicker = {
+            pickMedia.launch(
+              PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+          }
+        )
+      }
+    }
+  }
 }

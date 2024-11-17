@@ -19,33 +19,33 @@ import coil.compose.AsyncImage
 
 @Composable
 fun ModalDrawerAlbumItem(
-    title: String,
-    thumbnailUri: String?,
-    onClick: () -> Unit
+  title: String,
+  thumbnailUri: String?,
+  onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onClick() }
-    ) {
-        if (thumbnailUri != null) {
-            AsyncImage(
-                model = thumbnailUri,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp)
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp)
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = title,
-            modifier = Modifier.align(Alignment.CenterVertically)
-        )
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(8.dp)
+      .clickable { onClick() }
+  ) {
+    if (thumbnailUri != null) {
+      AsyncImage(
+        model = thumbnailUri,
+        contentDescription = null,
+        modifier = Modifier.size(64.dp)
+      )
+    } else {
+      Icon(
+        imageVector = Icons.Default.Add,
+        contentDescription = null,
+        modifier = Modifier.size(64.dp)
+      )
     }
+    Spacer(modifier = Modifier.width(8.dp))
+    Text(
+      text = title,
+      modifier = Modifier.align(Alignment.CenterVertically)
+    )
+  }
 }
