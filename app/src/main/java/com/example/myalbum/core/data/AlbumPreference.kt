@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -56,11 +57,7 @@ class AlbumPreference @Inject constructor(
 
   // 保存済みアルバムデータの更新
   suspend fun updateAlubm(albumData: AlbumData) {
-    val updateAlbumData = AlbumSaveData(
-      id = albumData.id,
-      title = albumData.title,
-      pictures = albumData.toAlbumSaveData().pictures,
-    )
+    val updateAlbumData = albumData.toAlbumSaveData()
     val key = stringPreferencesKey(albumData.id.toString())
     store.edit { prefs ->
       prefs[key] = json.encodeToString<AlbumSaveData>(updateAlbumData)
