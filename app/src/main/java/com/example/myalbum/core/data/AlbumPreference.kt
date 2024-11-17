@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -56,11 +57,18 @@ class AlbumPreference @Inject constructor(
 
   // 保存済みアルバムデータの更新
   suspend fun updateAlubm(albumData: AlbumData) {
-    // TODO(kana) ここに該当keyのデータを置き換える処理を書く
+    val updateAlbumData = albumData.toAlbumSaveData()
+    val key = stringPreferencesKey(albumData.id.toString())
+    store.edit { prefs ->
+      prefs[key] = json.encodeToString<AlbumSaveData>(updateAlbumData)
+    }
   }
 
   // 保存済みアルバムデータを削除
   suspend fun removeAlbum(albumId: Int) {
-    // TODO(kana) ここに該当keyのものをまるごと削除する処理を書く
+    val key = stringPreferencesKey(albumId.toString())
+    store.edit { prefs ->
+      prefs.remove(key)
+    }
   }
 }
