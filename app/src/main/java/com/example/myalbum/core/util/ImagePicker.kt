@@ -37,71 +37,72 @@ import com.example.myalbum.R
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun ImagePicker(
-    context: Context,
-    onResult: (uri: Uri) -> Unit
+  context: Context,
+  onResult: (uri: Uri) -> Unit
 ) {
-    var imageUri: Uri? by remember { mutableStateOf(null) }
+  var imageUri: Uri? by remember { mutableStateOf(null) }
 
-    var bitmap: Bitmap? by remember { mutableStateOf(null) }
+  var bitmap: Bitmap? by remember { mutableStateOf(null) }
 
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-            if (uri == null) return@rememberLauncherForActivityResult
-            imageUri = uri
-            onResult(uri)
-        }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(256.dp)
-                .background(Color(0xFF000000))
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                ),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            imageUri?.let {
-                val source = ImageDecoder
-                    .createSource(
-                        context.contentResolver,
-                        it,
-                    )
-                bitmap = ImageDecoder.decodeBitmap(source)
-
-                bitmap?.let { bm ->
-                    Image(
-                        bitmap = bm.asImageBitmap(),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (imageUri == null) {
-                Text(
-                    color = Color(0xFFFFFFFF),
-                    text = stringResource(id = R.string.label_preview)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedButton(
-            modifier = Modifier
-                .testTag("AddButton")
-                .fillMaxWidth(),
-            onClick = {
-                launcher.launch("image/*")
-            },
-        ) {
-            Text(
-                text = stringResource(id = R.string.app_name)
-            )
-        }
+  val launcher =
+    rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+      if (uri == null) return@rememberLauncherForActivityResult
+      imageUri = uri
+      onResult(uri)
     }
+
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(256.dp)
+        .background(Color(0xFF000000))
+        .border(
+          width = 1.dp,
+          color = MaterialTheme.colorScheme.primary,
+        ),
+      horizontalArrangement = Arrangement.Center,
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      imageUri?.let {
+        val source = ImageDecoder
+          .createSource(
+            context.contentResolver,
+            it,
+          )
+        bitmap = ImageDecoder.decodeBitmap(source)
+
+        bitmap?.let { bm ->
+          Image(
+            bitmap = bm.asImageBitmap(),
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth()
+          )
+        }
+      }
+      Spacer(modifier = Modifier.height(8.dp))
+
+      if (imageUri == null) {
+        Text(
+          color = Color(0xFFFFFFFF),
+          text = stringResource(id = R.string.label_preview)
+        )
+      }
+    }
+    Spacer(modifier = Modifier.height(8.dp))
+    OutlinedButton(
+      modifier = Modifier
+        .testTag("AddButton")
+        .fillMaxWidth(),
+      onClick = {
+        launcher.launch("image/*")
+      },
+    ) {
+      Text(
+        text = stringResource(id = R.string.app_name)
+      )
+    }
+  }
 }

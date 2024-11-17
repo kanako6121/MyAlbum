@@ -24,46 +24,46 @@ import com.example.myalbum.main.MainViewModel
 
 @Composable
 fun EditScreen(
-    viewModel: MainViewModel = hiltViewModel(),
-    selectedId: Int?,
-    onClick: (PictureData) -> Unit,
+  viewModel: MainViewModel = hiltViewModel(),
+  selectedId: Int?,
+  onClick: (PictureData) -> Unit,
 ) {
-    if (selectedId == null) return
-    val pictureData = viewModel.getPictureData(selectedId) ?: return
-    var comment by remember { mutableStateOf(pictureData.comment) }
-    val maxChar = 10
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .aspectRatio(1f)
-                .padding(16.dp)
-                .fillMaxWidth(),
-            model = pictureData.uri,
-            contentDescription = null
-        )
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally),
-            value = comment.orEmpty(),
-            onValueChange = { newComment ->
-                if (newComment.length <= maxChar) {
-                    comment = newComment
-                }
-            },
-            placeholder = { Text(text = stringResource(R.string.comment)) },
-            singleLine = true,
-        )
-        Button(
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally),
-            onClick = { onClick(pictureData.copy(comment = comment)) }
-        ) {
-            Text(text = stringResource(R.string.post))
+  if (selectedId == null) return
+  val pictureData = viewModel.getPictureData(selectedId) ?: return
+  var comment by remember { mutableStateOf(pictureData.comment) }
+  val maxChar = 10
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+  ) {
+    AsyncImage(
+      modifier = Modifier
+        .aspectRatio(1f)
+        .padding(16.dp)
+        .fillMaxWidth(),
+      model = pictureData.uri,
+      contentDescription = null
+    )
+    OutlinedTextField(
+      modifier = Modifier
+        .padding(8.dp)
+        .align(Alignment.CenterHorizontally),
+      value = comment.orEmpty(),
+      onValueChange = { newComment ->
+        if (newComment.length <= maxChar) {
+          comment = newComment
         }
+      },
+      placeholder = { Text(text = stringResource(R.string.comment)) },
+      singleLine = true,
+    )
+    Button(
+      modifier = Modifier
+        .padding(16.dp)
+        .align(Alignment.CenterHorizontally),
+      onClick = { onClick(pictureData.copy(comment = comment)) }
+    ) {
+      Text(text = stringResource(R.string.post))
     }
+  }
 }
