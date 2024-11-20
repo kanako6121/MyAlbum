@@ -15,14 +15,16 @@ class PictureRepository @Inject constructor(
   val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
   suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
-    // TODO(kana) (1) ここに新規アルバムデータをAlbumPreferenceへ保存するコードを書く
+    preference.createAlubm(title)
   }
 
   suspend fun updateAlbumTitle(
     albumId: Int,
     newTitle: String
   ) = withContext(Dispatchers.IO) {
-    // TODO(kana) (2) ここに既存アルバムデータのタイトルを更新して、更新したアルバムデータをAlbumPreferenceへ保存するコードを書く
+    val currentAlbumData = getCurrentAlbum(albumId)
+    val newAlbumData = AlbumData(id = albumId, title = newTitle, pictures = currentAlbumData.pictures)
+    preference.updateAlubm(newAlbumData)
   }
 
   suspend fun addPhotoToAlbum(
