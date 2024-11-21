@@ -23,8 +23,14 @@ class PictureRepository @Inject constructor(
     newTitle: String
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId)
-    val newAlbumData = AlbumData(id = albumId, title = newTitle, pictures = currentAlbumData.pictures)
-    preference.updateAlubm(newAlbumData)
+    if (currentAlbumData != null) {
+      val newAlbumData = currentAlbumData.copy(
+        id = albumId,
+        title = newTitle,
+        pictures = currentAlbumData.pictures
+      )
+      preference.updateAlubm(newAlbumData)
+    }
   }
 
   suspend fun addPhotoToAlbum(
