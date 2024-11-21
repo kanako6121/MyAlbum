@@ -23,12 +23,8 @@ class PictureRepository @Inject constructor(
     newTitle: String
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId)
-    if (currentAlbumData != null) {
-      val newAlbumData = currentAlbumData.copy(
-        id = albumId,
-        title = newTitle,
-        pictures = currentAlbumData.pictures
-      )
+    currentAlbumData?.let { data ->
+      val newAlbumData = data.copy(title = newTitle)
       preference.updateAlubm(newAlbumData)
     }
   }
@@ -37,14 +33,34 @@ class PictureRepository @Inject constructor(
     albumId: Int,
     pictureData: PictureData
   ) = withContext(Dispatchers.IO) {
-    // TODO(kana) (3) ここに既存アルバムの写真リストに写真を追加して、更新したアルバムデータをAlbumPreferenceへ保存するコードを書く
+    val currentAlbumData = getCurrentAlbum(albumId)
+    if (currentAlbumData?.id == albumId) {
+      currentAlbumData.let { data ->
+        val newAlbumData = data.copy(
+          id = albumId,
+          title = currentAlbumData.title,
+          pictures = currentAlbumData.pictures + pictureData,
+        )
+        preference.updateAlubm(newAlbumData)
+      }
+    }
   }
 
   suspend fun updatePicture(
     albumId: Int,
     pictureData: PictureData
   ) = withContext(Dispatchers.IO) {
-    // TODO(kana) (4) ここに既存アルバムの写真リスト内の該当写真を部分を更新して、更新したアルバムデータをAlbumPreferenceへ保存するコードを書く
+    val currentAlbumData = getCurrentAlbum(albumId)
+    if (currentAlbumData?.id == albumId) {
+      currentAlbumData.let { data ->
+        val newAlbumData = data.copy(
+          id = albumId,
+          title = currentAlbumData.title,
+          pictures = currentAlbumData.pictures + pictureData,
+        )
+        preference.updateAlubm(newAlbumData)
+      }
+    }
   }
 
   suspend fun removePhoto(
