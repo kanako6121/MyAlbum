@@ -1,5 +1,7 @@
 package com.example.myalbum.core.data
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.tooling.data.EmptyGroup.data
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -52,14 +54,16 @@ class PictureRepository @Inject constructor(
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId)
     if (currentAlbumData?.id == albumId) {
-      currentAlbumData.let { data ->
-        val newAlbumData = data.copy(
+      currentAlbumData.pictures.map { comment ->
+        val newPictureData = PictureData(
           id = albumId,
-          title = currentAlbumData.title,
-          pictures = currentAlbumData.pictures + pictureData,
+          uri = pictureData.uri,
+          comment = comment.toString(),
         )
-        preference.updateAlubm(newAlbumData)
       }
+      preference.updateAlubm(
+        albumData = 
+      )
     }
   }
 
