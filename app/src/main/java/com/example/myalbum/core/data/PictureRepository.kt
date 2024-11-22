@@ -1,7 +1,6 @@
 package com.example.myalbum.core.data
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.ui.tooling.data.EmptyGroup.data
+import androidx.collection.emptyLongSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -53,17 +52,18 @@ class PictureRepository @Inject constructor(
     pictureData: PictureData
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId)
-    if (currentAlbumData?.id == albumId) {
-      currentAlbumData.pictures.map { comment ->
-        val newPictureData = PictureData(
-          id = albumId,
-          uri = pictureData.uri,
-          comment = comment.toString(),
-        )
-      }
-      preference.updateAlubm(
-        albumData = 
+    currentAlbumData?.pictures?.map { comment ->
+      val newPictureData = PictureData(
+        id = albumId,
+        uri = pictureData.uri,
+        comment = comment.toString(),
       )
+      val newAlbumData = AlbumData(
+        id = albumId,
+        title = currentAlbumData.title,
+        pictures = currentAlbumData.pictures + newPictureData,
+      )
+      preference.updateAlubm(newAlbumData)
     }
   }
 
@@ -71,6 +71,12 @@ class PictureRepository @Inject constructor(
     albumId: Int,
     pictureId: Int
   ) = withContext(Dispatchers.IO) {
+    val currentAlbumData = getCurrentAlbum(albumId)
+    val pickedPhotoId = currentAlbumData?.pictures?.map {
+      if(it.id == pictureId) {
+        
+      }
+    }
     // TODO(kana) (5) ここに既存アルバムの写真リスト内の該当写真を削除して、更新したアルバムデータをAlbumPreferenceへ保存するコードを書く
   }
 
