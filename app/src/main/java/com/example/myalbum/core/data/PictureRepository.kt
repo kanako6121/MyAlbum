@@ -1,6 +1,5 @@
 package com.example.myalbum.core.data
 
-import androidx.collection.emptyLongSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -72,16 +71,24 @@ class PictureRepository @Inject constructor(
     pictureId: Int
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId)
-    val pickedPhotoId = currentAlbumData?.pictures?.map {
-      if(it.id == pictureId) {
-        
+    val currentPictureData = currentAlbumData?.pictures
+    val updatePictureData = currentPictureData?.filterNot { it.id == pictureId }
+    currentAlbumData?.let { data ->
+      val updateAlbumData = updatePictureData?.let {
+        data.copy(
+          id = albumId,
+          title = currentAlbumData.title,
+          pictures = it,
+        )
+      }
+      if (updateAlbumData != null) {
+        preference.updateAlubm(updateAlbumData)
       }
     }
-    // TODO(kana) (5) ここに既存アルバムの写真リスト内の該当写真を削除して、更新したアルバムデータをAlbumPreferenceへ保存するコードを書く
   }
 
   suspend fun deleateAlbum(albumId: Int) = withContext(Dispatchers.IO) {
-    // TODO(kana) (6) ここに既存アルバムをAlbumPreferenceから削除するコードを書く
+    preference.removeAlbum(albumId)
   }
 
   private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
