@@ -1,5 +1,6 @@
 package com.example.myalbum.core.data
 
+import androidx.collection.emptyLongSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -45,28 +46,34 @@ class PictureRepository @Inject constructor(
     pictureData: PictureData
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
-    val updatePictures = currentAlbumData.pictures + pictureData
-    val newAlbumData = currentAlbumData.copy(
+    val updatePictures = currentAlbumData.pictures.map { picture ->
+      if (picture.id == pictureData.id) {
+        pictureData
+      } else {
+      }
+    }
+    val updateAlbumData = currentAlbumData.copy(
       pictures = updatePictures
     )
-    preference.updateAlubm(newAlbumData)
-  }
-
-  suspend fun removePhoto(
-    albumId: Int,
-    pictureId: Int
-  ) = withContext(Dispatchers.IO) {
-    val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
-    val updatePictureData = currentAlbumData.pictures.filterNot { it.id == pictureId }
-    val updateAlbumData = currentAlbumData.copy(pictures = updatePictureData)
     preference.updateAlubm(updateAlbumData)
   }
+}
 
-  suspend fun deleateAlbum(albumId: Int) = withContext(Dispatchers.IO) {
-    preference.removeAlbum(albumId)
-  }
+suspend fun removePhoto(
+  albumId: Int,
+  pictureId: Int
+) = withContext(Dispatchers.IO) {
+  val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
+  val updatePictureData = currentAlbumData.pictures.filterNot { it.id == pictureId }
+  val updateAlbumData = currentAlbumData.copy(pictures = updatePictureData)
+  preference.updateAlubm(updateAlbumData)
+}
 
-  private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
-    return preference.albumMap.first()[albumId]
-  }
+suspend fun deleateAlbum(albumId: Int) = withContext(Dispatchers.IO) {
+  preference.removeAlbum(albumId)
+}
+
+private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
+  return preference.albumMap.first()[albumId]
+}
 }
