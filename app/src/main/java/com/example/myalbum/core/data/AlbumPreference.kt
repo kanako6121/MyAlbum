@@ -43,7 +43,7 @@ class AlbumPreference @Inject constructor(
   }
 
   // アルバムの新規作成保存
-  suspend fun createAlubm(title: String) {
+  suspend fun createAlbum(title: String) {
     val saveData = AlbumSaveData(
       id = albumMap.first().keys.maxOrNull()?.plus(1) ?: 0,
       title = title,
@@ -56,7 +56,7 @@ class AlbumPreference @Inject constructor(
   }
 
   // 保存済みアルバムデータの更新
-  suspend fun updateAlubm(albumData: AlbumData) {
+  suspend fun updateAlbum(albumData: AlbumData) {
     val updateAlbumData = albumData.toAlbumSaveData()
     val key = stringPreferencesKey(albumData.id.toString())
     store.edit { prefs ->

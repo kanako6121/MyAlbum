@@ -1,6 +1,5 @@
 package com.example.myalbum.core.data
 
-import androidx.collection.emptyLongSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -16,7 +15,7 @@ class PictureRepository @Inject constructor(
   val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
   suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
-    preference.createAlubm(title)
+    preference.createAlbum(title)
   }
 
   suspend fun updateAlbumTitle(
@@ -24,10 +23,8 @@ class PictureRepository @Inject constructor(
     newTitle: String
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
-    currentAlbumData.let { data ->
-      val newAlbumData = data.copy(title = newTitle)
-      preference.updateAlubm(newAlbumData)
-    }
+    val newAlbumData = currentAlbumData.copy(title = newTitle)
+    preference.updateAlbum(newAlbumData)
   }
 
   suspend fun addPhotoToAlbum(
@@ -38,7 +35,7 @@ class PictureRepository @Inject constructor(
     val newAlbumData = currentAlbumData.copy(
       pictures = currentAlbumData.pictures + pictureData
     )
-    preference.updateAlubm(newAlbumData)
+    preference.updateAlbum(newAlbumData)
   }
 
   suspend fun updatePicture(
@@ -47,33 +44,33 @@ class PictureRepository @Inject constructor(
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
     val updatePictures = currentAlbumData.pictures.map { picture ->
-      if (picture.id == pictureData.id) {
-        pictureData
+      if (picture.id == pictureData.id)
+        val newPictureData = PictureData(id = picture.id, uri = picture.uri, comment = picture.comment)
       } else {
+        
       }
+      val updateAlbumData = currentAlbumData.copy(
+        pictures = updatePictures
+      )
+      preference.updateAlbum(updateAlbumData)
     }
-    val updateAlbumData = currentAlbumData.copy(
-      pictures = updatePictures
-    )
-    preference.updateAlubm(updateAlbumData)
+
+
+  suspend fun removePhoto(
+    albumId: Int,
+    pictureId: Int
+  ) = withContext(Dispatchers.IO) {
+    val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
+    val updatePictureData = currentAlbumData.pictures.filterNot { it.id == pictureId }
+    val updateAlbumData = currentAlbumData.copy(pictures = updatePictureData)
+    preference.updateAlbum(updateAlbumData)
   }
-}
 
-suspend fun removePhoto(
-  albumId: Int,
-  pictureId: Int
-) = withContext(Dispatchers.IO) {
-  val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
-  val updatePictureData = currentAlbumData.pictures.filterNot { it.id == pictureId }
-  val updateAlbumData = currentAlbumData.copy(pictures = updatePictureData)
-  preference.updateAlubm(updateAlbumData)
-}
+  suspend fun deleteAlbum(albumId: Int) = withContext(Dispatchers.IO) {
+    preference.removeAlbum(albumId)
+  }
 
-suspend fun deleateAlbum(albumId: Int) = withContext(Dispatchers.IO) {
-  preference.removeAlbum(albumId)
-}
-
-private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
-  return preference.albumMap.first()[albumId]
-}
+  private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
+    return preference.albumMap.first()[albumId]
+  }
 }
