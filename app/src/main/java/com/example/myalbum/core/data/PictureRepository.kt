@@ -44,17 +44,18 @@ class PictureRepository @Inject constructor(
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
     val updatePictures = currentAlbumData.pictures.map { picture ->
-      if (picture.id == pictureData.id)
-        val newPictureData = PictureData(id = picture.id, uri = picture.uri, comment = picture.comment)
+      if (picture.id == pictureData.id) {
+        pictureData
       } else {
-        
+        return@withContext
       }
-      val updateAlbumData = currentAlbumData.copy(
-        pictures = updatePictures
-      )
-      preference.updateAlbum(updateAlbumData)
     }
 
+    val updateAlbumData = currentAlbumData.copy(
+      pictures = updatePictures
+    )
+    preference.updateAlbum(updateAlbumData)
+  }
 
   suspend fun removePhoto(
     albumId: Int,
