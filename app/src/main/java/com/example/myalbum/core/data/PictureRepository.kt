@@ -47,10 +47,9 @@ class PictureRepository @Inject constructor(
       if (picture.id == pictureData.id) {
         pictureData
       } else {
-        return@withContext
+        picture
       }
     }
-
     val updateAlbumData = currentAlbumData.copy(
       pictures = updatePictures
     )
