@@ -1,4 +1,4 @@
-package com.example.myalbum.feature.top
+package com.example.myalbum.feature.top.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
-import com.example.myalbum.main.MainViewModel
+import com.example.myalbum.feature.main.ui.MainViewModel
 
 @Composable
 fun TopScreen(
@@ -61,14 +61,14 @@ fun TopScreen(
   onEditScreen: (PictureData) -> Unit,
   onUpPress: () -> Unit,
 ) {
-  val pictures by viewModel.pictures.collectAsState()
-  TopScreenContent(
-    launchPicker = launchPicker,
-    onUpPress = onUpPress,
-    onEditScreen = onEditScreen,
-    pictures = pictures,
-    onRemove = viewModel::removePhoto,
-  )
+  // val pictures by viewModel.pictures.collectAsState()
+  // TopScreenContent(
+  //   launchPicker = launchPicker,
+  //   onUpPress = onUpPress,
+  //   onEditScreen = onEditScreen,
+  //   pictures = pictures,
+  //   onRemove = viewModel::removePhoto,
+  // )
 }
 
 @Composable
