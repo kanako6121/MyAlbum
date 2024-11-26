@@ -1,4 +1,4 @@
-package com.example.myalbum.main
+package com.example.myalbum.feature.main.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

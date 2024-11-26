@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PictureRepository @Inject constructor(
+class AlbumRepository @Inject constructor(
   private val preference: AlbumPreference
 ) {
   val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
