@@ -52,41 +52,42 @@ fun MainNav(
   navController: NavHostController = rememberNavController(),
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
+  val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   // val albumData by mainViewModel.albums.collectAsStateWithLifecycle()
   // val pictures by mainViewModel.pictures.collectAsStateWithLifecycle()
-  // var showDialog by remember { mutableStateOf(false) }
-  //
-  // Column(modifier = Modifier.fillMaxWidth()) {
-  //   val coroutineScope = rememberCoroutineScope()
-  //
-  //   TopAppBar(
-  //     title = { Text(text = stringResource(id = R.string.app_name)) },
-  //     modifier = Modifier.fillMaxWidth(),
-  //     colors = TopAppBarDefaults.topAppBarColors(
-  //       containerColor = MaterialTheme.colorScheme.primaryContainer,
-  //       titleContentColor = contentColorFor(
-  //         backgroundColor = MaterialTheme.colorScheme.primaryContainer
-  //       )
-  //     ),
-  //     navigationIcon = {
-  //       IconButton(
-  //         onClick = {
-  //           coroutineScope.launch {
-  //             if (drawerState.isClosed) drawerState.open() else drawerState.close()
-  //           }
-  //         }
-  //       ) {
+ //  var showDialog by remember { mutableStateOf(false) }
+
+  /* Column(modifier = Modifier.fillMaxWidth()) {
+     val coroutineScope = rememberCoroutineScope()
+
+     TopAppBar(
+       title = { Text(text = stringResource(id = R.string.app_name)) },
+       modifier = Modifier.fillMaxWidth(),
+       colors = TopAppBarDefaults.topAppBarColors(
+         containerColor = MaterialTheme.colorScheme.primaryContainer,
+         titleContentColor = contentColorFor(
+           backgroundColor = MaterialTheme.colorScheme.primaryContainer
+         )
+       ),
+       navigationIcon = {
+         IconButton(
+           onClick = {
+             coroutineScope.launch {
+               if (drawerState.isClosed) drawerState.open() else drawerState.close()
+             }*/
+    //       }
+        // ) {
   //         Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
-  //       }
-  //     }
+    //     }
+ //      }
   //   )
   //   ModalNavigationDrawer(
-  //     drawerState = drawerState,
-  //     drawerContent = {
-  //       ModalDrawerSheet {
-  //         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-  //           items(
-  //             items = albumData,
+   //    drawerState = drawerState,
+     //  drawerContent = {
+   //      ModalDrawerSheet {
+      //     LazyColumn(modifier = Modifier.fillMaxWidth()) {
+      //       items(
+    //           items = albumData,
   //             key = { it.id }
   //           ) { item ->
   //             ModalDrawerAlbumItem(
@@ -155,7 +156,7 @@ fun MainNav(
   //     )
   //   }
   // }
-}
+//}
 
 // @Composable
 // fun AlbumDialog(
@@ -203,7 +204,8 @@ fun MainNav(
 //   )
 // }
 
-enum class MainNavOption {
-  TopScreen,
-  EditScreen,
+//enum class MainNavOption {
+ // TopScreen,
+ // EditScreen,
+//}
 }
