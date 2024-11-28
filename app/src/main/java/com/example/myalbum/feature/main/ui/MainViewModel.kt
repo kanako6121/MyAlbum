@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,20 +20,29 @@ class MainViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(MainUiState())
   val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-  init {
+  private fun createAlbuMenu() {
     viewModelScope.launch {
-      repository.albums.collect { menuList ->
-        val albumMenus = menuList.map { menu ->
-          AlbumMenu(
-            id = menu.id,
-            uri = menu.pictures.first().uri,
-            title = menu.title,
-          )
-        }
-        _uiState.value = _uiState.value.copy(
-          albumMenu = albumMenus,
-          errorMessage = null,
+      val newMenu = uiState.value.albumMenu.firstOrNull()?.let {
+        AlbumMenu(
+          it.id,
+          it.uri,
+          it.title,
         )
+        try {
+          repository.albums.collect { menuList ->
+            val albumMenus = menuList.map { menu ->
+              AlbumMenu(
+                id = menu.id,
+                uri = menu.pictures.first().uri,
+                title = menu.title,
+              )
+            }
+          }
+        } catch (exception: Exception) {
+          _uiState.update {
+            it.copy(errorMessage = exception.toString())
+          }
+        }
       }
     }
   }
