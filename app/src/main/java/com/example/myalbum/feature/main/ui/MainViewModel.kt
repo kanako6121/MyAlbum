@@ -1,7 +1,9 @@
 package com.example.myalbum.feature.main.ui
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.AlbumRepository
 import com.example.myalbum.feature.main.data.AlbumMenu
 import com.example.myalbum.feature.main.data.MainUiState
@@ -9,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,29 +23,24 @@ class MainViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(MainUiState())
   val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-  private fun createAlbuMenu() {
+  init {
     viewModelScope.launch {
-      val newMenu = uiState.value.albumMenu.firstOrNull()?.let {
-        AlbumMenu(
-          it.id,
-          it.uri,
-          it.title,
-        )
-        try {
-          repository.albums.collect { menuList ->
-            val albumMenus = menuList.map { menu ->
-              AlbumMenu(
-                id = menu.id,
-                uri = menu.pictures.first().uri,
-                title = menu.title,
-              )
-            }
-          }
-        } catch (exception: Exception) {
-          _uiState.update {
-            it.copy(errorMessage = exception.toString())
-          }
+      repository.albums.collect { albums ->
+        albums.firstOrNull()?.let {
+          AlbumData(
+            id = it.id,
+            title = it.title,
+            pictures = it.pictures,
+          )
         }
+        val albumMenu = albums.firstOrNull()?.let {
+          AlbumMenu(
+            id = it.id,
+            uri = it.pictures.firstOrNull()?.uri ?: Uri.EMPTY,
+            title = it.title,
+          )
+        }
+        _uiState.value = _uiState.value.copy(albumMenu = albumMenu)
       }
     }
   }
