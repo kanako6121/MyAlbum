@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,21 +25,16 @@ class MainViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       repository.albums.collect { albums ->
-        albums.firstOrNull()?.let {
-          AlbumData(
-            id = it.id,
-            title = it.title,
-            pictures = it.pictures,
-          )
-        }
-        val albumMenu = albums.firstOrNull()?.let {
+        val albumMenus = albums.map {
           AlbumMenu(
             id = it.id,
             uri = it.pictures.firstOrNull()?.uri ?: Uri.EMPTY,
             title = it.title,
           )
         }
-        _uiState.value = _uiState.value.copy(albumMenu = albumMenu)
+        _uiState.update { menu ->
+          menu.copy(albumMenu = albumMenus)
+        }
       }
     }
   }
