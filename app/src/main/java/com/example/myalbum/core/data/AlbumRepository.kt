@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class AlbumRepository @Inject constructor(
   private val preference: AlbumPreference
 ) {
-  val albums: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
+  val albumsFlow: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
   suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
     preference.createAlbum(title)

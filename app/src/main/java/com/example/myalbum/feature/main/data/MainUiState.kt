@@ -2,10 +2,11 @@ package com.example.myalbum.feature.main.data
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
+import com.example.myalbum.core.data.AlbumData
 
 @Immutable
 data class MainUiState(
-  val albumMenu: List<AlbumMenu> = emptyList(),
+  val albumMenus: List<AlbumMenu> = emptyList(),
   val errorMessage: String? = null,
 )
 
@@ -15,3 +16,16 @@ data class AlbumMenu(
   val uri: Uri,
   val title: String,
 )
+
+fun AlbumData.toAlbumMenu() =
+  AlbumMenu(
+    id = id,
+    // 最初の写真がよければ first、追加した最新の写真がよければ last
+    uri = pictures.firstOrNull()?.uri ?: Uri.EMPTY,
+    title = title
+  )
+
+fun List<AlbumData>.toMainUiState() =
+  MainUiState(
+    albumMenus = map { it.toAlbumMenu() }
+  )
