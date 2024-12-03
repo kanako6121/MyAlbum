@@ -39,7 +39,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
-import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.edit.ui.EditScreen
 import com.example.myalbum.feature.top.ui.TopScreen
 import kotlinx.coroutines.launch
@@ -53,159 +52,144 @@ fun MainNav(
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
-  // val albumData by mainViewModel.albums.collectAsStateWithLifecycle()
-  // val pictures by mainViewModel.pictures.collectAsStateWithLifecycle()
- //  var showDialog by remember { mutableStateOf(false) }
+  var showDialog by remember { mutableStateOf(false) }
 
-  /* Column(modifier = Modifier.fillMaxWidth()) {
-     val coroutineScope = rememberCoroutineScope()
+  Column(modifier = Modifier.fillMaxWidth()) {
+    val coroutineScope = rememberCoroutineScope()
 
-     TopAppBar(
-       title = { Text(text = stringResource(id = R.string.app_name)) },
-       modifier = Modifier.fillMaxWidth(),
-       colors = TopAppBarDefaults.topAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer,
-         titleContentColor = contentColorFor(
-           backgroundColor = MaterialTheme.colorScheme.primaryContainer
-         )
-       ),
-       navigationIcon = {
-         IconButton(
-           onClick = {
-             coroutineScope.launch {
-               if (drawerState.isClosed) drawerState.open() else drawerState.close()
-             }*/
-    //       }
-        // ) {
-  //         Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
-    //     }
- //      }
-  //   )
-  //   ModalNavigationDrawer(
-   //    drawerState = drawerState,
-     //  drawerContent = {
-   //      ModalDrawerSheet {
-      //     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-      //       items(
-    //           items = albumData,
-  //             key = { it.id }
-  //           ) { item ->
-  //             ModalDrawerAlbumItem(
-  //               title = item.title,
-  //               thumbnailUri = item.pictures.lastOrNull()?.toString(),
-  //               onClick = {
-  //                 navController.navigate("album/${item.id}")
-  //               }
-  //             )
-  //           }
-  //         }
-  //         IconButton(
-  //           onClick = { showDialog = true },
-  //           modifier = Modifier
-  //         ) {
-  //           Icon(imageVector = Icons.Default.Add, contentDescription = null)
-  //         }
-  //       }
-  //     },
-  //   ) {
-  //     Scaffold(
-  //       modifier = Modifier.fillMaxWidth(),
-  //     ) { contentPadding ->
-  //       Column(modifier = Modifier.padding(contentPadding)) {
-  //         NavHost(
-  //           navController = navController,
-  //           startDestination = MainNavOption.TopScreen.name,
-  //         ) {
-  //           composable(MainNavOption.TopScreen.name) {
-  //             TopScreen(
-  //               viewModel = mainViewModel,
-  //               launchPicker = launchPicker,
-  //               onUpPress = {
-  //                 coroutineScope.launch {
-  //                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
-  //                 }
-  //               },
-  //               onEditScreen = { pictureData ->
-  //                 navController.navigate("edit/${pictureData.id}")
-  //               },
-  //               onSaveAlbum = { albumData ->
-  //                 navController.navigate("save/${albumData}")
-  //               }
-  //             )
-  //           }
-  //           composable("edit/{selectId}") { backStackEntry ->
-  //             EditScreen(
-  //               selectedId = backStackEntry.arguments?.getString("selectId")
-  //                 ?.toInt(),
-  //               onClick = { pictureData ->
-  //                 mainViewModel.saveEditPhoto(pictureData)
-  //                 navController.popBackStack()
-  //               },
-  //             )
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   if (showDialog) {
-  //     AlbumDialog(
-  //       mainViewModel = mainViewModel,
-  //       pictures = pictures,
-  //       onDismiss = { showDialog = false },
-  //       resetScreen = { }
-  //     )
-  //   }
-  // }
-//}
+    TopAppBar(
+      title = { Text(text = stringResource(id = R.string.app_name)) },
+      modifier = Modifier.fillMaxWidth(),
+      colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        titleContentColor = contentColorFor(
+          backgroundColor = MaterialTheme.colorScheme.primaryContainer
+        )
+      ),
+      navigationIcon = {
+        IconButton(
+          onClick = {
+            coroutineScope.launch {
+              if (drawerState.isClosed) drawerState.open() else drawerState.close()
+            }
+          }
+        ) {
+          Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
+        }
+      }
+    )
+    ModalNavigationDrawer(
+      drawerState = drawerState,
+      drawerContent = {
+        ModalDrawerSheet {
+          LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            items(
+              items = uiState.albumMenus,
+              key = { it.id }
+            ) { item ->
+              ModalDrawerAlbumItem(
+                title = item.title,
+                thumbnailUri = item.uri,
+                onClick = {
+                  navController.navigate("album/${item.id}")
+                }
+              )
+            }
+          }
+          IconButton(
+            onClick = { showDialog = true },
+            modifier = Modifier
+          ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+          }
+        }
+      },
+    ) {
+      Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+      ) { contentPadding ->
+        Column(modifier = Modifier.padding(contentPadding)) {
+          NavHost(
+            navController = navController,
+            startDestination = MainNavOption.TopScreen.name,
+          ) {
+            composable(MainNavOption.TopScreen.name) {
+              TopScreen(
+                viewModel = mainViewModel,
+                launchPicker = launchPicker,
+                onUpPress = {
+                  coroutineScope.launch {
+                    if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                  }
+                },
+                onEditScreen = { pictureData ->
+                  navController.navigate("edit/${pictureData.id}")
+                },
 
-// @Composable
-// fun AlbumDialog(
-//   mainViewModel: MainViewModel,
-//   pictures: List<PictureData>,
-//   onDismiss: () -> Unit,
-//   resetScreen: () -> Unit,
-// ) {
-//   var albumTitle by remember { mutableStateOf("") }
-//
-//   AlertDialog(
-//     title = {
-//       Text(text = stringResource(R.string.make_album))
-//     },
-//     text = {
-//       TextField(
-//         value = albumTitle,
-//         onValueChange = { albumTitle = it },
-//         label = { Text(text = stringResource(R.string.make_album)) }
-//       )
-//     },
-//     onDismissRequest = { onDismiss() },
-//     confirmButton = {
-//       TextButton(
-//         onClick = {
-//           if (albumTitle.isNotEmpty()) {
-//             mainViewModel.addNewAlbum(albumTitle)
-//             onDismiss()
-//           }
-//           onDismiss()
-//           resetScreen()
-//         }
-//       )
-//       {
-//         Text(text = stringResource(R.string.save))
-//       }
-//     },
-//     dismissButton = {
-//       TextButton(
-//         onClick = onDismiss
-//       ) {
-//         Text(text = stringResource(R.string.cancel))
-//       }
-//     },
-//   )
-// }
+                )
+            }
+            composable("edit/{selectId}") { backStackEntry ->
+              EditScreen(
+                selectedId = backStackEntry.arguments?.getString("selectId")?.toInt(),
+                onClick = {
+                },
+              )
+            }
+          }
+        }
+      }
+    }
+    if (showDialog) {
+      AlbumDialog(
+        mainViewModel = mainViewModel,
+        onDismiss = { showDialog = false },
+      )
+    }
+  }
+}
 
-//enum class MainNavOption {
- // TopScreen,
- // EditScreen,
-//}
+@Composable
+fun AlbumDialog(
+  mainViewModel: MainViewModel,
+  onDismiss: () -> Unit,
+) {
+  var albumTitle by remember { mutableStateOf("") }
+
+  AlertDialog(
+    title = {
+      Text(text = stringResource(R.string.make_album))
+    },
+    text = {
+      TextField(
+        value = albumTitle,
+        onValueChange = { albumTitle = it },
+        label = { Text(text = stringResource(R.string.make_album)) }
+      )
+    },
+    onDismissRequest = { onDismiss() },
+    confirmButton = {
+      TextButton(
+        onClick = {
+          if (albumTitle.isNotEmpty()) {
+          }
+          onDismiss()
+        }
+      )
+      {
+        Text(text = stringResource(R.string.save))
+      }
+    },
+    dismissButton = {
+      TextButton(
+        onClick = onDismiss
+      ) {
+        Text(text = stringResource(R.string.cancel))
+      }
+    },
+  )
+}
+
+enum class MainNavOption {
+  TopScreen,
+  EditScreen,
 }
