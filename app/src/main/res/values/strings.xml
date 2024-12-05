@@ -23,5 +23,5 @@
   <string name="album5">アルバム５</string>
   <string name="new_album">マイアルバム</string>
   <string name="show_drawer">アルバムを作る</string>
-
+  <string name="default_album_name">（名無しアルバム）</string>
 </resources>
