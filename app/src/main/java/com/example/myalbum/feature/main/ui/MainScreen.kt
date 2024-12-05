@@ -55,6 +55,7 @@ fun MainNav(
   launchPicker: () -> Unit,
   navController: NavHostController = rememberNavController(),
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+  startDestination: String = "top",
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
@@ -120,9 +121,9 @@ fun MainNav(
       Column(modifier = Modifier.padding(contentPadding)) {
         NavHost(
           navController = navController,
-          startDestination = MainNavOption.TopScreen.name,
+          startDestination = startDestination,
         ) {
-          composable(MainNavOption.TopScreen.name) {
+          composable("top") {
             TopScreen(
               viewModel = mainViewModel,
               launchPicker = launchPicker,
@@ -177,11 +178,7 @@ fun AlbumDialog(
     onDismissRequest = { onDismiss() },
     confirmButton = {
       TextButton(
-        onClick = {
-          if (albumTitle.isNotEmpty()) {
-          }
-          onDismiss()
-        }
+        onClick = {}
       )
       {
         Text(text = stringResource(R.string.save))
@@ -197,7 +194,7 @@ fun AlbumDialog(
   )
 }
 
-enum class MainNavOption {
-  TopScreen,
-  EditScreen,
+enum class Screen(val route: String) {
+  TOP("top"),
+  EDIT("edit")
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,4 +24,10 @@ class MainViewModel @Inject constructor(
     started = SharingStarted.Eagerly,
     initialValue = MainUiState()
   )
-}
+
+  fun createDefaltAlbum(title: String) {
+      viewModelScope.launch {
+        repository.createAlbum(title)
+      }
+    }
+  }
