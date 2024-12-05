@@ -9,11 +9,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -99,6 +102,17 @@ fun MainNav(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
           ),
+          navigationIcon = {
+            IconButton(
+              onClick = {
+                coroutineScope.launch {
+                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                }
+              }
+            ) {
+              Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+            }
+          }
         )
       },
     )
@@ -134,12 +148,12 @@ fun MainNav(
       }
     }
   }
-  if (showDialog) {
-    AlbumDialog(
-      mainViewModel = mainViewModel,
-      onDismiss = { showDialog = false },
-    )
-  }
+//  if (showDialog) {
+//    AlbumDialog(
+//      mainViewModel = mainViewModel,
+//      onDismiss = { showDialog = false },
+//    )
+//  }
 }
 
 @Composable
