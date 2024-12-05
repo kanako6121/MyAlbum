@@ -1,17 +1,20 @@
 package com.example.myalbum.feature.main.ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,9 +34,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,27 +63,6 @@ fun MainNav(
   Column(modifier = Modifier.fillMaxWidth()) {
     val coroutineScope = rememberCoroutineScope()
 
-    TopAppBar(
-      title = { Text(text = stringResource(id = R.string.app_name)) },
-      modifier = Modifier.fillMaxWidth(),
-      colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        titleContentColor = contentColorFor(
-          backgroundColor = MaterialTheme.colorScheme.primaryContainer
-        )
-      ),
-      navigationIcon = {
-        IconButton(
-          onClick = {
-            coroutineScope.launch {
-              if (drawerState.isClosed) drawerState.open() else drawerState.close()
-            }
-          }
-        ) {
-          Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
-        }
-      }
-    )
     ModalNavigationDrawer(
       drawerState = drawerState,
       drawerContent = {
@@ -96,18 +81,47 @@ fun MainNav(
               )
             }
           }
-          IconButton(
-            onClick = { showDialog = true },
+          Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+              .padding(16.dp)
+              .clickable { showDialog = true }
           ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            Icon(
+              imageVector = Icons.Default.Add,
+              contentDescription = null,
+            )
+            Text(text = stringResource(id = R.string.new_album))
           }
         }
-      },
+      }
     ) {
       Scaffold(
-        modifier = Modifier.fillMaxWidth(),
-      ) { contentPadding ->
+        topBar = {
+          TopAppBar(
+            title = { Text(text = stringResource(id = R.string.app_name)) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TopAppBarDefaults.topAppBarColors(
+              containerColor = MaterialTheme.colorScheme.primaryContainer,
+              titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+            ),
+          )
+        },
+        floatingActionButton = {
+          ExtendedFloatingActionButton(
+            text = { Text(stringResource(R.string.show_drawer)) },
+            icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+            onClick = {
+              coroutineScope.launch {
+                drawerState.apply {
+                  if (isClosed) open() else close()
+                }
+              }
+            }
+          )
+        }
+      )
+      { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
           NavHost(
             navController = navController,
@@ -171,6 +185,7 @@ fun AlbumDialog(
       TextButton(
         onClick = {
           if (albumTitle.isNotEmpty()) {
+            mainViewModel::
           }
           onDismiss()
         }
