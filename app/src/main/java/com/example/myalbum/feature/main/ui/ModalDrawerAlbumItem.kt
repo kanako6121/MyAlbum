@@ -22,9 +22,9 @@ fun ModalDrawerAlbumItem(
 ) {
   Row(
     modifier = Modifier
-      .fillMaxWidth()
-      .padding(8.dp)
-      .clickable { onClick() }
+        .fillMaxWidth()
+        .padding(8.dp)
+        .clickable { onClick() }
   ) {
     AsyncImage(
       model = thumbnailUri,

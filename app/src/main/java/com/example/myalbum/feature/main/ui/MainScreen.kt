@@ -13,7 +13,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -58,89 +57,89 @@ fun MainNav(
   var showDialog by remember { mutableStateOf(false) }
   val coroutineScope = rememberCoroutineScope()
 
-    ModalNavigationDrawer(
-      drawerState = drawerState,
-      drawerContent = {
-        ModalDrawerSheet {
-          LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(
-              items = uiState.albumMenus,
-              key = { it.id }
-            ) { item ->
-              ModalDrawerAlbumItem(
-                title = item.title,
-                thumbnailUri = item.uri,
-                onClick = {
-                  navController.navigate("album/${item.id}")
-                }
-              )
-            }
+  ModalNavigationDrawer(
+    drawerState = drawerState,
+    drawerContent = {
+      ModalDrawerSheet {
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+          items(
+            items = uiState.albumMenus,
+            key = { it.id }
+          ) { item ->
+            ModalDrawerAlbumItem(
+              title = item.title,
+              thumbnailUri = item.uri,
+              onClick = {
+                navController.navigate("album/${item.id}")
+              }
+            )
           }
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
+        }
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier
               .padding(16.dp)
               .clickable { showDialog = true }
-          ) {
-            Icon(
-              imageVector = Icons.Default.Add,
-              contentDescription = null,
-            )
-            Text(text = stringResource(id = R.string.new_album))
-          }
-        }
-      }
-    ) {
-      Scaffold(
-        topBar = {
-          TopAppBar(
-            title = { Text(text = stringResource(id = R.string.app_name)) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TopAppBarDefaults.topAppBarColors(
-              containerColor = MaterialTheme.colorScheme.primaryContainer,
-              titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
-            ),
+        ) {
+          Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = null,
           )
-        },
-      )
-      { contentPadding ->
-        Column(modifier = Modifier.padding(contentPadding)) {
-          NavHost(
-            navController = navController,
-            startDestination = MainNavOption.TopScreen.name,
-          ) {
-            composable(MainNavOption.TopScreen.name) {
-              TopScreen(
-                viewModel = mainViewModel,
-                launchPicker = launchPicker,
-                onUpPress = {
-                  coroutineScope.launch {
-                    if (drawerState.isClosed) drawerState.open() else drawerState.close()
-                  }
-                },
-                onEditScreen = { pictureData ->
-                  navController.navigate("edit/${pictureData.id}")
-                },
+          Text(text = stringResource(id = R.string.new_album))
+        }
+      }
+    }
+  ) {
+    Scaffold(
+      topBar = {
+        TopAppBar(
+          title = { Text(text = stringResource(id = R.string.app_name)) },
+          modifier = Modifier.fillMaxWidth(),
+          colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+          ),
+        )
+      },
+    )
+    { contentPadding ->
+      Column(modifier = Modifier.padding(contentPadding)) {
+        NavHost(
+          navController = navController,
+          startDestination = MainNavOption.TopScreen.name,
+        ) {
+          composable(MainNavOption.TopScreen.name) {
+            TopScreen(
+              viewModel = mainViewModel,
+              launchPicker = launchPicker,
+              onUpPress = {
+                coroutineScope.launch {
+                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                }
+              },
+              onEditScreen = { pictureData ->
+                navController.navigate("edit/${pictureData.id}")
+              },
 
-                )
-            }
-            composable("edit/{selectId}") { backStackEntry ->
-              EditScreen(
-                selectedId = backStackEntry.arguments?.getString("selectId")?.toInt(),
-                onClick = {
-                },
               )
-            }
+          }
+          composable("edit/{selectId}") { backStackEntry ->
+            EditScreen(
+              selectedId = backStackEntry.arguments?.getString("selectId")?.toInt(),
+              onClick = {
+              },
+            )
           }
         }
       }
     }
-    if (showDialog) {
-      AlbumDialog(
-        mainViewModel = mainViewModel,
-        onDismiss = { showDialog = false },
-      )
-    }
+  }
+  if (showDialog) {
+    AlbumDialog(
+      mainViewModel = mainViewModel,
+      onDismiss = { showDialog = false },
+    )
+  }
 }
 
 @Composable
