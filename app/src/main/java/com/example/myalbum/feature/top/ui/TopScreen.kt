@@ -1,11 +1,5 @@
 package com.example.myalbum.feature.top.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,13 +16,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,24 +81,25 @@ fun TopScreenContent(
   }
   Scaffold(
     modifier = Modifier
-      .fillMaxSize()
-      .statusBarsPadding()
-      .navigationBarsPadding(),
+        .fillMaxSize()
+        .statusBarsPadding()
+        .navigationBarsPadding(),
     floatingActionButton = {
-      AnimatedVisibility(
-        visible = showButton,
-        enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
-          animationSpec = tween(
-            delayMillis = 1000
-          )
-        ),
-        exit = scaleOut() + fadeOut(),
-      ) {
-        FloatingActionButton(
-          onClick = launchPicker,
-        ) {
-          Icon(imageVector = Icons.Default.Add, contentDescription = "add")
-        }
+      //    AnimatedVisibility(
+      //     visible = showButton,
+      //enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
+      //  animationSpec = tween(
+      //    delayMillis = 1000
+      //       )
+      //     ),
+      //       exit = scaleOut() + fadeOut(),
+//      )
+      {
+        //       FloatingActionButton(
+        //     onClick = launchPicker,
+        //       ) {
+        //       Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+        //       }
       }
     },
     floatingActionButtonPosition = FabPosition.End,
@@ -134,23 +126,23 @@ fun TopScreenContent(
               model = pictureData.uri,
               contentDescription = null,
               modifier = Modifier
-                .shadow(elevation = 4.dp)
-                .background(Color.White)
-                .border(
-                  BorderStroke(width = 0.5.dp, color = Color.Gray)
-                )
-                .padding(
-                  start = 8.dp,
-                  top = 8.dp,
-                  end = 8.dp,
-                  bottom = 32.dp
-                )
-                .clickable { onEditScreen(pictureData) },
+                  .shadow(elevation = 4.dp)
+                  .background(Color.White)
+                  .border(
+                      BorderStroke(width = 0.5.dp, color = Color.Gray)
+                  )
+                  .padding(
+                      start = 8.dp,
+                      top = 8.dp,
+                      end = 8.dp,
+                      bottom = 32.dp
+                  )
+                  .clickable { onEditScreen(pictureData) },
             )
             Box(
               modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 24.dp, bottom = 4.dp)
+                  .align(Alignment.BottomStart)
+                  .padding(start = 24.dp, bottom = 4.dp)
             ) {
               Text(
                 text = pictureData.comment.orEmpty()
@@ -158,9 +150,9 @@ fun TopScreenContent(
             }
             Box(
               modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.BottomStart)
-                .padding(start = 0.dp, bottom = 4.dp)
+                  .size(32.dp)
+                  .align(Alignment.BottomStart)
+                  .padding(start = 0.dp, bottom = 4.dp)
             ) {
               IconButton(onClick = { expanded = true }) {
                 Icon(
