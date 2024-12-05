@@ -94,20 +94,21 @@ fun TopScreenContent(
       .statusBarsPadding()
       .navigationBarsPadding(),
     floatingActionButton = {
-      AnimatedVisibility(
-        visible = showButton,
-        enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
-          animationSpec = tween(
-            delayMillis = 1000
-          )
-        ),
-        exit = scaleOut() + fadeOut(),
-      ) {
-        FloatingActionButton(
-          onClick = launchPicker,
-        ) {
-          Icon(imageVector = Icons.Default.Add, contentDescription = "add")
-        }
+  //    AnimatedVisibility(
+   //     visible = showButton,
+        //enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
+        //  animationSpec = tween(
+        //    delayMillis = 1000
+   //       )
+   //     ),
+ //       exit = scaleOut() + fadeOut(),
+//      )
+      {
+ //       FloatingActionButton(
+     //     onClick = launchPicker,
+ //       ) {
+   //       Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+ //       }
       }
     },
     floatingActionButtonPosition = FabPosition.End,
