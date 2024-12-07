@@ -3,6 +3,7 @@ package com.example.myalbum.feature.main.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumRepository
 import com.example.myalbum.feature.main.data.MainUiState
@@ -38,6 +39,15 @@ class MainViewModel @Inject constructor(
     viewModelScope.launch {
       repository.createAlbum(
         title = context.getString(R.string.new_album)
+      )
+    }
+  }
+
+  fun createAlbumTitle(title: String) {
+    viewModelScope.launch {
+      repository.updateAlbumTitle(
+        albumId = ,
+        newTitle =
       )
     }
   }

@@ -82,8 +82,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-              .padding(16.dp)
-              .clickable { showDialog = true }
+            .padding(16.dp)
+            .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -149,18 +149,20 @@ fun MainNav(
       }
     }
   }
-//  if (showDialog) {
-//    AlbumDialog(
-//      mainViewModel = mainViewModel,
-//      onDismiss = { showDialog = false },
-//    )
-//  }
+  if (showDialog) {
+    AlbumDialog(
+      mainViewModel = mainViewModel,
+      onDismiss = { showDialog = false },
+      onAddTitle = mainViewModel::createAlbumTitle,
+    )
+  }
 }
 
 @Composable
 fun AlbumDialog(
   mainViewModel: MainViewModel,
   onDismiss: () -> Unit,
+  onAddTitle: (String) -> Unit
 ) {
   var albumTitle by remember { mutableStateOf("") }
 
@@ -178,7 +180,7 @@ fun AlbumDialog(
     onDismissRequest = { onDismiss() },
     confirmButton = {
       TextButton(
-        onClick = {}
+        onClick = { onAddTitle(albumTitle) }
       )
       {
         Text(text = stringResource(R.string.save))
