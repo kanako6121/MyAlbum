@@ -46,8 +46,8 @@ class MainViewModel @Inject constructor(
   fun createAlbumTitle(title: String) {
     viewModelScope.launch {
       repository.updateAlbumTitle(
-        albumId = ,
-        newTitle =
+        albumId = uiState.value.albumMenus.lastIndex,
+        newTitle = title,
       )
     }
   }
