@@ -6,7 +6,7 @@ import com.example.myalbum.core.data.AlbumData
 
 @Immutable
 data class MainUiState(
-  val albumMenus: List<AlbumMenu>? = null,
+  val albumMenus: List<AlbumMenu> = emptyList(),
   val errorMessage: String? = null,
 )
 
