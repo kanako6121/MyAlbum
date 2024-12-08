@@ -3,9 +3,9 @@ package com.example.myalbum.feature.main.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumRepository
+import com.example.myalbum.core.data.AlbumSaveData
 import com.example.myalbum.feature.main.data.MainUiState
 import com.example.myalbum.feature.main.data.toMainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,11 +44,13 @@ class MainViewModel @Inject constructor(
   }
 
   fun createAlbumTitle(title: String) {
+    val albumSaveData = AlbumSaveData(
+      id = uiState.value.albumMenus.lastOrNull()?.id ?: 0,
+      title = title,
+      pictures = emptyList()
+    )
     viewModelScope.launch {
-      repository.updateAlbumTitle(
-        albumId = uiState.value.albumMenus.lastIndex,
-        newTitle = title,
-      )
+      repository.createAlbum(albumSaveData.title,)
     }
   }
 }
