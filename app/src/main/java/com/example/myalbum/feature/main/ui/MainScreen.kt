@@ -64,9 +64,10 @@ fun MainNav(
     drawerState = drawerState,
     drawerContent = {
       ModalDrawerSheet {
-        LazyColumn(modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 20.dp)
+        LazyColumn(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -84,8 +85,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-              .padding(16.dp)
-              .clickable { showDialog = true }
+            .padding(16.dp)
+            .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -164,7 +165,7 @@ fun MainNav(
 fun AlbumDialog(
   mainViewModel: MainViewModel,
   onDismiss: () -> Unit,
-  onAddTitle: (String) -> Unit
+  onAddTitle: (String) -> Unit,
 ) {
   var albumTitle by remember { mutableStateOf("") }
 

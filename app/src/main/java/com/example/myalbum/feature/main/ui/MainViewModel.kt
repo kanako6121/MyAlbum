@@ -47,4 +47,10 @@ class MainViewModel @Inject constructor(
       repository.createAlbum(title)
     }
   }
+
+  fun updateAlbumTitle(albumId: Int, newTitle: String) {
+    viewModelScope.launch {
+      repository.updateAlbumTitle(albumId, newTitle)
+    }
+  }
 }
