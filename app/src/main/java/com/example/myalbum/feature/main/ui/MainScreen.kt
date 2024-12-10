@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -65,7 +64,10 @@ fun MainNav(
     drawerState = drawerState,
     drawerContent = {
       ModalDrawerSheet {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        LazyColumn(modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 20.dp)
+        ) {
           items(
             items = uiState.albumMenus,
             key = { it.id }
@@ -75,7 +77,7 @@ fun MainNav(
               thumbnailUri = item.uri,
               onClick = {
                 navController.navigate("album/${item.id}")
-              }
+              },
             )
           }
         }
@@ -89,7 +91,7 @@ fun MainNav(
             imageVector = Icons.Default.Add,
             contentDescription = null,
           )
-          Text(text = stringResource(id = R.string.new_album))
+          Text(text = stringResource(id = R.string.make_album))
         }
       }
     }
@@ -149,18 +151,20 @@ fun MainNav(
       }
     }
   }
-//  if (showDialog) {
-//    AlbumDialog(
-//      mainViewModel = mainViewModel,
-//      onDismiss = { showDialog = false },
-//    )
-//  }
+  if (showDialog) {
+    AlbumDialog(
+      mainViewModel = mainViewModel,
+      onDismiss = { showDialog = false },
+      onAddTitle = mainViewModel::createAlbumTitle,
+    )
+  }
 }
 
 @Composable
 fun AlbumDialog(
   mainViewModel: MainViewModel,
   onDismiss: () -> Unit,
+  onAddTitle: (String) -> Unit
 ) {
   var albumTitle by remember { mutableStateOf("") }
 
@@ -178,7 +182,10 @@ fun AlbumDialog(
     onDismissRequest = { onDismiss() },
     confirmButton = {
       TextButton(
-        onClick = {}
+        onClick = {
+          onAddTitle(albumTitle)
+          onDismiss()
+        }
       )
       {
         Text(text = stringResource(R.string.save))

@@ -18,7 +18,7 @@ import coil.compose.AsyncImage
 fun ModalDrawerAlbumItem(
   title: String,
   thumbnailUri: Uri,
-  onClick: () -> Unit
+  onClick: () -> Unit,
 ) {
   Row(
     modifier = Modifier

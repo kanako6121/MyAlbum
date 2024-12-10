@@ -41,4 +41,10 @@ class MainViewModel @Inject constructor(
       )
     }
   }
+
+  fun createAlbumTitle(title: String) {
+    viewModelScope.launch {
+      repository.createAlbum(title)
+    }
+  }
 }
