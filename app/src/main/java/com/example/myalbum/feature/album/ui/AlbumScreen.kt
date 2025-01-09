@@ -1,4 +1,4 @@
-package com.example.myalbum.feature.top.ui
+package com.example.myalbum.feature.album.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,14 +46,14 @@ import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.main.ui.MainViewModel
 
 @Composable
-fun TopScreen(
+fun AlbumScreen(
   viewModel: MainViewModel,
   launchPicker: () -> Unit,
   onEditScreen: (PictureData) -> Unit,
   onUpPress: () -> Unit,
 ) {
   // val pictures by viewModel.pictures.collectAsState()
-  // TopScreenContent(
+  // AlbumScreenContent(
   //   launchPicker = launchPicker,
   //   onUpPress = onUpPress,
   //   onEditScreen = onEditScreen,
@@ -63,7 +63,7 @@ fun TopScreen(
 }
 
 @Composable
-fun TopScreenContent(
+fun AlbumScreenContent(
   launchPicker: () -> Unit,
   onUpPress: () -> Unit,
   onEditScreen: (PictureData) -> Unit,
@@ -190,7 +190,7 @@ fun TopScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
-  TopScreenContent(
+  AlbumScreenContent(
     launchPicker = {},
     onUpPress = {},
     onEditScreen = {},

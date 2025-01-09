@@ -44,7 +44,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditScreen
-import com.example.myalbum.feature.top.ui.TopScreen
+import com.example.myalbum.feature.album.ui.AlbumScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +127,7 @@ fun MainNav(
           startDestination = startDestination,
         ) {
           composable("top") {
-            TopScreen(
+            AlbumScreen(
               viewModel = mainViewModel,
               launchPicker = launchPicker,
               onUpPress = {
