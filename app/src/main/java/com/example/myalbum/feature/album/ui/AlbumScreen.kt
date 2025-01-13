@@ -11,7 +11,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -83,7 +86,7 @@ fun AlbumScreenContent(
 ) {
   val scrollState = rememberLazyStaggeredGridState()
   var showButton by remember { mutableStateOf(true) }
-  var showTutorial by remember { mutableStateOf(true) }
+  var showTutorial by remember { mutableStateOf(false) }
 
   LaunchedEffect(currentAlbumData) {
     delay(600)
@@ -95,9 +98,9 @@ fun AlbumScreenContent(
   }
   Scaffold(
     modifier = Modifier
-      .fillMaxSize()
-      .statusBarsPadding()
-      .navigationBarsPadding(),
+        .fillMaxSize()
+        .statusBarsPadding()
+        .navigationBarsPadding(),
     floatingActionButton = {
       AnimatedVisibility(
         visible = showButton,
@@ -120,13 +123,12 @@ fun AlbumScreenContent(
   ) { contentPadding ->
     Box(
       modifier = Modifier
-        .fillMaxSize()
-        .padding(contentPadding)
+          .fillMaxSize()
+          .padding(contentPadding)
     ) {
       LazyVerticalStaggeredGrid(
         state = scrollState,
         columns = StaggeredGridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize()
       ) {
         items(currentAlbumData.pictures) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
@@ -139,26 +141,26 @@ fun AlbumScreenContent(
             )
           ) {
             AsyncImage(
-              model = currentAlbumData.pictures,
+              model = pictureData.uri,
               contentDescription = null,
               modifier = Modifier
-                .shadow(elevation = 4.dp)
-                .background(Color.White)
-                .border(
-                  BorderStroke(width = 0.5.dp, color = Color.Gray)
-                )
-                .padding(
-                  start = 8.dp,
-                  top = 8.dp,
-                  end = 8.dp,
-                  bottom = 32.dp
-                )
-                .clickable { onEditScreen(pictureData) },
+                  .shadow(elevation = 4.dp)
+                  .background(Color.White)
+                  .border(
+                      BorderStroke(width = 0.5.dp, color = Color.Gray)
+                  )
+                  .padding(
+                      start = 8.dp,
+                      top = 8.dp,
+                      end = 8.dp,
+                      bottom = 32.dp
+                  )
+                  .clickable { onEditScreen(pictureData) },
             )
             Box(
               modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 24.dp, bottom = 4.dp)
+                  .align(Alignment.BottomStart)
+                  .padding(start = 24.dp, bottom = 4.dp)
             ) {
               Text(
                 text = pictureData.comment.orEmpty()
@@ -166,9 +168,9 @@ fun AlbumScreenContent(
             }
             Box(
               modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.BottomStart)
-                .padding(start = 0.dp, bottom = 4.dp)
+                  .size(32.dp)
+                  .align(Alignment.BottomStart)
+                  .padding(start = 0.dp, bottom = 4.dp)
             ) {
               IconButton(onClick = { expanded = true }) {
                 Icon(
@@ -198,6 +200,37 @@ fun AlbumScreenContent(
             }
           }
         }
+      }
+      //チュートリアルコメント
+      AnimatedVisibility(
+        modifier = Modifier.align(Alignment.BottomEnd),
+        visible = showTutorial,
+        enter = fadeIn(
+          animationSpec = tween(delayMillis = 500)
+        ),
+        exit = fadeOut(
+          animationSpec = tween(durationMillis = 250)
+        )
+      ) {
+        Column(
+          modifier = Modifier.padding(16.dp),
+          horizontalAlignment = Alignment.End
+        ) {
+          Text(text = stringResource(R.string.tutorial))
+          Spacer(modifier = Modifier.height(64.dp))
+        }
+      }
+
+      FloatingActionButton(
+        modifier = Modifier
+            .padding(16.dp)
+            .align(Alignment.BottomEnd),
+        onClick = {
+          showTutorial = false
+          launchPicker()
+        }
+      ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = null)
       }
     }
   }

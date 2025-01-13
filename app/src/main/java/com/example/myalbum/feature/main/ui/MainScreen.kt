@@ -76,7 +76,8 @@ fun MainNav(
             ModalDrawerAlbumItem(
               title = item.title,
               thumbnailUri = item.uri,
-              onClick = { mainViewModel.selectAlbum(item.id) },
+              onClick = {
+                mainViewModel.selectAlbum(item.id) },
             )
           }
         }

@@ -37,8 +37,14 @@ class MainViewModel @Inject constructor(
   private fun createDefaultAlbum() {
     viewModelScope.launch {
       repository.createAlbum(
-        title = context.getString(R.string.new_album)
+        title = context.getString(R.string.defalt_album)
       )
+    }
+  }
+
+  fun createAlbumTitle(title: String) {
+    viewModelScope.launch {
+      repository.createAlbum(title)
     }
   }
 
@@ -52,12 +58,6 @@ class MainViewModel @Inject constructor(
   fun selectAlbum(albumId: Int) {
     viewModelScope.launch {
       repository.setCurrentAlbum(albumId)
-    }
-  }
-
-  fun createAlbumTitle(title: String) {
-    viewModelScope.launch {
-      repository.createAlbum(title)
     }
   }
 
