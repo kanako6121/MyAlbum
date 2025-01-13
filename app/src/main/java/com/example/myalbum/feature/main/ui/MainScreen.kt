@@ -77,7 +77,8 @@ fun MainNav(
               title = item.title,
               thumbnailUri = item.uri,
               onClick = {
-                mainViewModel.selectAlbum(item.id) },
+                mainViewModel.selectAlbum(item.id)
+              },
             )
           }
         }
@@ -137,8 +138,7 @@ fun MainNav(
               onEditScreen = { pictureData ->
                 navController.navigate("edit/${pictureData.id}")
               },
-
-              )
+            )
           }
           composable("edit/{selectId}") { backStackEntry ->
             EditScreen(
