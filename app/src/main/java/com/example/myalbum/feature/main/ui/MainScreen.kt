@@ -54,7 +54,7 @@ fun MainNav(
   launchPicker: () -> Unit,
   navController: NavHostController = rememberNavController(),
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-  startDestination: String = "top",
+  startDestination: String = "album",
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
@@ -66,8 +66,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+              .fillMaxWidth()
+              .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -76,17 +76,15 @@ fun MainNav(
             ModalDrawerAlbumItem(
               title = item.title,
               thumbnailUri = item.uri,
-              onClick = {
-                navController.navigate("album/${item.id}")
-              },
+              onClick = { mainViewModel.selectAlbum(item.id) },
             )
           }
         }
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-            .padding(16.dp)
-            .clickable { showDialog = true }
+              .padding(16.dp)
+              .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -100,7 +98,7 @@ fun MainNav(
     Scaffold(
       topBar = {
         TopAppBar(
-          title = { Text(text = stringResource(id = R.string.app_name)) },
+          title = { Text(text = uiState.currentAlbum.title) },
           modifier = Modifier.fillMaxWidth(),
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -126,7 +124,7 @@ fun MainNav(
           navController = navController,
           startDestination = startDestination,
         ) {
-          composable("top") {
+          composable("album") {
             AlbumScreen(
               viewModel = mainViewModel,
               launchPicker = launchPicker,
@@ -200,9 +198,4 @@ fun AlbumDialog(
       }
     },
   )
-}
-
-enum class Screen(val route: String) {
-  TOP("top"),
-  EDIT("edit")
 }

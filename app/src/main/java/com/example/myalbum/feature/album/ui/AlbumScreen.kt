@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
@@ -52,14 +53,16 @@ fun AlbumScreen(
   onEditScreen: (PictureData) -> Unit,
   onUpPress: () -> Unit,
 ) {
-  // val pictures by viewModel.pictures.collectAsState()
-  // AlbumScreenContent(
-  //   launchPicker = launchPicker,
-  //   onUpPress = onUpPress,
-  //   onEditScreen = onEditScreen,
-  //   pictures = pictures,
-  //   onRemove = viewModel::removePhoto,
-  // )
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+  AlbumScreenContent(
+    launchPicker = { /*TODO*/ },
+    onUpPress = { /*TODO*/ },
+    onEditScreen = ,
+
+  ) {
+
+  }
 }
 
 @Composable
@@ -67,7 +70,7 @@ fun AlbumScreenContent(
   launchPicker: () -> Unit,
   onUpPress: () -> Unit,
   onEditScreen: (PictureData) -> Unit,
-  pictures: List<PictureData>,
+  
   onRemove: (PictureData) -> Unit,
 ) {
   val scrollState = rememberLazyStaggeredGridState()
@@ -81,9 +84,9 @@ fun AlbumScreenContent(
   }
   Scaffold(
     modifier = Modifier
-        .fillMaxSize()
-        .statusBarsPadding()
-        .navigationBarsPadding(),
+      .fillMaxSize()
+      .statusBarsPadding()
+      .navigationBarsPadding(),
     floatingActionButton = {
       //    AnimatedVisibility(
       //     visible = showButton,
@@ -126,23 +129,23 @@ fun AlbumScreenContent(
               model = pictureData.uri,
               contentDescription = null,
               modifier = Modifier
-                  .shadow(elevation = 4.dp)
-                  .background(Color.White)
-                  .border(
-                      BorderStroke(width = 0.5.dp, color = Color.Gray)
-                  )
-                  .padding(
-                      start = 8.dp,
-                      top = 8.dp,
-                      end = 8.dp,
-                      bottom = 32.dp
-                  )
-                  .clickable { onEditScreen(pictureData) },
+                .shadow(elevation = 4.dp)
+                .background(Color.White)
+                .border(
+                  BorderStroke(width = 0.5.dp, color = Color.Gray)
+                )
+                .padding(
+                  start = 8.dp,
+                  top = 8.dp,
+                  end = 8.dp,
+                  bottom = 32.dp
+                )
+                .clickable { onEditScreen(pictureData) },
             )
             Box(
               modifier = Modifier
-                  .align(Alignment.BottomStart)
-                  .padding(start = 24.dp, bottom = 4.dp)
+                .align(Alignment.BottomStart)
+                .padding(start = 24.dp, bottom = 4.dp)
             ) {
               Text(
                 text = pictureData.comment.orEmpty()
@@ -150,9 +153,9 @@ fun AlbumScreenContent(
             }
             Box(
               modifier = Modifier
-                  .size(32.dp)
-                  .align(Alignment.BottomStart)
-                  .padding(start = 0.dp, bottom = 4.dp)
+                .size(32.dp)
+                .align(Alignment.BottomStart)
+                .padding(start = 0.dp, bottom = 4.dp)
             ) {
               IconButton(onClick = { expanded = true }) {
                 Icon(
