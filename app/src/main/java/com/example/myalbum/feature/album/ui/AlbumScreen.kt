@@ -1,11 +1,16 @@
 package com.example.myalbum.feature.album.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -16,11 +21,13 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,8 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.main.ui.MainViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun AlbumScreen(
@@ -56,13 +65,12 @@ fun AlbumScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   AlbumScreenContent(
-    launchPicker = { /*TODO*/ },
-    onUpPress = { /*TODO*/ },
-    onEditScreen = ,
-
-  ) {
-
-  }
+    launchPicker = launchPicker,
+    onUpPress = onUpPress,
+    onEditScreen = onEditScreen,
+    currentAlbumData = uiState.currentAlbum,
+    onRemove = viewModel::removePhoto,
+  )
 }
 
 @Composable
@@ -70,13 +78,16 @@ fun AlbumScreenContent(
   launchPicker: () -> Unit,
   onUpPress: () -> Unit,
   onEditScreen: (PictureData) -> Unit,
-  
-  onRemove: (PictureData) -> Unit,
+  currentAlbumData: AlbumData,
+  onRemove: (Int, Int) -> Unit,
 ) {
   val scrollState = rememberLazyStaggeredGridState()
   var showButton by remember { mutableStateOf(true) }
+  var showTutorial by remember { mutableStateOf(true) }
 
-  LaunchedEffect(scrollState) {
+  LaunchedEffect(currentAlbumData) {
+    delay(600)
+    showTutorial = currentAlbumData.pictures.isEmpty()
     snapshotFlow { scrollState.isScrollInProgress }
       .collect { scrolling ->
         showButton = !scrolling
@@ -88,34 +99,36 @@ fun AlbumScreenContent(
       .statusBarsPadding()
       .navigationBarsPadding(),
     floatingActionButton = {
-      //    AnimatedVisibility(
-      //     visible = showButton,
-      //enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
-      //  animationSpec = tween(
-      //    delayMillis = 1000
-      //       )
-      //     ),
-      //       exit = scaleOut() + fadeOut(),
-//      )
+      AnimatedVisibility(
+        visible = showButton,
+        enter = scaleIn(animationSpec = tween(delayMillis = 1000)) + fadeIn(
+          animationSpec = tween(
+            delayMillis = 1000
+          )
+        ),
+        exit = scaleOut() + fadeOut(),
+      )
       {
-        //       FloatingActionButton(
-        //     onClick = launchPicker,
-        //       ) {
-        //       Icon(imageVector = Icons.Default.Add, contentDescription = "add")
-        //       }
+        FloatingActionButton(
+          onClick = launchPicker,
+        ) {
+          Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+        }
       }
     },
     floatingActionButtonPosition = FabPosition.End,
-  )
-  { paddings ->
-    Column(
-      modifier = Modifier.padding(paddings),
+  ) { contentPadding ->
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(contentPadding)
     ) {
       LazyVerticalStaggeredGrid(
         state = scrollState,
-        columns = StaggeredGridCells.Fixed(2)
+        columns = StaggeredGridCells.Fixed(2),
+        modifier = Modifier.fillMaxSize()
       ) {
-        items(pictures) { pictureData ->
+        items(currentAlbumData.pictures) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
           Box(
             modifier = Modifier.padding(
@@ -126,7 +139,7 @@ fun AlbumScreenContent(
             )
           ) {
             AsyncImage(
-              model = pictureData.uri,
+              model = currentAlbumData.pictures,
               contentDescription = null,
               modifier = Modifier
                 .shadow(elevation = 4.dp)
@@ -171,7 +184,7 @@ fun AlbumScreenContent(
                 DropdownMenuItem(
                   text = { Text(stringResource(id = R.string.description_delete)) },
                   onClick = {
-                    onRemove(pictureData)
+                    onRemove(currentAlbumData.id, pictureData.id)
                     expanded = false
                   },
                   leadingIcon = {
@@ -197,7 +210,7 @@ fun ShowPhotoGrid() {
     launchPicker = {},
     onUpPress = {},
     onEditScreen = {},
-    pictures = emptyList(),
-    onRemove = {},
+    currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
+    onRemove = { _, _ -> }
   )
 }
