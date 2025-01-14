@@ -1,5 +1,6 @@
 package com.example.myalbum.core.data
 
+import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -13,6 +14,8 @@ class AlbumRepository @Inject constructor(
   private val preference: AlbumPreference
 ) {
   val albumsFlow: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
+
+  val currentAlbumIdFlow: Flow<Int> = preference.currentAlbumFlow
 
   suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
     preference.createAlbum(title)
@@ -29,9 +32,15 @@ class AlbumRepository @Inject constructor(
 
   suspend fun addPhotoToAlbum(
     albumId: Int,
-    pictureData: PictureData
+    uri: Uri,
   ) = withContext(Dispatchers.IO) {
     val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
+    val lastPictureId = currentAlbumData.pictures.lastOrNull()?.id
+    val newPictureId = lastPictureId?.plus(1) ?: 0
+    val pictureData = PictureData(
+      id = newPictureId,
+      uri = uri,
+    )
     val newAlbumData = currentAlbumData.copy(
       pictures = currentAlbumData.pictures + pictureData
     )
@@ -72,5 +81,9 @@ class AlbumRepository @Inject constructor(
 
   private suspend fun getCurrentAlbum(albumId: Int): AlbumData? {
     return preference.albumMap.first()[albumId]
+  }
+
+  suspend fun setCurrentAlbum(albumId: Int) = withContext(Dispatchers.IO) {
+    preference.setCurrentAlbum(albumId)
   }
 }

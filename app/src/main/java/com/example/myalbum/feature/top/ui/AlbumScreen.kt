@@ -46,7 +46,7 @@ import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.main.ui.MainViewModel
 
 @Composable
-fun TopScreen(
+fun AlbumScreen(
   viewModel: MainViewModel,
   launchPicker: () -> Unit,
   onEditScreen: (PictureData) -> Unit,
