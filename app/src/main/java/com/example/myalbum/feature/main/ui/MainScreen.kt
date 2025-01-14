@@ -78,6 +78,9 @@ fun MainNav(
               thumbnailUri = item.uri,
               onClick = {
                 mainViewModel.selectAlbum(item.id)
+                coroutineScope.launch {
+                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                }
               },
             )
           }

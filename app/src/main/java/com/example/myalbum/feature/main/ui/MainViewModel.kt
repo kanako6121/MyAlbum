@@ -24,11 +24,12 @@ class MainViewModel @Inject constructor(
   private val repository: AlbumRepository,
 ) : ViewModel() {
   val uiState: StateFlow<MainUiState> = combine(
-    repository.albumsFlow, repository.currentAlbumIdFlow) { albums, currentAlbumId ->
+    repository.albumsFlow, repository.currentAlbumIdFlow
+  ) { albums, currentAlbumId ->
     if (albums.isEmpty()) {
       createDefaultAlbum()
     }
-      albums.toMainUiState(currentAlbumId)
+    albums.toMainUiState(currentAlbumId)
   }.stateIn(
     scope = viewModelScope,
     started = SharingStarted.Eagerly,
