@@ -6,9 +6,18 @@ import com.example.myalbum.core.data.AlbumData
 
 @Immutable
 data class MainUiState(
-  val albumMenus: List<AlbumMenu> = emptyList(),
-  val errorMessage: String? = null,
-)
+  val albumMenus: List<AlbumMenu>,
+  val errorMessage: String,
+  var currentAlbum: AlbumData,
+) {
+  companion object {
+    val Empty = MainUiState(
+      albumMenus = emptyList(),
+      errorMessage = "",
+      currentAlbum = AlbumData(id = 0, title = "", pictures = emptyList())
+    )
+  }
+}
 
 @Immutable
 data class AlbumMenu(
@@ -24,7 +33,9 @@ fun AlbumData.toAlbumMenu() =
     title = title,
   )
 
-fun List<AlbumData>.toMainUiState() =
+fun List<AlbumData>.toMainUiState(albumIc: Int) =
   MainUiState(
-    albumMenus = map { it.toAlbumMenu() }
+    albumMenus = map { it.toAlbumMenu() },
+    errorMessage = "",
+    currentAlbum = firstOrNull { it.id == albumIc } ?: AlbumData(id = 0, title = "", pictures = emptyList())
   )

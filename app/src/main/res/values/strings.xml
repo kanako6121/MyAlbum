@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">MyAlbum</string>
+  <string name="app_name">FavPic</string>
   <string name="label_title">My Favorite Album</string>
   <string name="label_top">Top</string>
   <string name="description_top">Topへ</string>
@@ -15,13 +15,14 @@
   <string name="post">投稿する</string>
   <string name="save">保存する</string>
   <string name="cancel">キャンセル</string>
-  <string name="make_album">アルバムに名前をつける</string>
+  <string name="make_album">アルバムを新規作成</string>
   <string name="album1">アルバム１く</string>
   <string name="album2">アルバム２く</string>
   <string name="album3">アルバム３</string>
   <string name="album4">アルバム４</string>
   <string name="album5">アルバム５</string>
-  <string name="new_album">マイアルバム</string>
+  <string name="default_album">FavPicアルバム</string>
   <string name="show_drawer">アルバムを作る</string>
+  <string name="tutorial">お気に入りの写真をピックしてみてね！</string>
 
 </resources>

@@ -44,7 +44,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditScreen
-import com.example.myalbum.feature.top.ui.TopScreen
+import com.example.myalbum.feature.top.ui.AlbumScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +54,7 @@ fun MainNav(
   launchPicker: () -> Unit,
   navController: NavHostController = rememberNavController(),
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-  startDestination: String = "top",
+  startDestination: String = "album",
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
@@ -77,7 +77,10 @@ fun MainNav(
               title = item.title,
               thumbnailUri = item.uri,
               onClick = {
-                navController.navigate("album/${item.id}")
+                mainViewModel.selectAlbum(item.id)
+                coroutineScope.launch {
+                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                }
               },
             )
           }
@@ -100,7 +103,7 @@ fun MainNav(
     Scaffold(
       topBar = {
         TopAppBar(
-          title = { Text(text = stringResource(id = R.string.app_name)) },
+          title = { Text(text = uiState.currentAlbum?.title.orEmpty()) },
           modifier = Modifier.fillMaxWidth(),
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -126,8 +129,8 @@ fun MainNav(
           navController = navController,
           startDestination = startDestination,
         ) {
-          composable("top") {
-            TopScreen(
+          composable("album") {
+            AlbumScreen(
               viewModel = mainViewModel,
               launchPicker = launchPicker,
               onUpPress = {
@@ -200,9 +203,4 @@ fun AlbumDialog(
       }
     },
   )
-}
-
-enum class Screen(val route: String) {
-  TOP("top"),
-  EDIT("edit")
 }

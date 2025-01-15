@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,6 +42,11 @@ class AlbumPreference @Inject constructor(
     }.toMap()
   }
 
+  //カレントアルバムをFLOWで流す
+  val currentAlbumFlow: Flow<Int> = store.data.map { prefs ->
+    prefs[intPreferencesKey("current_album")] ?: 0
+  }
+
   // アルバムの新規作成保存
   suspend fun createAlbum(title: String) {
     val saveData = AlbumSaveData(
@@ -68,6 +74,14 @@ class AlbumPreference @Inject constructor(
     val key = stringPreferencesKey(albumId.toString())
     store.edit { prefs ->
       prefs.remove(key)
+    }
+  }
+
+  //カレントアルバムを設定
+  suspend fun setCurrentAlbum(albumId: Int) {
+    val key = intPreferencesKey("current_album")
+    store.edit { prefs ->
+      prefs[key] = albumId
     }
   }
 }
