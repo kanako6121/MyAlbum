@@ -147,11 +147,9 @@ fun MainNav(
             val selectedId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull()
             selectedId?.let {
               EditScreen(
+                selectedId = it,
                 selectedPictureData = { albumId, updatedPictureData ->
                   mainViewModel.updatePicture(albumId, updatedPictureData)
-                },
-                onClick = { pictureData ->
-                  navController.popBackStack()
                 },
               )
             }

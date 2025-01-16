@@ -198,7 +198,7 @@ fun ShowPhotoGrid() {
   AlbumContent(
     launchPicker = {},
     onUpPress = {},
-    onEditScreen = {},
+    onEditScreen = { _, _ -> },
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
     onRemove = { _, _ -> },
   )
