@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumRepository
+import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.main.data.MainUiState
 import com.example.myalbum.feature.main.data.toMainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,6 +67,12 @@ class MainViewModel @Inject constructor(
   fun updateAlbumTitle(albumId: Int, newTitle: String) {
     viewModelScope.launch {
       repository.updateAlbumTitle(albumId, newTitle)
+    }
+  }
+
+  fun updatePicture(albumId: Int, pictureData: PictureData) {
+    viewModelScope.launch {
+      repository.updatePicture(albumId, pictureData)
     }
   }
 

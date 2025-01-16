@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
@@ -24,46 +25,48 @@ import com.example.myalbum.feature.main.ui.MainViewModel
 
 @Composable
 fun EditScreen(
-  // viewModel: MainViewModel = hiltViewModel(),
-  selectedId: Int?,
+  viewModel: MainViewModel = hiltViewModel(),
+  selectedPictureData: (Int, PictureData)-> Unit,
   onClick: (PictureData) -> Unit,
 ) {
-  if (selectedId == null) return
-  // val pictureData = viewModel.getPictureData(selectedId) ?: return
-  // var comment by remember { mutableStateOf(pictureData.comment) }
-  // val maxChar = 10
-  // Column(
-  //   modifier = Modifier
-  //     .fillMaxWidth()
-  // ) {
-  //   AsyncImage(
-  //     modifier = Modifier
-  //       .aspectRatio(1f)
-  //       .padding(16.dp)
-  //       .fillMaxWidth(),
-  //     model = pictureData.uri,
-  //     contentDescription = null
-  //   )
-  //   OutlinedTextField(
-  //     modifier = Modifier
-  //       .padding(8.dp)
-  //       .align(Alignment.CenterHorizontally),
-  //     value = comment.orEmpty(),
-  //     onValueChange = { newComment ->
-  //       if (newComment.length <= maxChar) {
-  //         comment = newComment
-  //       }
-  //     },
-  //     placeholder = { Text(text = stringResource(R.string.comment)) },
-  //     singleLine = true,
-  //   )
-  //   Button(
-  //     modifier = Modifier
-  //       .padding(16.dp)
-  //       .align(Alignment.CenterHorizontally),
-  //     onClick = { onClick(pictureData.copy(comment = comment)) }
-  //   ) {
-  //     Text(text = stringResource(R.string.post))
-  //   }
-  // }
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val pictureData = uiState.currentAlbum.pictures.find { it.id == selectedId }
+  var comment by remember { mutableStateOf(pictureData?.comment) }
+  val maxChar = 10
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+  ) {
+    AsyncImage(
+      modifier = Modifier
+        .aspectRatio(1f)
+        .padding(16.dp)
+        .fillMaxWidth(),
+      model = uiState.currentAlbum.pictures.find { it.id == selectedId },
+      contentDescription = null
+    )
+    comment?.let {
+      OutlinedTextField(
+        modifier = Modifier
+          .padding(8.dp)
+          .align(Alignment.CenterHorizontally),
+        value = it,
+        onValueChange = { newComment ->
+          if (newComment.length <= maxChar) {
+            comment = newComment
+          }
+        },
+        placeholder = { Text(text = stringResource(R.string.comment)) },
+        singleLine = true,
+    )
+    }
+    Button(
+      modifier = Modifier
+        .padding(16.dp)
+        .align(Alignment.CenterHorizontally),
+      onClick = { onClick() }
+    ) {
+      Text(text = stringResource(R.string.post))
+    }
+  }
 }

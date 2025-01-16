@@ -54,7 +54,7 @@ import kotlinx.coroutines.delay
 fun AlbumScreen(
   viewModel: MainViewModel,
   launchPicker: () -> Unit,
-  onEditScreen: (PictureData) -> Unit,
+  onEditScreen: (Int, PictureData) -> Unit,
   onUpPress: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -72,7 +72,7 @@ fun AlbumScreen(
 fun AlbumContent(
   launchPicker: () -> Unit,
   onUpPress: () -> Unit,
-  onEditScreen: (PictureData) -> Unit,
+  onEditScreen: (Int, PictureData) -> Unit,
   currentAlbumData: AlbumData,
   onRemove: (Int, Int) -> Unit,
 ) {
@@ -113,7 +113,7 @@ fun AlbumContent(
                 end = 8.dp,
                 bottom = 32.dp
               )
-              .clickable { onEditScreen(pictureData) },
+              .clickable { onEditScreen(currentAlbumData.id, pictureData) },
           )
           Box(
             modifier = Modifier

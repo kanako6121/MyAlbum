@@ -138,18 +138,23 @@ fun MainNav(
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
               },
-              onEditScreen = { pictureData ->
+              onEditScreen = { id, pictureData ->
                 navController.navigate("edit/${pictureData.id}")
               },
-
-              )
+            )
           }
           composable("edit/{selectId}") { backStackEntry ->
-            EditScreen(
-              selectedId = backStackEntry.arguments?.getString("selectId")?.toInt(),
-              onClick = {
-              },
-            )
+            val selectedId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull()
+            selectedId?.let {
+              EditScreen(
+                selectedPictureData = { albumId, updatedPictureData ->
+                  mainViewModel.updatePicture(albumId, updatedPictureData)
+                },
+                onClick = { pictureData ->
+                  navController.popBackStack()
+                },
+              )
+            }
           }
         }
       }
