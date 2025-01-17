@@ -144,12 +144,12 @@ fun MainNav(
             )
           }
           composable("edit/{selectId}") { backStackEntry ->
-            val selectedId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull()
-            selectedId?.let {
+            backStackEntry.arguments?.getString("selectId")?.toInt()?.let {
               EditScreen(
                 selectedId = it,
-                selectedPictureData = { albumId, updatedPictureData ->
-                  mainViewModel.updatePicture(albumId, updatedPictureData)
+                selectedPictureData = { id, pictureData ->
+                  mainViewModel.updatePicture(id, pictureData)
+                  navController.popBackStack()
                 },
               )
             }

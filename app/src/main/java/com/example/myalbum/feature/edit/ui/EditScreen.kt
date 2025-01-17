@@ -27,10 +27,11 @@ import com.example.myalbum.feature.main.ui.MainViewModel
 fun EditScreen(
   selectedId: Int,
   viewModel: MainViewModel = hiltViewModel(),
-  selectedPictureData: (Int, PictureData)-> Unit,
+  selectedPictureData: (Int, PictureData) -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var comment by remember { mutableStateOf(uiState.currentAlbum.pictures.find{it.id == selectedId}?.comment) }
+  var comment by remember { mutableStateOf(uiState.currentAlbum.pictures.find { it.id == selectedId }?.comment ?: "") }
+  val pictureData = uiState.currentAlbum.pictures.find { it.id == selectedId }
   val maxChar = 10
   Column(
     modifier = Modifier
@@ -38,37 +39,38 @@ fun EditScreen(
   ) {
     AsyncImage(
       modifier = Modifier
-        .aspectRatio(1f)
-        .padding(16.dp)
-        .fillMaxWidth(),
-      model = uiState.currentAlbum.pictures.find { it.id == selectedId },
+          .aspectRatio(1f)
+          .padding(16.dp)
+          .fillMaxWidth(),
+      model = pictureData?.uri,
       contentDescription = null
     )
-    comment?.let {
-      OutlinedTextField(
-        modifier = Modifier
+    OutlinedTextField(
+      modifier = Modifier
           .padding(8.dp)
           .align(Alignment.CenterHorizontally),
-        value = it,
-        onValueChange = { newComment ->
-          if (newComment.length <= maxChar) {
-            comment = newComment
-          }
-        },
-        placeholder = { Text(text = stringResource(R.string.comment)) },
-        singleLine = true,
+      value = comment,
+      onValueChange = { newComment ->
+        if (newComment.length <= maxChar) {
+          comment = newComment
+        }
+      },
+      placeholder = { Text(text = stringResource(R.string.comment)) },
+      singleLine = true,
     )
-    }
     Button(
       modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.CenterHorizontally),
+          .padding(16.dp)
+          .align(Alignment.CenterHorizontally),
       onClick = {
-        val pictureData = uiState.currentAlbum.pictures.find { it.id == selectedId }
-        pictureData?.let {
-          val updatedPictureData = it.copy(comment = comment)
-          selectedPictureData(uiState.currentAlbum.id, updatedPictureData)
+        val updatedPictureData = pictureData?.let {
+          PictureData(
+            id = selectedId,
+            uri = it.uri,
+            comment = comment,
+          )
         }
+        updatedPictureData?.let { selectedPictureData(selectedId, it) }
       }
     ) {
       Text(text = stringResource(R.string.post))
