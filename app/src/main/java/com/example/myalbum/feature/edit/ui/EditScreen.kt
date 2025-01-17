@@ -25,13 +25,13 @@ import com.example.myalbum.feature.main.ui.MainViewModel
 
 @Composable
 fun EditScreen(
-  selectedId: Int,
+  albumId: Int,
   viewModel: MainViewModel = hiltViewModel(),
   selectedPictureData: (Int, PictureData) -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var comment by remember { mutableStateOf(uiState.currentAlbum.pictures.find { it.id == selectedId }?.comment ?: "") }
-  val pictureData = uiState.currentAlbum.pictures.find { it.id == selectedId }
+  var comment by remember { mutableStateOf(uiState.currentAlbum.pictures.find { it.id == albumId }?.comment ?: "") }
+  val pictureData = uiState.currentAlbum.pictures.find { it.id == albumId }
   val maxChar = 10
   Column(
     modifier = Modifier
@@ -65,7 +65,7 @@ fun EditScreen(
       onClick = {
         val updatedPictureData = pictureData?.let {
           PictureData(
-            id = selectedId,
+            id = albumId,
             uri = it.uri,
             comment = comment,
           )
