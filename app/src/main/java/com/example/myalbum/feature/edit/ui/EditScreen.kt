@@ -70,7 +70,7 @@ fun EditScreen(
             comment = comment,
           )
         }
-        updatedPictureData?.let { selectedPictureData(selectedId, it) }
+        updatedPictureData?.let { selectedPictureData(uiState.currentAlbum.id, it) }
       }
     ) {
       Text(text = stringResource(R.string.post))
