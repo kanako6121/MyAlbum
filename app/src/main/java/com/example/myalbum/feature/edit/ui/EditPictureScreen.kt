@@ -26,7 +26,7 @@ import com.example.myalbum.feature.main.ui.MainViewModel
 @Composable
 fun EditScreen(
   albumId: Int,
-  viewModel: MainViewModel = hiltViewModel(),
+  viewModel: EditPictureViewModel = hiltViewModel(),
   selectedPictureData: (Int, PictureData) -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
