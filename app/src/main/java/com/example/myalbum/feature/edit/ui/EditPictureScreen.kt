@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,34 +22,52 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
-import com.example.myalbum.feature.main.ui.MainViewModel
 
 @Composable
-fun EditScreen(
+fun EditPictureScreen(
   albumId: Int,
+  pictureId: Int,
   viewModel: EditPictureViewModel = hiltViewModel(),
-  selectedPictureData: (Int, PictureData) -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var comment by remember { mutableStateOf(uiState.currentAlbum.pictures.find { it.id == albumId }?.comment ?: "") }
-  val pictureData = uiState.currentAlbum.pictures.find { it.id == albumId }
   val maxChar = 10
+
+  LaunchedEffect(key1 = albumId, key2 = pictureId) {
+    viewModel.setEditPicture(albumId, pictureId)
+  }
+
+  EditPictureContent(
+    pictureData = uiState.pictureData,
+    maxChar = maxChar,
+    onSaveComment = viewModel::savePicture,
+  )
+}
+
+@Composable
+fun EditPictureContent(
+  pictureData: PictureData?,
+  maxChar: Int,
+  onSaveComment: (String) -> Unit,
+) {
+
+  var comment by remember { mutableStateOf("") }
+
   Column(
     modifier = Modifier
       .fillMaxWidth()
   ) {
     AsyncImage(
       modifier = Modifier
-          .aspectRatio(1f)
-          .padding(16.dp)
-          .fillMaxWidth(),
+        .aspectRatio(1f)
+        .padding(16.dp)
+        .fillMaxWidth(),
       model = pictureData?.uri,
       contentDescription = null
     )
     OutlinedTextField(
       modifier = Modifier
-          .padding(8.dp)
-          .align(Alignment.CenterHorizontally),
+        .padding(8.dp)
+        .align(Alignment.CenterHorizontally),
       value = comment,
       onValueChange = { newComment ->
         if (newComment.length <= maxChar) {
@@ -60,17 +79,10 @@ fun EditScreen(
     )
     Button(
       modifier = Modifier
-          .padding(16.dp)
-          .align(Alignment.CenterHorizontally),
+        .padding(16.dp)
+        .align(Alignment.CenterHorizontally),
       onClick = {
-        val updatedPictureData = pictureData?.let {
-          PictureData(
-            id = albumId,
-            uri = it.uri,
-            comment = comment,
-          )
-        }
-        updatedPictureData?.let { selectedPictureData(uiState.currentAlbum.id, it) }
+        onSaveComment(comment)
       }
     ) {
       Text(text = stringResource(R.string.post))

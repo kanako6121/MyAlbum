@@ -37,13 +37,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
-import com.example.myalbum.feature.edit.ui.EditScreen
+import com.example.myalbum.feature.edit.ui.EditPictureScreen
+import com.example.myalbum.feature.edit.ui.EditPictureViewModel
 import com.example.myalbum.feature.top.ui.AlbumScreen
 import kotlinx.coroutines.launch
 
@@ -138,26 +140,24 @@ fun MainNav(
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
               },
-              onEditScreen = { id, pictureData ->
-                navController.navigate("edit/${pictureData.id}")
+              onEditScreen = { albumId, pictureData ->
+                navController.navigate("edit/${albumId}/${pictureData.id}")
               },
             )
           }
-          composable("edit/{selectId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("selectId")?.toInt()?.let {
-              EditScreen(
-                albumId = it,
-                selectedPictureData = { id, pictureData ->
-                  mainViewModel.updatePicture(id, pictureData)
-                  navController.popBackStack()
-                },
+          composable("edit/{albumId}/{selectId}") { backStackEntry ->
+            val albumId = backStackEntry.arguments?.getString("albumId")?.toIntOrNull() ?: return@composable
+            val pictureId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull() ?: return@composable
+              EditPictureScreen(
+                albumId = albumId,
+                pictureId = pictureId,
+                viewModel = hiltViewModel(),
               )
             }
           }
         }
       }
     }
-  }
   if (showDialog) {
     AlbumDialog(
       mainViewModel = mainViewModel,
