@@ -67,8 +67,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -89,8 +89,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-              .padding(16.dp)
-              .clickable { showDialog = true }
+            .padding(16.dp)
+            .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -147,22 +147,22 @@ fun MainNav(
           composable("edit/{albumId}/{selectId}") { backStackEntry ->
             val albumId = backStackEntry.arguments?.getString("albumId")?.toIntOrNull() ?: return@composable
             val pictureId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull() ?: return@composable
-            EditPictureScreen(
-              albumId = albumId,
-              pictureId = pictureId,
-              viewModel = hiltViewModel(),
-              onClick = { pictureData ->
-                if (pictureData != null) {
-                  mainViewModel.updatePicture(albumId, pictureData)
-                }
-                navController.popBackStack()
-              },
-            )
+              EditPictureScreen(
+                albumId = albumId,
+                pictureId = pictureId,
+                viewModel = hiltViewModel(),
+                onClick = { pictureData ->
+                  if (pictureData != null) {
+                    mainViewModel.updatePicture(albumId,pictureData)
+                  }
+                  navController.popBackStack()
+                },
+              )
+            }
           }
         }
       }
     }
-  }
   if (showDialog) {
     AlbumDialog(
       mainViewModel = mainViewModel,

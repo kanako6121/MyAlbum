@@ -43,17 +43,15 @@ class EditPictureViewModel @Inject constructor(
 
   fun setEditPicture(albumId: Int, pictureId: Int) {
     editPictureFlow.value = albumId to pictureId
-    viewModelScope.launch {
-      repository.updatePicture(albumId, pictureData = )
-    }
   }
 
   fun savePicture(comment: String) {
     viewModelScope.launch {
-      repository.updatePicture(
-        albumId = uiState.value.pictureData?.id ?: return@launch,
-        pictureData = uiState.value.pictureData!!.copy(comment = comment)
-      )
+      val pictureData = uiState.value.pictureData
+      val newPictureData = pictureData?.copy(comment = comment)
+      if (newPictureData != null) {
+        editPictureFlow.value?.let { repository.updatePicture(it.first, newPictureData) }
+      }
     }
   }
 }

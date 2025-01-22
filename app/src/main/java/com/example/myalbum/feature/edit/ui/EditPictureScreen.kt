@@ -30,7 +30,6 @@ fun EditPictureScreen(
   viewModel: EditPictureViewModel = hiltViewModel(),
   onClick: (PictureData?) -> Unit,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val maxChar = 10
 
   LaunchedEffect(key1 = albumId, key2 = pictureId) {
@@ -38,37 +37,39 @@ fun EditPictureScreen(
   }
 
   EditPictureContent(
-    pictureData = uiState.pictureData,
     maxChar = maxChar,
-    onSaveComment = viewModel::savePicture,
     onClick = onClick,
+    viewModel = viewModel,
+    onSaveComment = viewModel::savePicture,
   )
 }
 
 @Composable
 fun EditPictureContent(
-  pictureData: PictureData?,
   maxChar: Int,
-  onSaveComment: (String) -> Unit,
   onClick: (PictureData?) -> Unit,
+  viewModel: EditPictureViewModel,
+  onSaveComment: (String) -> Unit,
 ) {
-  var comment by remember { mutableStateOf("") }
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val pictureData = uiState.pictureData
+  var comment by remember { mutableStateOf(pictureData?.comment ?: "") }
   Column(
     modifier = Modifier
       .fillMaxWidth()
   ) {
     AsyncImage(
       modifier = Modifier
-        .aspectRatio(1f)
-        .padding(16.dp)
-        .fillMaxWidth(),
+          .aspectRatio(1f)
+          .padding(16.dp)
+          .fillMaxWidth(),
       model = pictureData?.uri,
       contentDescription = null
     )
     OutlinedTextField(
       modifier = Modifier
-        .padding(8.dp)
-        .align(Alignment.CenterHorizontally),
+          .padding(8.dp)
+          .align(Alignment.CenterHorizontally),
       value = comment,
       onValueChange = { newComment ->
         if (newComment.length <= maxChar) {
@@ -80,8 +81,8 @@ fun EditPictureContent(
     )
     Button(
       modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.CenterHorizontally),
+          .padding(16.dp)
+          .align(Alignment.CenterHorizontally),
       onClick = {
         onSaveComment(comment)
         onClick(pictureData)
