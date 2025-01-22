@@ -49,9 +49,7 @@ fun EditPictureContent(
   maxChar: Int,
   onSaveComment: (String) -> Unit,
 ) {
-
   var comment by remember { mutableStateOf("") }
-
   Column(
     modifier = Modifier
       .fillMaxWidth()
