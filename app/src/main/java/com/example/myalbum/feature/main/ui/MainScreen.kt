@@ -139,7 +139,7 @@ fun MainNav(
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
               },
-              onEditScreen = { albumId, pictureData ->
+              navigateEditScreen = { albumId, pictureData ->
                 navController.navigate("edit/${albumId}/${pictureData.id}")
               },
             )
@@ -147,22 +147,19 @@ fun MainNav(
           composable("edit/{albumId}/{selectId}") { backStackEntry ->
             val albumId = backStackEntry.arguments?.getString("albumId")?.toIntOrNull() ?: return@composable
             val pictureId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull() ?: return@composable
-              EditPictureScreen(
-                albumId = albumId,
-                pictureId = pictureId,
-                viewModel = hiltViewModel(),
-                updatePicture = { pictureData ->
-                  if (pictureData != null) {
-                    mainViewModel.updatePicture(albumId,pictureData)
-                  }
-                  navController.popBackStack()
-                },
-              )
-            }
+            EditPictureScreen(
+              albumId = albumId,
+              pictureId = pictureId,
+              viewModel = hiltViewModel(),
+              updatePicture = { pictureData ->
+                navController.popBackStack()
+              },
+            )
           }
         }
       }
     }
+  }
   if (showDialog) {
     AlbumDialog(
       mainViewModel = mainViewModel,

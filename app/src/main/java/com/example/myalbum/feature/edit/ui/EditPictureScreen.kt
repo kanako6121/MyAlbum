@@ -16,7 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -30,6 +32,8 @@ fun EditPictureScreen(
   viewModel: EditPictureViewModel = hiltViewModel(),
   updatePicture: (PictureData?) -> Unit,
 ) {
+
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val maxChar = 10
 
   LaunchedEffect(key1 = albumId, key2 = pictureId) {
@@ -40,6 +44,7 @@ fun EditPictureScreen(
     maxChar = maxChar,
     updatePicture = updatePicture,
     onSaveComment = viewModel::savePicture,
+    pictureData = uiState.pictureData,
   )
 }
 
@@ -48,9 +53,9 @@ fun EditPictureContent(
   maxChar: Int,
   updatePicture: (PictureData?) -> Unit,
   onSaveComment: (String) -> Unit,
+  pictureData: PictureData?,
 ) {
-  val uiState = 
-  val pictureData = uiState.pictureData
+
   var comment by remember { mutableStateOf(pictureData?.comment ?: "") }
   Column(
     modifier = Modifier
@@ -89,4 +94,15 @@ fun EditPictureContent(
       Text(text = stringResource(R.string.post))
     }
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun showEditPictureContent() {
+  EditPictureContent(
+    maxChar = 10,
+    updatePicture = {},
+    onSaveComment = { _ -> },
+    pictureData = PictureData(id = 0, uri = "content://media/external/images/media/1".toUri(), comment = ""),
+  )
 }
