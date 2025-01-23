@@ -151,7 +151,7 @@ fun MainNav(
                 albumId = albumId,
                 pictureId = pictureId,
                 viewModel = hiltViewModel(),
-                onClick = { pictureData ->
+                updatePicture = { pictureData ->
                   if (pictureData != null) {
                     mainViewModel.updatePicture(albumId,pictureData)
                   }

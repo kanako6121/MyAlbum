@@ -28,7 +28,7 @@ fun EditPictureScreen(
   albumId: Int,
   pictureId: Int,
   viewModel: EditPictureViewModel = hiltViewModel(),
-  onClick: (PictureData?) -> Unit,
+  updatePicture: (PictureData?) -> Unit,
 ) {
   val maxChar = 10
 
@@ -38,8 +38,7 @@ fun EditPictureScreen(
 
   EditPictureContent(
     maxChar = maxChar,
-    onClick = onClick,
-    viewModel = viewModel,
+    updatePicture = updatePicture,
     onSaveComment = viewModel::savePicture,
   )
 }
@@ -47,11 +46,10 @@ fun EditPictureScreen(
 @Composable
 fun EditPictureContent(
   maxChar: Int,
-  onClick: (PictureData?) -> Unit,
-  viewModel: EditPictureViewModel,
+  updatePicture: (PictureData?) -> Unit,
   onSaveComment: (String) -> Unit,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val uiState = 
   val pictureData = uiState.pictureData
   var comment by remember { mutableStateOf(pictureData?.comment ?: "") }
   Column(
@@ -85,7 +83,7 @@ fun EditPictureContent(
           .align(Alignment.CenterHorizontally),
       onClick = {
         onSaveComment(comment)
-        onClick(pictureData)
+        updatePicture(pictureData)
       }
     ) {
       Text(text = stringResource(R.string.post))
