@@ -3,7 +3,6 @@ package com.example.myalbum.feature.edit.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.core.data.AlbumRepository
-import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.edit.data.EditPictureUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -30,7 +30,7 @@ fun EditPictureScreen(
   albumId: Int,
   pictureId: Int,
   viewModel: EditPictureViewModel = hiltViewModel(),
-  updatePicture: (PictureData?) -> Unit,
+  onUpPress: () -> Unit,
 ) {
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -42,7 +42,7 @@ fun EditPictureScreen(
 
   EditPictureContent(
     maxChar = maxChar,
-    updatePicture = updatePicture,
+    onUpPress = onUpPress,
     onSaveComment = viewModel::savePicture,
     pictureData = uiState.pictureData,
   )
@@ -51,7 +51,7 @@ fun EditPictureScreen(
 @Composable
 fun EditPictureContent(
   maxChar: Int,
-  updatePicture: (PictureData?) -> Unit,
+  onUpPress: () -> Unit,
   onSaveComment: (String) -> Unit,
   pictureData: PictureData?,
 ) {
@@ -88,7 +88,7 @@ fun EditPictureContent(
           .align(Alignment.CenterHorizontally),
       onClick = {
         onSaveComment(comment)
-        updatePicture(pictureData)
+        onUpPress()
       }
     ) {
       Text(text = stringResource(R.string.post))
@@ -101,7 +101,7 @@ fun EditPictureContent(
 fun showEditPictureContent() {
   EditPictureContent(
     maxChar = 10,
-    updatePicture = {},
+    onUpPress = {},
     onSaveComment = { _ -> },
     pictureData = PictureData(id = 0, uri = "content://media/external/images/media/1".toUri(), comment = ""),
   )

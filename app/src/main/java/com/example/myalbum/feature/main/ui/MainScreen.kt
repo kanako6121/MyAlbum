@@ -151,9 +151,7 @@ fun MainNav(
               albumId = albumId,
               pictureId = pictureId,
               viewModel = hiltViewModel(),
-              updatePicture = { pictureData ->
-                navController.popBackStack()
-              },
+              onUpPress = { navController.popBackStack() },
             )
           }
         }
