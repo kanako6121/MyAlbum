@@ -165,7 +165,7 @@ fun MainNav(
     }
   }
   if (showDialog) {
-    AlbumDialog(
+    CreateTitleDialog(
       onDismiss = { showDialog = false },
       onAddTitle = mainViewModel::createAlbumTitle,
     )

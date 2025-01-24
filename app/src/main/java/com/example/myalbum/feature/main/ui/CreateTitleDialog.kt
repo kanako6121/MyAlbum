@@ -10,13 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 import com.example.myalbum.R
-import com.example.myalbum.core.data.AlbumData
 
 @Composable
-fun AlbumDialog(
+fun CreateTitleDialog(
   onDismiss: () -> Unit,
   onAddTitle: (String) -> Unit,
 ) {
@@ -38,47 +35,6 @@ fun AlbumDialog(
       TextButton(
         onClick = {
           onAddTitle(albumTitle)
-          onDismiss()
-        }
-      )
-      {
-        Text(text = stringResource(R.string.save))
-      }
-    },
-    dismissButton = {
-      TextButton(
-        onClick = onDismiss
-      ) {
-        Text(text = stringResource(R.string.cancel))
-      }
-    },
-  )
-}
-
-@Composable
-fun EditTitleDialog(
-  onDismiss: () -> Unit,
-  updateTitle: (Int, String) -> Unit,
-  currentAlbum: AlbumData,
-) {
-  var editTitle by remember { mutableStateOf(currentAlbum.title) }
-
-  AlertDialog(
-    title = {
-      Text(text = stringResource(R.string.edit_title))
-    },
-    text = {
-      TextField(
-        value = editTitle,
-        onValueChange = { editTitle = it },
-        textStyle = TextStyle(fontSize = 18.sp)
-      )
-    },
-    onDismissRequest = { onDismiss() },
-    confirmButton = {
-      TextButton(
-        onClick = {
-          updateTitle(currentAlbum.id, editTitle)
           onDismiss()
         }
       )
