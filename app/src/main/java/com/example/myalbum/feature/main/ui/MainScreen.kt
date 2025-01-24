@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -36,7 +37,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -59,6 +62,7 @@ fun MainNav(
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
+  var editShowDialog by remember { mutableStateOf(false) }
   val coroutineScope = rememberCoroutineScope()
 
   ModalNavigationDrawer(
@@ -67,8 +71,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+              .fillMaxWidth()
+              .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -89,8 +93,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-            .padding(16.dp)
-            .clickable { showDialog = true }
+              .padding(16.dp)
+              .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -104,7 +108,9 @@ fun MainNav(
     Scaffold(
       topBar = {
         TopAppBar(
-          title = { Text(text = uiState.currentAlbum?.title.orEmpty()) },
+          title = {
+            Text(text = uiState.currentAlbum.title)
+          },
           modifier = Modifier.fillMaxWidth(),
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -119,6 +125,11 @@ fun MainNav(
               }
             ) {
               Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+            }
+          },
+          actions = {
+            IconButton(onClick = { editShowDialog = true }) {
+              Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
             }
           }
         )
@@ -160,16 +171,21 @@ fun MainNav(
   }
   if (showDialog) {
     AlbumDialog(
-      mainViewModel = mainViewModel,
       onDismiss = { showDialog = false },
       onAddTitle = mainViewModel::createAlbumTitle,
+    )
+  }
+  if (editShowDialog) {
+    EditTitleDialog(
+      onDismiss = { editShowDialog = false },
+      updateTitle = mainViewModel::updateAlbumTitle,
+      viewModel = mainViewModel
     )
   }
 }
 
 @Composable
 fun AlbumDialog(
-  mainViewModel: MainViewModel,
   onDismiss: () -> Unit,
   onAddTitle: (String) -> Unit,
 ) {
@@ -191,6 +207,48 @@ fun AlbumDialog(
       TextButton(
         onClick = {
           onAddTitle(albumTitle)
+          onDismiss()
+        }
+      )
+      {
+        Text(text = stringResource(R.string.save))
+      }
+    },
+    dismissButton = {
+      TextButton(
+        onClick = onDismiss
+      ) {
+        Text(text = stringResource(R.string.cancel))
+      }
+    },
+  )
+}
+
+@Composable
+fun EditTitleDialog(
+  onDismiss: () -> Unit,
+  updateTitle: (Int, String) -> Unit,
+  viewModel: MainViewModel,
+) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  var editTitle by remember { mutableStateOf(uiState.currentAlbum.title) }
+
+  AlertDialog(
+    title = {
+      Text(text = stringResource(R.string.edit_title))
+    },
+    text = {
+      TextField(
+        value = editTitle,
+        onValueChange = { editTitle = it },
+        textStyle = TextStyle(fontSize = 18.sp)
+      )
+    },
+    onDismissRequest = { onDismiss() },
+    confirmButton = {
+      TextButton(
+        onClick = {
+          updateTitle(uiState.currentAlbum.id, editTitle)
           onDismiss()
         }
       )
