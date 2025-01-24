@@ -1,5 +1,8 @@
 package com.example.myalbum.feature.edit.data
 
-data class EditUiState(
-  val isLoading: Boolean = true
-)
+import com.example.myalbum.core.data.PictureData
+
+data class EditPictureUiState(
+  val isLoading: Boolean = true,
+  val pictureData: PictureData? = null,
+  )

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumRepository
+import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.main.data.MainUiState
 import com.example.myalbum.feature.main.data.toMainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,6 +66,12 @@ class MainViewModel @Inject constructor(
   fun updateAlbumTitle(albumId: Int, newTitle: String) {
     viewModelScope.launch {
       repository.updateAlbumTitle(albumId, newTitle)
+    }
+  }
+
+  fun updatePicture(albumId: Int, pictureData: PictureData) {
+    viewModelScope.launch {
+      repository.updatePicture(albumId, pictureData)
     }
   }
 

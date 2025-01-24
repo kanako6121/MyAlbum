@@ -54,7 +54,7 @@ import kotlinx.coroutines.delay
 fun AlbumScreen(
   viewModel: MainViewModel,
   launchPicker: () -> Unit,
-  onEditScreen: (PictureData) -> Unit,
+  navigateEditScreen: (Int, PictureData) -> Unit,
   onUpPress: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -62,7 +62,7 @@ fun AlbumScreen(
   AlbumContent(
     launchPicker = launchPicker,
     onUpPress = onUpPress,
-    onEditScreen = onEditScreen,
+    onEditScreen = navigateEditScreen,
     currentAlbumData = uiState.currentAlbum,
     onRemove = viewModel::onRemovePhoto,
   )
@@ -72,7 +72,7 @@ fun AlbumScreen(
 fun AlbumContent(
   launchPicker: () -> Unit,
   onUpPress: () -> Unit,
-  onEditScreen: (PictureData) -> Unit,
+  onEditScreen: (Int, PictureData) -> Unit,
   currentAlbumData: AlbumData,
   onRemove: (Int, Int) -> Unit,
 ) {
@@ -102,23 +102,23 @@ fun AlbumContent(
             model = pictureData.uri,
             contentDescription = null,
             modifier = Modifier
-              .shadow(elevation = 4.dp)
-              .background(Color.White)
-              .border(
-                BorderStroke(width = 0.5.dp, color = Color.Gray)
-              )
-              .padding(
-                start = 8.dp,
-                top = 8.dp,
-                end = 8.dp,
-                bottom = 32.dp
-              )
-              .clickable { onEditScreen(pictureData) },
+                .shadow(elevation = 4.dp)
+                .background(Color.White)
+                .border(
+                    BorderStroke(width = 0.5.dp, color = Color.Gray)
+                )
+                .padding(
+                    start = 8.dp,
+                    top = 8.dp,
+                    end = 8.dp,
+                    bottom = 32.dp
+                )
+                .clickable { onEditScreen(currentAlbumData.id, pictureData) },
           )
           Box(
             modifier = Modifier
-              .align(Alignment.BottomStart)
-              .padding(start = 24.dp, bottom = 4.dp)
+                .align(Alignment.BottomStart)
+                .padding(start = 24.dp, bottom = 4.dp)
           ) {
             Text(
               text = pictureData.comment.orEmpty()
@@ -126,9 +126,9 @@ fun AlbumContent(
           }
           Box(
             modifier = Modifier
-              .size(32.dp)
-              .align(Alignment.BottomStart)
-              .padding(start = 0.dp, bottom = 4.dp)
+                .size(32.dp)
+                .align(Alignment.BottomStart)
+                .padding(start = 0.dp, bottom = 4.dp)
           ) {
             IconButton(onClick = { expanded = true }) {
               Icon(
@@ -177,8 +177,8 @@ fun AlbumContent(
 
     FloatingActionButton(
       modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.BottomEnd),
+          .padding(16.dp)
+          .align(Alignment.BottomEnd),
       onClick = {
         showTutorial = false
         launchPicker()
@@ -198,7 +198,7 @@ fun ShowPhotoGrid() {
   AlbumContent(
     launchPicker = {},
     onUpPress = {},
-    onEditScreen = {},
+    onEditScreen = { _, _ -> },
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
     onRemove = { _, _ -> },
   )
