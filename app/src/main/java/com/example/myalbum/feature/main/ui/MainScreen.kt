@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -48,6 +47,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
+import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.feature.edit.ui.EditPictureScreen
 import com.example.myalbum.feature.top.ui.AlbumScreen
 import kotlinx.coroutines.launch
@@ -180,7 +180,7 @@ fun MainNav(
     EditTitleDialog(
       onDismiss = { editShowDialog = false },
       updateTitle = mainViewModel::updateAlbumTitle,
-      viewModel = mainViewModel
+      currentAlbum = uiState.currentAlbum,
     )
   }
 }
@@ -229,10 +229,9 @@ fun AlbumDialog(
 fun EditTitleDialog(
   onDismiss: () -> Unit,
   updateTitle: (Int, String) -> Unit,
-  viewModel: MainViewModel,
+  currentAlbum: AlbumData,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var editTitle by remember { mutableStateOf(uiState.currentAlbum.title) }
+  var editTitle by remember { mutableStateOf(currentAlbum.title) }
 
   AlertDialog(
     title = {
@@ -249,7 +248,7 @@ fun EditTitleDialog(
     confirmButton = {
       TextButton(
         onClick = {
-          updateTitle(uiState.currentAlbum.id, editTitle)
+          updateTitle(currentAlbum.id, editTitle)
           onDismiss()
         }
       )
