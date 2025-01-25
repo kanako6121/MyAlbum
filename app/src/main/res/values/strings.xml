@@ -23,6 +23,8 @@
   <string name="album5">アルバム５</string>
   <string name="default_album">FavPicアルバム</string>
   <string name="show_drawer">アルバムを作る</string>
+  <string name="edit_title">タイトルを変更する</string>
+  <string name="album_name">アルバムに名前をつけよう</string>
   <string name="tutorial">お気に入りの写真をピックしてみてね！</string>
 
 </resources>

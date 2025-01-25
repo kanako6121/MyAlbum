@@ -9,8 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,8 +21,6 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
@@ -59,6 +57,7 @@ fun MainNav(
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
+  var editShowDialog by remember { mutableStateOf(false) }
   val coroutineScope = rememberCoroutineScope()
 
   ModalNavigationDrawer(
@@ -104,7 +103,9 @@ fun MainNav(
     Scaffold(
       topBar = {
         TopAppBar(
-          title = { Text(text = uiState.currentAlbum?.title.orEmpty()) },
+          title = {
+            Text(text = uiState.currentAlbum.title)
+          },
           modifier = Modifier.fillMaxWidth(),
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -119,6 +120,11 @@ fun MainNav(
               }
             ) {
               Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+            }
+          },
+          actions = {
+            IconButton(onClick = { editShowDialog = true }) {
+              Icon(imageVector = Icons.Default.Edit, contentDescription = null)
             }
           }
         )
@@ -159,51 +165,16 @@ fun MainNav(
     }
   }
   if (showDialog) {
-    AlbumDialog(
-      mainViewModel = mainViewModel,
+    CreateTitleDialog(
       onDismiss = { showDialog = false },
       onAddTitle = mainViewModel::createAlbumTitle,
     )
   }
-}
-
-@Composable
-fun AlbumDialog(
-  mainViewModel: MainViewModel,
-  onDismiss: () -> Unit,
-  onAddTitle: (String) -> Unit,
-) {
-  var albumTitle by remember { mutableStateOf("") }
-
-  AlertDialog(
-    title = {
-      Text(text = stringResource(R.string.make_album))
-    },
-    text = {
-      TextField(
-        value = albumTitle,
-        onValueChange = { albumTitle = it },
-        label = { Text(text = stringResource(R.string.make_album)) }
-      )
-    },
-    onDismissRequest = { onDismiss() },
-    confirmButton = {
-      TextButton(
-        onClick = {
-          onAddTitle(albumTitle)
-          onDismiss()
-        }
-      )
-      {
-        Text(text = stringResource(R.string.save))
-      }
-    },
-    dismissButton = {
-      TextButton(
-        onClick = onDismiss
-      ) {
-        Text(text = stringResource(R.string.cancel))
-      }
-    },
-  )
+  if (editShowDialog) {
+    EditTitleDialog(
+      onDismiss = { editShowDialog = false },
+      updateTitle = mainViewModel::updateAlbumTitle,
+      currentAlbum = uiState.currentAlbum,
+    )
+  }
 }
