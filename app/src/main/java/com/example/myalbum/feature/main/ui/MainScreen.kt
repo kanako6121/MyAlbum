@@ -82,6 +82,7 @@ fun MainNav(
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
               },
+              onLongClick = { mainViewModel.deleteAlbum(item.id) },
             )
           }
         }

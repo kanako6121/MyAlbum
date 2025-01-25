@@ -74,4 +74,10 @@ class MainViewModel @Inject constructor(
       repository.removePhoto(albumId, pictureId)
     }
   }
+
+  fun deleteAlbum(albumId: Int) {
+    viewModelScope.launch {
+      repository.deleteAlbum(albumId)
+    }
+  }
 }
