@@ -54,6 +54,7 @@ fun AlbumScreen(
   viewModel: MainViewModel,
   launchPicker: () -> Unit,
   navigateEditScreen: (Int, PictureData) -> Unit,
+  onUpPress: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

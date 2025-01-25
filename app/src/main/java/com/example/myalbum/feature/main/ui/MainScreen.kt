@@ -109,7 +109,9 @@ fun MainNav(
           title = {
             Text(text = uiState.currentAlbum.title)
           },
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { editShowDialog = true },
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
