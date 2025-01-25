@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
@@ -43,7 +44,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditPictureScreen
-import com.example.myalbum.feature.top.ui.AlbumScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +58,7 @@ fun MainNav(
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
   var editShowDialog by remember { mutableStateOf(false) }
+  var showDeleteDialog by remember { mutableStateOf(false) }
   val coroutineScope = rememberCoroutineScope()
 
   ModalNavigationDrawer(
@@ -106,7 +107,9 @@ fun MainNav(
           title = {
             Text(text = uiState.currentAlbum.title)
           },
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { editShowDialog = true },
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
@@ -126,9 +129,12 @@ fun MainNav(
             IconButton(onClick = { editShowDialog = true }) {
               Icon(imageVector = Icons.Default.Edit, contentDescription = null)
             }
-          }
+            IconButton(onClick = { showDeleteDialog = true }) {
+              Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+            }
+          },
         )
-      },
+      }
     )
     { contentPadding ->
       Column(modifier = Modifier.padding(contentPadding)) {
@@ -174,6 +180,13 @@ fun MainNav(
     EditTitleDialog(
       onDismiss = { editShowDialog = false },
       updateTitle = mainViewModel::updateAlbumTitle,
+      currentAlbum = uiState.currentAlbum,
+    )
+  }
+  if (showDeleteDialog) {
+    DeleteAlbumDialog(
+      onDismiss = { showDeleteDialog = false },
+      onDeleteAlbum = mainViewModel::deleteAlbum,
       currentAlbum = uiState.currentAlbum,
     )
   }

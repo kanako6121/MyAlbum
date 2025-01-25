@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumRepository
-import com.example.myalbum.core.data.PictureData
 import com.example.myalbum.feature.main.data.MainUiState
 import com.example.myalbum.feature.main.data.toMainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,6 +71,12 @@ class MainViewModel @Inject constructor(
   fun onRemovePhoto(albumId: Int, pictureId: Int) {
     viewModelScope.launch {
       repository.removePhoto(albumId, pictureId)
+    }
+  }
+
+  fun deleteAlbum(albumId: Int) {
+    viewModelScope.launch {
+      repository.deleteAlbum(albumId)
     }
   }
 }

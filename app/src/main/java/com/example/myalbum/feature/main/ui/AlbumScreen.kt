@@ -1,4 +1,4 @@
-package com.example.myalbum.feature.top.ui
+package com.example.myalbum.feature.main.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -47,7 +47,6 @@ import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
-import com.example.myalbum.feature.main.ui.MainViewModel
 import kotlinx.coroutines.delay
 
 @Composable
@@ -61,7 +60,6 @@ fun AlbumScreen(
 
   AlbumContent(
     launchPicker = launchPicker,
-    onUpPress = onUpPress,
     onEditScreen = navigateEditScreen,
     currentAlbumData = uiState.currentAlbum,
     onRemove = viewModel::onRemovePhoto,
@@ -71,7 +69,6 @@ fun AlbumScreen(
 @Composable
 fun AlbumContent(
   launchPicker: () -> Unit,
-  onUpPress: () -> Unit,
   onEditScreen: (Int, PictureData) -> Unit,
   currentAlbumData: AlbumData,
   onRemove: (Int, Int) -> Unit,
@@ -197,7 +194,6 @@ fun AlbumContent(
 fun ShowPhotoGrid() {
   AlbumContent(
     launchPicker = {},
-    onUpPress = {},
     onEditScreen = { _, _ -> },
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
     onRemove = { _, _ -> },

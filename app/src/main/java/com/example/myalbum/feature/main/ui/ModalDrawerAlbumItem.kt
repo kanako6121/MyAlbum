@@ -25,7 +25,9 @@ fun ModalDrawerAlbumItem(
     modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)
-        .clickable { onClick() },
+        .clickable(
+            onClick = onClick,
+        ),
     verticalAlignment = Alignment.CenterVertically
   ) {
     AsyncImage(

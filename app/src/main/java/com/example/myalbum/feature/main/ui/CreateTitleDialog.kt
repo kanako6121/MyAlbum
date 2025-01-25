@@ -10,7 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.example.myalbum.R
 
 @Composable
@@ -28,7 +30,8 @@ fun CreateTitleDialog(
       TextField(
         value = albumTitle,
         onValueChange = { albumTitle = it },
-        label = { Text(text = stringResource(R.string.album_name)) }
+        label = { Text(text = stringResource(R.string.album_name)) },
+        textStyle = TextStyle(fontSize = 18.sp)
       )
     },
     onDismissRequest = { onDismiss() },
