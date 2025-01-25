@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.myalbum.R
 
 @Composable
@@ -49,5 +50,14 @@ fun CreateTitleDialog(
         Text(text = stringResource(R.string.cancel))
       }
     },
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShowCreateTitleDialog() {
+  CreateTitleDialog(
+    onDismiss = {},
+    onAddTitle = {},
   )
 }
