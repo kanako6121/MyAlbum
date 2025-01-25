@@ -14,8 +14,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -60,8 +58,8 @@ fun MainNav(
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
   var editShowDialog by remember { mutableStateOf(false) }
+  var showDeleteDialog by remember { mutableStateOf(false) }
   val coroutineScope = rememberCoroutineScope()
-  var expanded by remember { mutableStateOf(false) }
 
   ModalNavigationDrawer(
     drawerState = drawerState,
@@ -130,31 +128,10 @@ fun MainNav(
           actions = {
             IconButton(onClick = { editShowDialog = true }) {
               Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-              }
-            IconButton(onClick = { expanded = true }) {
-              Icon(imageVector = Icons.Default.Delete, contentDescription = null)
             }
-            DropdownMenu(
-              expanded = expanded,
-              onDismissRequest = { expanded = false }
-            ) {
-              DropdownMenuItem(
-                text = { Text(stringResource(id = R.string.delete_album)) },
-                onClick = {
-                  mainViewModel.deleteAlbum(uiState.currentAlbum.id)
-                  expanded = false
-                },
-                leadingIcon = {
-                  Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = null
-                  )
-                }
-              )
-            }
-          }
+          },
         )
-      },
+      }
     )
     { contentPadding ->
       Column(modifier = Modifier.padding(contentPadding)) {
@@ -200,6 +177,13 @@ fun MainNav(
     EditTitleDialog(
       onDismiss = { editShowDialog = false },
       updateTitle = mainViewModel::updateAlbumTitle,
+      currentAlbum = uiState.currentAlbum,
+    )
+  }
+  if (showDeleteDialog) {
+    DeleteAlbumDialog(
+      onDismiss = { showDeleteDialog = false },
+      onDeleteAlbum = mainViewModel::deleteAlbum,
       currentAlbum = uiState.currentAlbum,
     )
   }
