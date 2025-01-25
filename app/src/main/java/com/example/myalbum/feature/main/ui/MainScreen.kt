@@ -129,6 +129,9 @@ fun MainNav(
             IconButton(onClick = { editShowDialog = true }) {
               Icon(imageVector = Icons.Default.Edit, contentDescription = null)
             }
+            IconButton(onClick = { showDeleteDialog = true }) {
+              Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+            }
           },
         )
       }
