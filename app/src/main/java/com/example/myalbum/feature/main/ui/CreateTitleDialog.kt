@@ -28,7 +28,7 @@ fun CreateTitleDialog(
       TextField(
         value = albumTitle,
         onValueChange = { albumTitle = it },
-        label = { Text(text = stringResource(R.string.make_album)) }
+        label = { Text(text = stringResource(R.string.album_name)) }
       )
     },
     onDismissRequest = { onDismiss() },
