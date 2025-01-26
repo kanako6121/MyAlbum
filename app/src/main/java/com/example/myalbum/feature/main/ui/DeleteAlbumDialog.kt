@@ -8,13 +8,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumData
+import com.example.myalbum.feature.main.data.AlbumMenu
 
 @Composable
 fun DeleteAlbumDialog(
   onDismiss: () -> Unit,
   onFirstAlbum: () -> Unit,
+  onDefaultAlbum: () -> Unit,
   onDeleteAlbum: (Int) -> Unit,
   currentAlbum: AlbumData,
+  albumMenus: List<AlbumMenu>,
 ) {
   AlertDialog(
     title = {
@@ -24,7 +27,10 @@ fun DeleteAlbumDialog(
       TextButton(
         onClick = {
           onDeleteAlbum(currentAlbum.id)
-          onFirstAlbum()
+          if (albumMenus.isEmpty())
+            onDefaultAlbum()
+          else
+            onFirstAlbum()
         }
       )
       {
@@ -49,6 +55,8 @@ fun ShowDeleteAlbumDialog() {
     onDismiss = {},
     onFirstAlbum = {},
     onDeleteAlbum = {},
+    onDefaultAlbum = {},
+    albumMenus = emptyList(),
     currentAlbum = AlbumData(id = 0, title = "プレビュー", pictures = emptyList())
   )
 }

@@ -192,10 +192,12 @@ fun MainNav(
       onDismiss = { showDeleteDialog = false },
       onDeleteAlbum = mainViewModel::deleteAlbum,
       currentAlbum = uiState.currentAlbum,
+      albumMenus = uiState.albumMenus,
       onFirstAlbum = {
         mainViewModel.selectAlbum(albumId = uiState.albumMenus.first().id)
         showDeleteDialog = false
       },
+      onDefaultAlbum = {  }
     )
   }
 }
