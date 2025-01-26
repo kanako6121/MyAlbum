@@ -13,6 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -77,6 +78,10 @@ class MainViewModel @Inject constructor(
   fun deleteAlbum(albumId: Int) {
     viewModelScope.launch {
       repository.deleteAlbum(albumId)
+      val firstAlbum = repository.albumsFlow.firstOrNull()
+      if (firstAlbum.isNullOrEmpty()) {
+        createDefaultAlbum()
+      } else selectAlbum(firstAlbum.first().id)
     }
   }
 }

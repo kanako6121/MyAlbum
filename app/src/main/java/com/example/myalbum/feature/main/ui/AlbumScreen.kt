@@ -99,23 +99,23 @@ fun AlbumContent(
             model = pictureData.uri,
             contentDescription = null,
             modifier = Modifier
-                .shadow(elevation = 4.dp)
-                .background(Color.White)
-                .border(
-                    BorderStroke(width = 0.5.dp, color = Color.Gray)
-                )
-                .padding(
-                    start = 8.dp,
-                    top = 8.dp,
-                    end = 8.dp,
-                    bottom = 32.dp
-                )
-                .clickable { onEditScreen(currentAlbumData.id, pictureData) },
+              .shadow(elevation = 4.dp)
+              .background(Color.White)
+              .border(
+                BorderStroke(width = 0.5.dp, color = Color.Gray)
+              )
+              .padding(
+                start = 8.dp,
+                top = 8.dp,
+                end = 8.dp,
+                bottom = 32.dp
+              )
+              .clickable { onEditScreen(currentAlbumData.id, pictureData) },
           )
           Box(
             modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 24.dp, bottom = 4.dp)
+              .align(Alignment.BottomStart)
+              .padding(start = 24.dp, bottom = 4.dp)
           ) {
             Text(
               text = pictureData.comment.orEmpty()
@@ -123,9 +123,9 @@ fun AlbumContent(
           }
           Box(
             modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.BottomStart)
-                .padding(start = 0.dp, bottom = 4.dp)
+              .size(32.dp)
+              .align(Alignment.BottomStart)
+              .padding(start = 0.dp, bottom = 4.dp)
           ) {
             IconButton(onClick = { expanded = true }) {
               Icon(
@@ -174,8 +174,8 @@ fun AlbumContent(
 
     FloatingActionButton(
       modifier = Modifier
-          .padding(16.dp)
-          .align(Alignment.BottomEnd),
+        .padding(16.dp)
+        .align(Alignment.BottomEnd),
       onClick = {
         showTutorial = false
         launchPicker()
