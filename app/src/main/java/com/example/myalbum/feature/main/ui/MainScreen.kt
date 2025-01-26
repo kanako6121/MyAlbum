@@ -67,8 +67,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -89,8 +89,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-              .padding(16.dp)
-              .clickable { showDialog = true }
+            .padding(16.dp)
+            .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -108,8 +108,8 @@ fun MainNav(
             Text(text = uiState.currentAlbum.title)
           },
           modifier = Modifier
-              .fillMaxWidth()
-              .clickable { editShowDialog = true },
+            .fillMaxWidth()
+            .clickable { editShowDialog = true },
           colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
@@ -192,12 +192,6 @@ fun MainNav(
       onDismiss = { showDeleteDialog = false },
       onDeleteAlbum = mainViewModel::deleteAlbum,
       currentAlbum = uiState.currentAlbum,
-      albumMenus = uiState.albumMenus,
-      onFirstAlbum = {
-        mainViewModel.selectAlbum(albumId = uiState.albumMenus.first().id)
-        showDeleteDialog = false
-      },
-      onDefaultAlbum = {  }
     )
   }
 }
