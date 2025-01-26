@@ -12,6 +12,7 @@ import com.example.myalbum.core.data.AlbumData
 @Composable
 fun DeleteAlbumDialog(
   onDismiss: () -> Unit,
+  onFirstAlbum: () -> Unit,
   onDeleteAlbum: (Int) -> Unit,
   currentAlbum: AlbumData,
 ) {
@@ -23,7 +24,7 @@ fun DeleteAlbumDialog(
       TextButton(
         onClick = {
           onDeleteAlbum(currentAlbum.id)
-          onDismiss()
+          onFirstAlbum()
         }
       )
       {
@@ -46,6 +47,7 @@ fun DeleteAlbumDialog(
 fun ShowDeleteAlbumDialog() {
   DeleteAlbumDialog(
     onDismiss = {},
+    onFirstAlbum = {},
     onDeleteAlbum = {},
     currentAlbum = AlbumData(id = 0, title = "プレビュー", pictures = emptyList())
   )
