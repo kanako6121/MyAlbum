@@ -56,7 +56,7 @@ fun EditPictureContent(
   pictureData: PictureData?,
 ) {
 
-  var comment by remember { mutableStateOf(pictureData?.comment ?: "") }
+  var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
   Column(
     modifier = Modifier
       .fillMaxWidth()
