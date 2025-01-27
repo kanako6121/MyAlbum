@@ -72,6 +72,7 @@ dependencies {
 
   implementation("io.coil-kt:coil-compose:2.6.0")
   implementation("com.jakewharton.timber:timber:5.0.1")
+  implementation( "net.engawapg.lib:zoomable:2.0.0-test2")
 
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.2.1")
