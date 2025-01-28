@@ -163,6 +163,7 @@ fun MainNav(
           composable("edit/{albumId}/{selectId}") { backStackEntry ->
             val albumId = backStackEntry.arguments?.getString("albumId")?.toIntOrNull() ?: return@composable
             val pictureId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull() ?: return@composable
+            val albumTitle = uiState.albumMenus.firstOrNull { it.id == albumId }?.title ?: return@composable
             EditPictureScreen(
               albumId = albumId,
               pictureId = pictureId,

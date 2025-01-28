@@ -1,16 +1,24 @@
 package com.example.myalbum.feature.edit.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,11 +31,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
 import net.engawapg.lib.zoomable.rememberZoomState
@@ -42,7 +50,7 @@ fun EditPictureScreen(
 ) {
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val maxChar = 10
+  val maxChar = 12
 
   LaunchedEffect(key1 = albumId, key2 = pictureId) {
     viewModel.setEditPicture(albumId, pictureId)
@@ -63,52 +71,86 @@ fun EditPictureContent(
   onSaveComment: (String) -> Unit,
   pictureData: PictureData?,
 ) {
-
-  var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-  ) {
-    val zoomState = rememberZoomState()
-    AsyncImage(
-      onSuccess = { state ->
-        zoomState.setContentSize(state.painter.intrinsicSize)
-      },
-      contentScale = ContentScale.Fit,
+  Scaffold(
+    topBar = {
+      EditPictureTopBar(
+        onUpPress = onUpPress,
+      )
+    }
+  ) { paddings ->
+    var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
+    Column(
       modifier = Modifier
-        .zoomable(zoomState)
-        .aspectRatio(1f)
-        .padding(8.dp)
-        .fillMaxWidth()
-        .fillMaxHeight(),
-      model = pictureData?.uri,
-      contentDescription = null
-    )
-    OutlinedTextField(
-      modifier = Modifier
-        .padding(8.dp)
-        .align(Alignment.CenterHorizontally),
-      value = comment,
-      onValueChange = { newComment ->
-        if (newComment.length <= maxChar) {
-          comment = newComment
-        }
-      },
-      placeholder = { Text(text = stringResource(R.string.comment)) },
-      singleLine = true,
-    )
-    Button(
-      modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.CenterHorizontally),
-      onClick = {
-        onSaveComment(comment)
-        onUpPress()
-      }
+          .padding(paddings)
+          .fillMaxWidth()
     ) {
-      Text(text = stringResource(R.string.post))
+      val zoomState = rememberZoomState()
+      AsyncImage(
+        onSuccess = { state ->
+          zoomState.setContentSize(state.painter.intrinsicSize)
+        },
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .zoomable(zoomState)
+            .aspectRatio(1f)
+            .padding(8.dp)
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        model = pictureData?.uri,
+        contentDescription = null
+      )
+      OutlinedTextField(
+        modifier = Modifier
+            .padding(8.dp)
+            .align(Alignment.CenterHorizontally),
+        value = comment,
+        onValueChange = { newComment ->
+          if (newComment.length <= maxChar) {
+            comment = newComment
+          }
+        },
+        placeholder = { Text(text = stringResource(R.string.comment)) },
+        singleLine = true,
+      )
+      Button(
+        modifier = Modifier
+            .padding(16.dp)
+            .align(Alignment.CenterHorizontally),
+        onClick = {
+          onSaveComment(comment)
+          onUpPress()
+        }
+      ) {
+        Text(text = stringResource(R.string.post))
+      }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditPictureTopBar(
+  onUpPress: () -> Unit,
+) {
+  TopAppBar(
+    navigationIcon = {
+      IconButton(onClick = onUpPress) {
+        Icon(imageVector = Icons.Default.Close, contentDescription = null)
+      }
+    },
+    title = {
+      Text(
+        text = stringResource(R.string.edit_photo),
+        fontSize = 20.sp
+      )
+    },
+    modifier = Modifier
+      .fillMaxWidth(),
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.onPrimary,
+      titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+    ),
+  )
 }
 
 @Preview(showBackground = true)
