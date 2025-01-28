@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -46,7 +48,6 @@ import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditPictureScreen
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNav(
   mainViewModel: MainViewModel,
@@ -54,6 +55,7 @@ fun MainNav(
   navController: NavHostController = rememberNavController(),
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
   startDestination: String = "album",
+  onUpPress: () -> Unit,
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
@@ -67,8 +69,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+              .fillMaxWidth()
+              .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -89,8 +91,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-            .padding(16.dp)
-            .clickable { showDialog = true }
+              .padding(16.dp)
+              .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -103,40 +105,9 @@ fun MainNav(
   ) {
     Scaffold(
       topBar = {
-        TopAppBar(
-          title = {
-            Text(text = uiState.currentAlbum.title)
-          },
-          modifier = Modifier
-            .fillMaxWidth()
-            .clickable { editShowDialog = true },
-          colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
-          ),
-          navigationIcon = {
-            IconButton(
-              onClick = {
-                coroutineScope.launch {
-                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
-                }
-              }
-            ) {
-              Icon(imageVector = Icons.Default.Menu, contentDescription = null)
-            }
-          },
-          actions = {
-            IconButton(onClick = { editShowDialog = true }) {
-              Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-            }
-            IconButton(
-              onClick = {
-                showDeleteDialog = true
-              }
-            ) {
-              Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-            }
-          },
+        MainTopAppBar(
+          title = uiState.currentAlbum.title,
+          onUpPress = onUpPress,
         )
       }
     )
@@ -163,7 +134,6 @@ fun MainNav(
           composable("edit/{albumId}/{selectId}") { backStackEntry ->
             val albumId = backStackEntry.arguments?.getString("albumId")?.toIntOrNull() ?: return@composable
             val pictureId = backStackEntry.arguments?.getString("selectId")?.toIntOrNull() ?: return@composable
-            val albumTitle = uiState.albumMenus.firstOrNull { it.id == albumId }?.title ?: return@composable
             EditPictureScreen(
               albumId = albumId,
               pictureId = pictureId,
@@ -195,4 +165,42 @@ fun MainNav(
       currentAlbum = uiState.currentAlbum,
     )
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainTopAppBar(
+  title: String,
+  onUpPress: () -> Unit,
+) {
+  var showDialog by remember { mutableStateOf(false) }
+  var editShowDialog by remember { mutableStateOf(false) }
+  var showDeleteDialog by remember { mutableStateOf(false) }
+  TopAppBar(
+    title = { Text(text = title) },
+    modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = { showDialog = true }),
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+    ),
+    navigationIcon = {
+      IconButton(onClick = onUpPress) {
+        Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+      }
+    },
+    actions = {
+      IconButton(onClick = { editShowDialog = true }) {
+        Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+      }
+      IconButton(
+        onClick = {
+          showDeleteDialog = true
+        }
+      ) {
+        Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+      }
+    },
+  )
 }
