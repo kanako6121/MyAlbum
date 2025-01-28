@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
 import net.engawapg.lib.zoomable.rememberZoomState
@@ -72,6 +74,7 @@ fun EditPictureContent(
       onSuccess = { state ->
         zoomState.setContentSize(state.painter.intrinsicSize)
       },
+      contentScale = ContentScale.Fit,
       modifier = Modifier
         .zoomable(zoomState)
         .aspectRatio(1f)
