@@ -78,7 +78,7 @@ fun EditPictureContent(
       modifier = Modifier
         .zoomable(zoomState)
         .aspectRatio(1f)
-        .padding(16.dp)
+        .padding(8.dp)
         .fillMaxWidth()
         .fillMaxHeight(),
       model = pictureData?.uri,
