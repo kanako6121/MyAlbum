@@ -154,7 +154,7 @@ fun EditPictureTopBar(
 
 @Preview(showBackground = true)
 @Composable
-fun showEditPictureContent() {
+fun ShowEditPictureContent() {
   EditPictureContent(
     maxChar = 10,
     onUpPress = {},

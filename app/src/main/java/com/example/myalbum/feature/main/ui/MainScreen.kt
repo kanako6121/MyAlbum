@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
@@ -37,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -55,7 +53,6 @@ fun MainNav(
   navController: NavHostController = rememberNavController(),
   drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
   startDestination: String = "album",
-  onUpPress: () -> Unit,
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
   var showDialog by remember { mutableStateOf(false) }
@@ -69,8 +66,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -91,8 +88,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-              .padding(16.dp)
-              .clickable { showDialog = true }
+            .padding(16.dp)
+            .clickable { showDialog = true }
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -107,7 +104,7 @@ fun MainNav(
       topBar = {
         MainTopAppBar(
           title = uiState.currentAlbum.title,
-          onUpPress = onUpPress,
+          onUpPress = { showDialog = true },
         )
       }
     )
@@ -179,8 +176,8 @@ fun MainTopAppBar(
   TopAppBar(
     title = { Text(text = title) },
     modifier = Modifier
-        .fillMaxWidth()
-        .clickable(onClick = { showDialog = true }),
+      .fillMaxWidth()
+      .clickable(onClick = { showDialog = true }),
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)

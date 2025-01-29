@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             pickMedia.launch(
               PickVisualMediaRequest(ImageOnly)
             )
-          }
+          },
         )
       }
     }

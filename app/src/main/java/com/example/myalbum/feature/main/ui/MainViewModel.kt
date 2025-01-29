@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumRepository
 import com.example.myalbum.feature.main.data.MainUiState
 import com.example.myalbum.feature.main.data.toMainUiState
@@ -38,7 +39,7 @@ class MainViewModel @Inject constructor(
   private fun createDefaultAlbum() {
     viewModelScope.launch {
       repository.createAlbum(
-        title = context.getString(R.string.)
+        title = context.getString(R.string.default_album)
       )
     }
   }
