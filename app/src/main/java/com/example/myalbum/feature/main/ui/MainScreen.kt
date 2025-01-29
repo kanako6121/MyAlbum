@@ -55,10 +55,10 @@ fun MainNav(
   startDestination: String = "album",
 ) {
   val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+  val coroutineScope = rememberCoroutineScope()
   var showDialog by remember { mutableStateOf(false) }
   var editShowDialog by remember { mutableStateOf(false) }
   var showDeleteDialog by remember { mutableStateOf(false) }
-  val coroutineScope = rememberCoroutineScope()
 
   ModalNavigationDrawer(
     drawerState = drawerState,
@@ -89,7 +89,7 @@ fun MainNav(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
             .padding(16.dp)
-            .clickable { showDialog = true }
+            .clickable {showDialog = true},
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -170,14 +170,11 @@ fun MainTopAppBar(
   title: String,
   onUpPress: () -> Unit,
 ) {
-  var showDialog by remember { mutableStateOf(false) }
-  var editShowDialog by remember { mutableStateOf(false) }
-  var showDeleteDialog by remember { mutableStateOf(false) }
   TopAppBar(
     title = { Text(text = title) },
     modifier = Modifier
       .fillMaxWidth()
-      .clickable(onClick = { showDialog = true }),
+      .clickable { editS},
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
@@ -188,12 +185,12 @@ fun MainTopAppBar(
       }
     },
     actions = {
-      IconButton(onClick = { editShowDialog = true }) {
+      IconButton(onClick = { }) {
         Icon(imageVector = Icons.Default.Edit, contentDescription = null)
       }
       IconButton(
         onClick = {
-          showDeleteDialog = true
+
         }
       ) {
         Icon(imageVector = Icons.Default.Delete, contentDescription = null)
