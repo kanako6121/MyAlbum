@@ -3,6 +3,7 @@ package com.example.myalbum.feature.main.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
@@ -44,6 +46,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditPictureScreen
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -81,7 +84,8 @@ fun MainNav(
                 coroutineScope.launch {
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
-              },
+                editShowDialog = true
+              }
             )
           }
         }
@@ -89,7 +93,7 @@ fun MainNav(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
             .padding(16.dp)
-            .clickable {showDialog = true},
+            .clickable { showDialog = true },
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -99,16 +103,20 @@ fun MainNav(
         }
       }
     }
-  ) {
+  )
+  {
     Scaffold(
       topBar = {
         MainTopAppBar(
-          title = uiState.currentAlbum.title,
-          onUpPress = { showDialog = true },
+          drawerState = drawerState,
+          coroutineScope = coroutineScope,
+          title = { Text(text = stringResource(id = R.string.app_name)) },
+          onShowDialog = { editShowDialog = true },
+          onShowDeleteDialog = { showDeleteDialog = true },
+          onEditShowDialog = { editShowDialog = true }
         )
-      }
-    )
-    { contentPadding ->
+      },
+    ) { contentPadding ->
       Column(modifier = Modifier.padding(contentPadding)) {
         NavHost(
           navController = navController,
@@ -167,31 +175,39 @@ fun MainNav(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopAppBar(
-  title: String,
-  onUpPress: () -> Unit,
+  drawerState: DrawerState,
+  coroutineScope: CoroutineScope,
+  title: @Composable () -> Unit,
+  onEditShowDialog: () -> Unit,
+  onShowDeleteDialog: () -> Unit,
+  onShowDialog: () -> Unit,
 ) {
   TopAppBar(
-    title = { Text(text = title) },
+    title = title,
     modifier = Modifier
       .fillMaxWidth()
-      .clickable { editS},
+      .clickable(onClick = onShowDialog),
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
     ),
     navigationIcon = {
-      IconButton(onClick = onUpPress) {
+      IconButton(
+        onClick = {
+          coroutineScope.launch {
+            if (drawerState.isClosed) drawerState.open() else drawerState.close()
+          }
+        }
+      ) {
         Icon(imageVector = Icons.Default.Menu, contentDescription = null)
       }
     },
     actions = {
-      IconButton(onClick = { }) {
+      IconButton(onClick = onEditShowDialog) {
         Icon(imageVector = Icons.Default.Edit, contentDescription = null)
       }
       IconButton(
-        onClick = {
-
-        }
+        onClick = onShowDeleteDialog
       ) {
         Icon(imageVector = Icons.Default.Delete, contentDescription = null)
       }
