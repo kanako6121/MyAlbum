@@ -84,7 +84,6 @@ fun MainNav(
                 coroutineScope.launch {
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
-                editShowDialog = true
               }
             )
           }
@@ -110,10 +109,10 @@ fun MainNav(
         MainTopAppBar(
           drawerState = drawerState,
           coroutineScope = coroutineScope,
-          title = { Text(text = stringResource(id = R.string.app_name)) },
-          onShowDialog = { editShowDialog = true },
+          title = { Text(text = uiState.currentAlbum.title) },
+          onShowDialog = { showDialog = true },
           onShowDeleteDialog = { showDeleteDialog = true },
-          onEditShowDialog = { editShowDialog = true }
+          onEditShowDialog = { editShowDialog = true },
         )
       },
     ) { contentPadding ->
