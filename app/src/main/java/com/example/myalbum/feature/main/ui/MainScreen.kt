@@ -1,13 +1,17 @@
 package com.example.myalbum.feature.main.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -33,10 +37,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,7 +52,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditPictureScreen
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -62,6 +67,8 @@ fun MainNav(
   var showDialog by remember { mutableStateOf(false) }
   var editShowDialog by remember { mutableStateOf(false) }
   var showDeleteDialog by remember { mutableStateOf(false) }
+  val listItems by remember { mutableStateOf(listOf(1, 2)) }
+  var selectedItems by rememberSaveable { mutableStateOf(setOf<Int>()) }
 
   ModalNavigationDrawer(
     drawerState = drawerState,
@@ -69,8 +76,8 @@ fun MainNav(
       ModalDrawerSheet {
         LazyColumn(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+              .fillMaxWidth()
+              .padding(horizontal = 20.dp)
         ) {
           items(
             items = uiState.albumMenus,
@@ -91,8 +98,8 @@ fun MainNav(
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier
-            .padding(16.dp)
-            .clickable { showDialog = true },
+              .padding(16.dp)
+              .clickable { showDialog = true },
         ) {
           Icon(
             imageVector = Icons.Default.Add,
@@ -106,13 +113,37 @@ fun MainNav(
   {
     Scaffold(
       topBar = {
-        MainTopAppBar(
-          drawerState = drawerState,
-          coroutineScope = coroutineScope,
-          title = { Text(text = uiState.currentAlbum.title) },
-          onShowDialog = { showDialog = true },
-          onShowDeleteDialog = { showDeleteDialog = true },
-          onEditShowDialog = { editShowDialog = true },
+        MainTopAppBar(selectedItems)
+        title = { Text(text = uiState.currentAlbum.title) },
+        colors = TopAppBarDefaults.topAppBarColors(
+          containerColor = MaterialTheme.colorScheme.primaryContainer,
+          titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+        ),
+        navigationIcon = {
+          IconButton(onClick = {
+            coroutineScope.launch {
+              if (drawerState.isClosed) drawerState.open() else drawerState.close()
+            }
+          }
+          ) {
+            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+          }
+        },
+        actions = {
+          IconButton(onClick = { editShowDialog = true }) {
+            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+          }
+          IconButton(
+            onClick = { showDeleteDialog = true }
+          ) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+          }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                onClick = { showDialog = true },
+            )
         )
       },
     ) { contentPadding ->
@@ -174,42 +205,28 @@ fun MainNav(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopAppBar(
-  drawerState: DrawerState,
-  coroutineScope: CoroutineScope,
-  title: @Composable () -> Unit,
-  onEditShowDialog: () -> Unit,
-  onShowDeleteDialog: () -> Unit,
-  onShowDialog: () -> Unit,
+  selectedItems: Set<Int>,
+  modifier: Modifier,
 ) {
+  val hasSelectedItems = selectedItems.isNotEmpty()
+  val topBarText = if (hasSelectedItems) {
+    "${selecterItems.size}"
+  } else {
+    ""
+  }
   TopAppBar(
-    title = title,
-    modifier = Modifier
-      .fillMaxWidth()
-      .clickable(onClick = onShowDialog),
+    title = { Text(text = topBarText) },
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
+      titleContentColor = MaterialTheme.colorScheme.primary,
     ),
-    navigationIcon = {
-      IconButton(
-        onClick = {
-          coroutineScope.launch {
-            if (drawerState.isClosed) drawerState.open() else drawerState.close()
-          }
-        }
-      ) {
-        Icon(imageVector = Icons.Default.Menu, contentDescription = null)
-      }
-    },
     actions = {
-      IconButton(onClick = onEditShowDialog) {
-        Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-      }
-      IconButton(
-        onClick = onShowDeleteDialog
-      ) {
-        Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+      if (hasSelectedItems) {
+        IconButton(onClick = { /*TODO*/ }) {
+          Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+        }
       }
     },
+    modifier = modifier,
   )
 }

@@ -14,16 +14,16 @@ data class MainUiState(
     val Empty = MainUiState(
       albumMenus = emptyList(),
       errorMessage = "",
-      currentAlbum = AlbumData(id = 0, title = "", pictures = emptyList())
+      currentAlbum = AlbumData(id = 0, title = "FavPic", pictures = emptyList())
     )
   }
 }
 
 @Immutable
 data class AlbumMenu(
-  val id: Int,
-  val uri: Uri,
-  val title: String,
+    val id: Int,
+    val uri: Uri,
+    var title: String,
 )
 
 fun AlbumData.toAlbumMenu() =
@@ -33,9 +33,9 @@ fun AlbumData.toAlbumMenu() =
     title = title,
   )
 
-fun List<AlbumData>.toMainUiState(albumIc: Int) =
+fun List<AlbumData>.toMainUiState(albumId: Int) =
   MainUiState(
     albumMenus = map { it.toAlbumMenu() },
     errorMessage = "",
-    currentAlbum = firstOrNull { it.id == albumIc } ?: AlbumData(id = 0, title = "", pictures = emptyList())
+    currentAlbum = firstOrNull { it.id == albumId } ?: AlbumData(id = 0, title = "FavPic", pictures = emptyList())
   )
