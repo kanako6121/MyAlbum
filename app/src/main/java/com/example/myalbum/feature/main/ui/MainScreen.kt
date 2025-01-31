@@ -112,8 +112,9 @@ fun MainNav(
   )
   {
     Scaffold(
+      Column(){
       topBar = {
-        MainTopAppBar(selectedItems)
+        MainTopAppBar(
         title = { Text(text = uiState.currentAlbum.title) },
         colors = TopAppBarDefaults.topAppBarColors(
           containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -205,28 +206,8 @@ fun MainNav(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopAppBar(
-  selectedItems: Set<Int>,
   modifier: Modifier,
+  title: @Composable () -> Unit,
 ) {
-  val hasSelectedItems = selectedItems.isNotEmpty()
-  val topBarText = if (hasSelectedItems) {
-    "${selecterItems.size}"
-  } else {
-    ""
-  }
-  TopAppBar(
-    title = { Text(text = topBarText) },
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = MaterialTheme.colorScheme.primary,
-    ),
-    actions = {
-      if (hasSelectedItems) {
-        IconButton(onClick = { /*TODO*/ }) {
-          Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-        }
-      }
-    },
-    modifier = modifier,
-  )
+
 }
