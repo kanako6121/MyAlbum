@@ -57,6 +57,15 @@ fun EditPictureScreen(
     viewModel.setEditPicture(albumId, pictureId)
   }
 
+  EditTopBar(
+    title = { Text(text = stringResource(R.string.edit_photo)) },
+    navigationIcon = {
+      IconButton(onClick = onUpPress) {
+        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+      }
+    },
+    actions = {}
+  )
   EditPictureContent(
     maxChar = maxChar,
     onUpPress = onUpPress,
@@ -71,65 +80,50 @@ fun EditPictureContent(
   onUpPress: () -> Unit,
   onSaveComment: (String) -> Unit,
   pictureData: PictureData?,
-  drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
   var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
 
-  Scaffold(
-    modifier = Modifier.fillMaxSize(),
-    topBar = {
-      EditTopBar(
-        title = { Text(text = stringResource(R.string.edit_photo)) },
-        navigationIcon = {
-          IconButton(onClick = onUpPress) {
-            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-          }
-        },
-      )
-    }
-  ) { paddings ->
-    Column(
-      modifier = Modifier.padding(paddings)
-    ) {
-      val zoomState = rememberZoomState()
-      AsyncImage(
-        onSuccess = { state ->
-          zoomState.setContentSize(state.painter.intrinsicSize)
-        },
-        contentScale = ContentScale.Fit,
-        modifier = Modifier
-          .zoomable(zoomState)
-          .aspectRatio(1f)
-          .padding(8.dp)
-          .fillMaxWidth()
-          .fillMaxHeight(),
-        model = pictureData?.uri,
-        contentDescription = null
-      )
-      OutlinedTextField(
-        modifier = Modifier
-          .padding(8.dp)
-          .align(Alignment.CenterHorizontally),
-        value = comment,
-        onValueChange = { newComment ->
-          if (newComment.length <= maxChar) {
-            comment = newComment
-          }
-        },
-        placeholder = { Text(text = stringResource(R.string.comment)) },
-        singleLine = true,
-      )
-      Button(
-        modifier = Modifier
-          .padding(16.dp)
-          .align(Alignment.CenterHorizontally),
-        onClick = {
-          onSaveComment(comment)
-          onUpPress()
+  Column(
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    val zoomState = rememberZoomState()
+    AsyncImage(
+      onSuccess = { state ->
+        zoomState.setContentSize(state.painter.intrinsicSize)
+      },
+      contentScale = ContentScale.Fit,
+      modifier = Modifier
+        .zoomable(zoomState)
+        .aspectRatio(1f)
+        .padding(8.dp)
+        .fillMaxWidth()
+        .fillMaxHeight(),
+      model = pictureData?.uri,
+      contentDescription = null
+    )
+    OutlinedTextField(
+      modifier = Modifier
+        .padding(8.dp)
+        .align(Alignment.CenterHorizontally),
+      value = comment,
+      onValueChange = { newComment ->
+        if (newComment.length <= maxChar) {
+          comment = newComment
         }
-      ) {
-        Text(text = stringResource(R.string.post))
+      },
+      placeholder = { Text(text = stringResource(R.string.comment)) },
+      singleLine = true,
+    )
+    Button(
+      modifier = Modifier
+        .padding(16.dp)
+        .align(Alignment.CenterHorizontally),
+      onClick = {
+        onSaveComment(comment)
+        onUpPress()
       }
+    ) {
+      Text(text = stringResource(R.string.post))
     }
   }
 }

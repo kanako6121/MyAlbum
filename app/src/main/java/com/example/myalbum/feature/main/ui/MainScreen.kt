@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
@@ -19,13 +20,10 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +43,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myalbum.R
 import com.example.myalbum.feature.edit.ui.EditPictureScreen
+import com.example.myalbum.feature.edit.ui.EditTopBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -105,29 +104,43 @@ fun MainNav(
     Scaffold(
       modifier = Modifier.fillMaxSize(),
       topBar = {
-        MainTopAppBar(
-          modifier = Modifier
-            .fillMaxWidth()
-            .clickable { editShowDialog = true },
-          title = { Text(text = uiState.currentAlbum.title) },
-          navigationIcon = {
-            IconButton(onClick = {
-              coroutineScope.launch {
-                if (drawerState.isClosed) drawerState.open() else drawerState.close()
+        if (navController.currentBackStackEntry?.destination?.route?.startsWith("edit") == true) {
+          val albumId = navController.currentBackStackEntry?.arguments?.getString("albumId")?.toIntOrNull() ?: 0
+          val pictureId = navController.currentBackStackEntry?.arguments?.getString("selectId")?.toIntOrNull() ?: 0
+          EditTopBar(
+            title = { Text(text = stringResource(R.string.edit_photo)) },
+            navigationIcon = {
+              IconButton(onClick = { navController.popBackStack() }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
               }
-            }) {
-              Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+            },
+            actions = {}
+          )
+        } else {
+          MainTopAppBar(
+            modifier = Modifier
+              .fillMaxWidth()
+              .clickable { editShowDialog = true },
+            title = { Text(text = uiState.currentAlbum.title) },
+            navigationIcon = {
+              IconButton(onClick = {
+                coroutineScope.launch {
+                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                }
+              }) {
+                Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+              }
+            },
+            actions = {
+              IconButton(onClick = { editShowDialog = true }) {
+                Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+              }
+              IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+              }
             }
-          },
-          actions = {
-            IconButton(onClick = { editShowDialog = true }) {
-              Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-            }
-            IconButton(onClick = { showDeleteDialog = true }) {
-              Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-            }
-          }
-        )
+          )
+        }
       },
     ) { contentPadding ->
       Column(modifier = Modifier.padding(contentPadding)) {
@@ -193,14 +206,14 @@ fun MainTopAppBar(
   navigationIcon: @Composable () -> Unit = {},
   actions: @Composable RowScope.() -> Unit = {},
 ) {
-  TopAppBar(
+  androidx.compose.material3.TopAppBar(
     modifier = modifier,
     title = title,
     navigationIcon = navigationIcon,
     actions = actions,
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = MaterialTheme.colorScheme.primary,
+    colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+      containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primaryContainer,
+      titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
     )
   )
 }
