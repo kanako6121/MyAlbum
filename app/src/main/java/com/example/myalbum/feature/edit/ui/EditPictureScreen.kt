@@ -62,6 +62,7 @@ fun EditPictureScreen(
     onUpPress = onUpPress,
     onSaveComment = viewModel::savePicture,
     pictureData = uiState.pictureData,
+  )
 }
 
 @Composable
