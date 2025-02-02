@@ -3,6 +3,7 @@ package com.example.myalbum.feature.edit.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -49,21 +50,8 @@ fun EditPictureScreen(
   LaunchedEffect(key1 = albumId, key2 = pictureId) {
     viewModel.setEditPicture(albumId, pictureId)
   }
-  Scaffold(
-    topBar = {
-      EditTopBar(
-        modifier = Modifier,
-        title = { Text(text = stringResource(R.string.edit_photo)) },
-        navigationIcon = {
-          IconButton(onClick = onUpPress) {
-            Icon(imageVector = Icons.Default.ArrowBack ,contentDescription = null)
-          }
-        },
-      )
-    }
-  ) { contentPadding ->
     EditPictureContent(
-      modifier = Modifier.padding(contentPadding),
+      modifier = Modifier.fillMaxSize(),
       maxChar = maxChar,
       onUpPress = onUpPress,
       onSaveComment = viewModel::savePicture,
@@ -82,11 +70,22 @@ fun EditPictureContent(
 ) {
   var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
 
-  Column(
-    modifier = Modifier
-      .padding(top = 64.dp)
-      .fillMaxWidth()
-  ) {
+  Scaffold(
+    modifier = Modifier,
+    topBar = {
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(text = stringResource(R.string.edit_photo)) },
+      navigationIcon = {
+        IconButton(onClick = onUpPress) {
+          Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+        }
+      },
+      )
+    }
+  ) { contengPadding ->
+    Column(
+      modifier = Modifier.padding(contengPadding).fillMaxWidth()
+    )
     val zoomState = rememberZoomState()
     AsyncImage(
       onSuccess = { state ->
