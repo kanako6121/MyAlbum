@@ -3,24 +3,17 @@ package com.example.myalbum.feature.edit.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
+import com.example.myalbum.feature.main.ui.EditTopBar
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 
@@ -48,6 +42,8 @@ fun EditPictureScreen(
   pictureId: Int,
   viewModel: EditPictureViewModel = hiltViewModel(),
   onUpPress: () -> Unit,
+  onDelete: () -> Unit,
+  onEdit: () -> Unit,
 ) {
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -56,26 +52,35 @@ fun EditPictureScreen(
   LaunchedEffect(key1 = albumId, key2 = pictureId) {
     viewModel.setEditPicture(albumId, pictureId)
   }
-
-  EditTopBar(
-    title = { Text(text = stringResource(R.string.edit_photo)) },
-    navigationIcon = {
-      IconButton(onClick = onUpPress) {
-        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-      }
-    },
-    actions = {}
-  )
-  EditPictureContent(
-    maxChar = maxChar,
-    onUpPress = onUpPress,
-    onSaveComment = viewModel::savePicture,
-    pictureData = uiState.pictureData,
-  )
+  Scaffold(
+    topBar = {
+      EditTopBar(
+        modifier = Modifier,
+        title = { Text(text = stringResource(R.string.edit_photo)) },
+        actions = {
+          IconButton(onClick = onEdit) {
+            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+          }
+          IconButton(onClick = onDelete) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+          }
+        }
+      )
+    }
+  ) { contentPadding ->
+    EditPictureContent(
+      modifier = Modifier.padding(contentPadding),
+      maxChar = maxChar,
+      onUpPress = onUpPress,
+      onSaveComment = viewModel::savePicture,
+      pictureData = uiState.pictureData,
+    )
+  }
 }
 
 @Composable
 fun EditPictureContent(
+  modifier: Modifier = Modifier,
   maxChar: Int,
   onUpPress: () -> Unit,
   onSaveComment: (String) -> Unit,
@@ -126,25 +131,6 @@ fun EditPictureContent(
       Text(text = stringResource(R.string.post))
     }
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditTopBar(
-  modifier: Modifier = Modifier,
-  title: @Composable () -> Unit,
-  navigationIcon: @Composable () -> Unit = {},
-  actions: @Composable () -> Unit = {},
-) {
-  TopAppBar(
-    modifier = modifier,
-    title = title,
-    navigationIcon = navigationIcon,
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = MaterialTheme.colorScheme.primary,
-    )
-  )
 }
 
 @Preview(showBackground = true)

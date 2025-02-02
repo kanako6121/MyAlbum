@@ -21,6 +21,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -28,6 +30,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,19 +58,46 @@ fun AlbumScreen(
   launchPicker: () -> Unit,
   navigateEditScreen: (Int, PictureData) -> Unit,
   onUpPress: () -> Unit,
-) {
+  onDelete: () -> Unit,
+  onEdit:() -> Unit,
+
+  ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  AlbumContent(
-    launchPicker = launchPicker,
-    onEditScreen = navigateEditScreen,
-    currentAlbumData = uiState.currentAlbum,
-    onRemove = viewModel::onRemovePhoto,
-  )
+  Scaffold(
+    topBar = {
+      MainTopAppBar(
+        modifier = Modifier,
+        title = { Text(text = uiState.currentAlbum.title) },
+        navigationIcon = {
+          IconButton(onClick = onUpPress ) {
+            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+          }
+        },
+        actions = {
+          IconButton(onClick = onEdit) {
+            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+          }
+          IconButton(onClick = onDelete) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+          }
+        }
+      )
+    }
+  ) { contentPadding ->
+    AlbumContent(
+      modifier = Modifier.padding(contentPadding),
+      launchPicker = launchPicker,
+      onEditScreen = navigateEditScreen,
+      currentAlbumData = uiState.currentAlbum,
+      onRemove = viewModel::onRemovePhoto,
+    )
+  }
 }
 
 @Composable
 fun AlbumContent(
+  modifier: Modifier = Modifier,
   launchPicker: () -> Unit,
   onEditScreen: (Int, PictureData) -> Unit,
   currentAlbumData: AlbumData,
