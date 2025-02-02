@@ -100,7 +100,7 @@ fun MainNav(
   {
     Scaffold(
       modifier = Modifier.fillMaxSize(),
-      ) { contentPadding ->
+    ) { contentPadding ->
       Column(modifier = Modifier.padding(contentPadding)) {
         NavHost(
           navController = navController,
@@ -115,7 +115,7 @@ fun MainNav(
                   if (drawerState.isClosed) drawerState.open() else drawerState.close()
                 }
               },
-              onDelete ={ showDeleteDialog = true },
+              onDelete = { showDeleteDialog = true },
               onEdit = { editShowDialog = true },
               navigateEditScreen = { albumId, pictureData ->
                 navController.navigate("edit/${albumId}/${pictureData.id}")
@@ -130,8 +130,6 @@ fun MainNav(
               pictureId = pictureId,
               viewModel = hiltViewModel(),
               onUpPress = { navController.popBackStack() },
-              onDelete = { showDeleteDialog = true },
-              onEdit = { editShowDialog = true },
             )
           }
         }
@@ -186,13 +184,11 @@ fun EditTopBar(
   modifier: Modifier = Modifier,
   title: @Composable () -> Unit,
   navigationIcon: @Composable () -> Unit = {},
-  actions: @Composable RowScope.() -> Unit = {},
 ) {
   TopAppBar(
     modifier = modifier,
     title = title,
     navigationIcon = navigationIcon,
-    actions = actions,
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = MaterialTheme.colorScheme.primary,

@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,8 +41,6 @@ fun EditPictureScreen(
   pictureId: Int,
   viewModel: EditPictureViewModel = hiltViewModel(),
   onUpPress: () -> Unit,
-  onDelete: () -> Unit,
-  onEdit: () -> Unit,
 ) {
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,14 +54,11 @@ fun EditPictureScreen(
       EditTopBar(
         modifier = Modifier,
         title = { Text(text = stringResource(R.string.edit_photo)) },
-        actions = {
-          IconButton(onClick = onEdit) {
-            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+        navigationIcon = {
+          IconButton(onClick = onUpPress) {
+            Icon(imageVector = Icons.Default.ArrowBack ,contentDescription = null)
           }
-          IconButton(onClick = onDelete) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-          }
-        }
+        },
       )
     }
   ) { contentPadding ->
