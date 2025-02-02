@@ -160,7 +160,7 @@ fun MainNav(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopAppBar(
+fun AlbumTopBar(
   modifier: Modifier,
   title: @Composable () -> Unit,
   navigationIcon: @Composable () -> Unit = {},

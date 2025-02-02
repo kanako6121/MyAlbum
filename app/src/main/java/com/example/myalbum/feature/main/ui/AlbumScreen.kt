@@ -66,10 +66,9 @@ fun AlbumScreen(
 
   Scaffold(
     topBar = {
-      MainTopAppBar(
+      AlbumTopBar(
         modifier = Modifier
-          .padding(8.dp)
-          .clickable(onClick = onEdit) ,
+          .clickable(onClick = onEdit),
         title = { Text(text = uiState.currentAlbum.title) },
         navigationIcon = {
           IconButton(onClick = onUpPress ) {
@@ -112,7 +111,11 @@ fun AlbumContent(
     delay(600)
     showTutorial = currentAlbumData.pictures.isEmpty()
   }
-  Box(modifier = Modifier.fillMaxSize()) {
+  Box(
+    modifier = Modifier
+      .padding(top = 64.dp)
+      .fillMaxSize()
+  ) {
     LazyVerticalStaggeredGrid(
       state = scrollState,
       columns = StaggeredGridCells.Fixed(2)
@@ -121,10 +124,9 @@ fun AlbumContent(
         var expanded by remember { mutableStateOf(false) }
         Box(
           modifier = Modifier.padding(
-            start = 8.dp,
             top = 8.dp,
-            end = 4.dp,
-            bottom = 8.dp
+            bottom = 8.dp,
+            end = 8.dp,
           )
         ) {
           AsyncImage(

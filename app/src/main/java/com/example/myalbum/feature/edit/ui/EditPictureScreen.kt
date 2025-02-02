@@ -83,7 +83,9 @@ fun EditPictureContent(
   var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
 
   Column(
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier
+      .padding(top = 64.dp)
+      .fillMaxWidth()
   ) {
     val zoomState = rememberZoomState()
     AsyncImage(
