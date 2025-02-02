@@ -67,7 +67,9 @@ fun AlbumScreen(
   Scaffold(
     topBar = {
       MainTopAppBar(
-        modifier = Modifier,
+        modifier = Modifier
+          .padding(8.dp)
+          .clickable(onClick = onEdit) ,
         title = { Text(text = uiState.currentAlbum.title) },
         navigationIcon = {
           IconButton(onClick = onUpPress ) {
