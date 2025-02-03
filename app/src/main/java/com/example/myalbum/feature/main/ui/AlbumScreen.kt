@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +42,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -151,7 +154,7 @@ fun AlbumScreen(
     )
   }
 
-  if (showDeletePictureDialog) {
+  if (showDeleteAlbumDialog) {
     DeleteAlbumDialog(
       onDismiss = { showDeleteAlbumDialog = false },
       onDeleteAlbum = viewModel::deleteAlbum,
@@ -162,12 +165,14 @@ fun AlbumScreen(
 
 @Composable
 fun AlbumContent(
- currentAlbumData: AlbumData,
- onClickDrawMenu: () -> Unit,
- onEditTitle: () -> Unit,
- onDeleteAlbum: () -> Unit,
- launchPicker: () -> Unit,
- onNavigateEditScreen: (Int, PictureData) -> Unit,
+  modifier: Modifier = Modifier,
+  currentAlbumData: AlbumData,
+  onClickDrawMenu: () -> Unit,
+  onEditTitle: () -> Unit,
+  onDeleteAlbum: () -> Unit,
+  launchPicker: () -> Unit,
+  onNavigateEditScreen: (Int, PictureData) -> Unit,
+  onRemovePicture: (Int, Int) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
@@ -177,7 +182,7 @@ fun AlbumContent(
     showTutorial = currentAlbumData.pictures.isEmpty()
   }
   Scaffold(
-    modifier = Modifier,
+    modifier = modifier,
     topBar = {
       AlbumTopBar(
         modifier = Modifier
@@ -232,7 +237,7 @@ fun AlbumContent(
                 end = 8.dp,
                 bottom = 32.dp
               )
-              .clickable { onEditScreen(currentAlbumData.id, pictureData) },
+              .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
           )
           Box(
             modifier = Modifier
@@ -263,7 +268,7 @@ fun AlbumContent(
               DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.description_delete)) },
                 onClick = {
-                  onRemove(currentAlbumData.id, pictureData.id)
+                  onRemovePicture(currentAlbumData.id, pictureData.id)
                   expanded = false
                 },
                 leadingIcon = {
@@ -278,37 +283,57 @@ fun AlbumContent(
         }
       }
     }
-    AnimatedVisibility(
-      modifier = Modifier.align(Alignment.BottomEnd),
-      visible = showTutorial,
-      enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-      exit = fadeOut(animationSpec = tween(durationMillis = 250))
-    )
-    {
-      Column(
-        modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.End
-      ) {
-        Text(text = stringResource(R.string.tutorial))
-        Spacer(modifier = Modifier.size(64.dp))
-      }
-    }
-
-    FloatingActionButton(
-      modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.BottomEnd),
-      onClick = {
-        showTutorial = false
-        launchPicker()
-      }
+  }
+  AnimatedVisibility(
+    modifier = Modifier.align(Alignment.BottomEnd),
+    visible = showTutorial,
+    enter = fadeIn(animationSpec = tween(durationMillis = 500)),
+    exit = fadeOut(animationSpec = tween(durationMillis = 250))
+  )
+  {
+    Column(
+      modifier = Modifier.padding(16.dp),
+      horizontalAlignment = Alignment.End
     ) {
-      Icon(
-        imageVector = Icons.Default.Add,
-        contentDescription = null
-      )
+      Text(text = stringResource(R.string.tutorial))
+      Spacer(modifier = Modifier.size(64.dp))
     }
   }
+
+  FloatingActionButton(
+    modifier = Modifier
+      .padding(16.dp)
+      .align(Alignment.BottomEnd),
+    onClick = {
+      showTutorial = false
+      launchPicker()
+    }
+  ) {
+    Icon(
+      imageVector = Icons.Default.Add,
+      contentDescription = null
+    )
+  }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlbumTopBar(
+  modifier: Modifier,
+  title: @Composable () -> Unit,
+  navigationIcon: @Composable () -> Unit = {},
+  actions: @Composable RowScope.() -> Unit = {},
+) {
+  TopAppBar(
+    modifier = modifier,
+    title = title,
+    navigationIcon = navigationIcon,
+    actions = actions,
+    colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      titleContentColor = MaterialTheme.colorScheme.primary,
+    )
+  )
 }
 
 @Preview(showBackground = true)
@@ -316,8 +341,11 @@ fun AlbumContent(
 fun ShowPhotoGrid() {
   AlbumContent(
     launchPicker = {},
-    onEditScreen = { _, _ -> },
+    onNavigateEditScreen = { _, _ -> },
+    onRemovePicture = { _, _ -> },
+    onClickDrawMenu = {},
+    onEditTitle = {},
+    onDeleteAlbum = {},
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
-    onRemove = { _, _ -> },
   )
 }

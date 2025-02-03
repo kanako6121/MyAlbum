@@ -3,7 +3,6 @@ package com.example.myalbum.feature.main.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,15 +12,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -156,24 +151,4 @@ fun MainNav(
       currentAlbum = uiState.currentAlbum,
     )
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AlbumTopBar(
-  modifier: Modifier,
-  title: @Composable () -> Unit,
-  navigationIcon: @Composable () -> Unit = {},
-  actions: @Composable RowScope.() -> Unit = {},
-) {
-  TopAppBar(
-    modifier = modifier,
-    title = title,
-    navigationIcon = navigationIcon,
-    actions = actions,
-    colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
-      containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-    )
-  )
 }
