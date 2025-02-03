@@ -128,8 +128,8 @@ fun AlbumScreen(
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
       launchPicker = launchPicker,
-      onRemove = viewModel::onRemovePhoto,
       onNavigateEditScreen = navigateEditScreen,
+      onRemovePicture = viewModel::onRemovePhoto,
       onClickDrawMenu = {
         coroutineScope.launch {
           if (drawerState.isClosed) drawerState.open() else drawerState.close()
@@ -138,7 +138,7 @@ fun AlbumScreen(
     )
   }
   if (showCreateAlbumDialog) {
-    CreateAlbumDialog(
+    CreateTitleDialog(
       onDismiss = { showCreateAlbumDialog = false },
       onAddTitle = viewModel::createAlbumTitle,
     )
@@ -151,7 +151,7 @@ fun AlbumScreen(
     )
   }
 
-  if (showDeleteAlbumDialog) {
+  if (showDeletePictureDialog) {
     DeleteAlbumDialog(
       onDismiss = { showDeleteAlbumDialog = false },
       onDeleteAlbum = viewModel::deleteAlbum,
@@ -162,14 +162,12 @@ fun AlbumScreen(
 
 @Composable
 fun AlbumContent(
-  modifier: Modifier = Modifier,
-  launchPicker: () -> Unit,
-  onNavigateEditScreen: (Int, PictureData) -> Unit,
-  currentAlbumData: AlbumData,
-  onRemovePicture: (Int, Int) -> Unit,
-  onEditTitle: () -> Unit,
-  onDeleteAlbum: () -> Unit,
-  onClickDrawMenu: () -> Unit,
+ currentAlbumData: AlbumData,
+ onClickDrawMenu: () -> Unit,
+ onEditTitle: () -> Unit,
+ onDeleteAlbum: () -> Unit,
+ launchPicker: () -> Unit,
+ onNavigateEditScreen: (Int, PictureData) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
