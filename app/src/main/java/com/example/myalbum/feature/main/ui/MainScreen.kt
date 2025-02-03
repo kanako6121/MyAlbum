@@ -177,21 +177,3 @@ fun AlbumTopBar(
     )
   )
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditTopBar(
-  modifier: Modifier = Modifier,
-  title: @Composable () -> Unit,
-  navigationIcon: @Composable () -> Unit = {},
-) {
-  TopAppBar(
-    modifier = modifier,
-    title = title,
-    navigationIcon = navigationIcon,
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = MaterialTheme.colorScheme.primary,
-    )
-  )
-}

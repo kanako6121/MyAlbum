@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.PictureData
-import com.example.myalbum.feature.main.ui.EditTopBar
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 
@@ -50,14 +53,13 @@ fun EditPictureScreen(
   LaunchedEffect(key1 = albumId, key2 = pictureId) {
     viewModel.setEditPicture(albumId, pictureId)
   }
-    EditPictureContent(
-      modifier = Modifier.fillMaxSize(),
-      maxChar = maxChar,
-      onUpPress = onUpPress,
-      onSaveComment = viewModel::savePicture,
-      pictureData = uiState.pictureData,
-    )
-  }
+  EditPictureContent(
+    modifier = Modifier.fillMaxSize(),
+    maxChar = maxChar,
+    onUpPress = onUpPress,
+    onSaveComment = viewModel::savePicture,
+    pictureData = uiState.pictureData,
+  )
 }
 
 @Composable
@@ -73,59 +75,82 @@ fun EditPictureContent(
   Scaffold(
     modifier = Modifier,
     topBar = {
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(text = stringResource(R.string.edit_photo)) },
-      navigationIcon = {
-        IconButton(onClick = onUpPress) {
-          Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
-        }
-      },
+      EditTopBar(
+        modifier = Modifier.fillMaxWidth(),
+        title = { Text(text = stringResource(R.string.edit_photo)) },
+        navigationIcon = {
+          IconButton(onClick = onUpPress) {
+            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+          }
+        },
       )
     }
-  ) { contengPadding ->
+  ) { contentPadding ->
     Column(
-      modifier = Modifier.padding(contengPadding).fillMaxWidth()
-    )
-    val zoomState = rememberZoomState()
-    AsyncImage(
-      onSuccess = { state ->
-        zoomState.setContentSize(state.painter.intrinsicSize)
-      },
-      contentScale = ContentScale.Fit,
       modifier = Modifier
-        .zoomable(zoomState)
-        .aspectRatio(1f)
-        .padding(8.dp)
+        .padding(contentPadding)
         .fillMaxWidth()
-        .fillMaxHeight(),
-      model = pictureData?.uri,
-      contentDescription = null
-    )
-    OutlinedTextField(
-      modifier = Modifier
-        .padding(8.dp)
-        .align(Alignment.CenterHorizontally),
-      value = comment,
-      onValueChange = { newComment ->
-        if (newComment.length <= maxChar) {
-          comment = newComment
-        }
-      },
-      placeholder = { Text(text = stringResource(R.string.comment)) },
-      singleLine = true,
-    )
-    Button(
-      modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.CenterHorizontally),
-      onClick = {
-        onSaveComment(comment)
-        onUpPress()
-      }
     ) {
-      Text(text = stringResource(R.string.post))
+      val zoomState = rememberZoomState()
+      AsyncImage(
+        onSuccess = { state ->
+          zoomState.setContentSize(state.painter.intrinsicSize)
+        },
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+          .zoomable(zoomState)
+          .aspectRatio(1f)
+          .padding(8.dp)
+          .fillMaxWidth()
+          .fillMaxHeight(),
+        model = pictureData?.uri,
+        contentDescription = null
+      )
+      OutlinedTextField(
+        modifier = Modifier
+          .padding(8.dp)
+          .align(Alignment.CenterHorizontally),
+        value = comment,
+        onValueChange = { newComment ->
+          if (newComment.length <= maxChar) {
+            comment = newComment
+          }
+
+        },
+        placeholder = { Text(text = stringResource(R.string.comment)) },
+        singleLine = true,
+      )
+      Button(
+        modifier = Modifier
+          .padding(16.dp)
+          .align(Alignment.CenterHorizontally),
+        onClick = {
+          onSaveComment(comment)
+          onUpPress()
+        }
+      ) {
+        Text(text = stringResource(R.string.post))
+      }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditTopBar(
+  modifier: Modifier = Modifier,
+  title: @Composable () -> Unit,
+  navigationIcon: @Composable () -> Unit = {},
+) {
+  TopAppBar(
+    modifier = modifier,
+    title = title,
+    navigationIcon = navigationIcon,
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      titleContentColor = MaterialTheme.colorScheme.primary,
+    )
+  )
 }
 
 @Preview(showBackground = true)

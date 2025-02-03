@@ -10,10 +10,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -24,19 +28,25 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,53 +55,107 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun AlbumScreen(
-  viewModel: MainViewModel,
+  viewModel: MainViewModel = hiltViewModel(),
   launchPicker: () -> Unit,
   navigateEditScreen: (Int, PictureData) -> Unit,
   onUpPress: () -> Unit,
   onDelete: () -> Unit,
-  onEdit:() -> Unit,
+  onEdit: () -> Unit,
 
   ) {
+  val coroutineScope = rememberCoroutineScope()
+  val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  var showCreateAlbumDialog by remember { mutableStateOf(false) }
+  var showEditAlbumDialog by remember { mutableStateOf(false) }
+  var showDeleteAlbumDialog by remember { mutableStateOf(false) }
 
-  Scaffold(
-    topBar = {
-      AlbumTopBar(
-        modifier = Modifier
-          .clickable(onClick = onEdit),
-        title = { Text(text = uiState.currentAlbum.title) },
-        navigationIcon = {
-          IconButton(onClick = onUpPress ) {
-            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
-          }
-        },
-        actions = {
-          IconButton(onClick = onEdit) {
-            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-          }
-          IconButton(onClick = onDelete) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+  ModalNavigationDrawer(
+    modifier = Modifier.fillMaxSize(),
+    drawerState = drawerState,
+    drawerContent = {
+      ModalDrawerSheet {
+        LazyColumn(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+        ) {
+          items(
+            items = uiState.albumMenus,
+            key = { it.id }
+          ) { item ->
+            ModalDrawerAlbumItem(
+              title = item.title,
+              thumbnailUri = item.uri,
+              onClick = {
+                viewModel.selectAlbum(item.id)
+                coroutineScope.launch {
+                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                }
+              }
+            )
           }
         }
-      )
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier
+            .padding(16.dp)
+            .clickable { showCreateAlbumDialog = true },
+        ) {
+          Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = null,
+          )
+          Text(text = stringResource(id = R.string.make_album))
+        }
+      }
     }
-  ) { contentPadding ->
+  ) {
     AlbumContent(
-      modifier = Modifier.padding(contentPadding),
-      launchPicker = launchPicker,
-      onEditScreen = navigateEditScreen,
+      modifier = Modifier.fillMaxSize(),
       currentAlbumData = uiState.currentAlbum,
+      onEditTitle = { showEditAlbumDialog = true },
+      onDeleteAlbum = { showDeleteAlbumDialog = true },
+      launchPicker = launchPicker,
       onRemove = viewModel::onRemovePhoto,
+      onNavigateEditScreen = navigateEditScreen,
+      onClickDrawMenu = {
+        coroutineScope.launch {
+          if (drawerState.isClosed) drawerState.open() else drawerState.close()
+        }
+      }
+    )
+  }
+  if (showCreateAlbumDialog) {
+    CreateAlbumDialog(
+      onDismiss = { showCreateAlbumDialog = false },
+      onAddTitle = viewModel::createAlbumTitle,
+    )
+  }
+  if (showEditAlbumDialog) {
+    EditTitleDialog(
+      onDismiss = { showEditAlbumDialog = false },
+      updateTitle = viewModel::updateAlbumTitle,
+      currentAlbum = uiState.currentAlbum,
+    )
+  }
+
+  if (showDeleteAlbumDialog) {
+    DeleteAlbumDialog(
+      onDismiss = { showDeleteAlbumDialog = false },
+      onDeleteAlbum = viewModel::deleteAlbum,
+      currentAlbum = uiState.currentAlbum,
     )
   }
 }
@@ -100,9 +164,12 @@ fun AlbumScreen(
 fun AlbumContent(
   modifier: Modifier = Modifier,
   launchPicker: () -> Unit,
-  onEditScreen: (Int, PictureData) -> Unit,
+  onNavigateEditScreen: (Int, PictureData) -> Unit,
   currentAlbumData: AlbumData,
-  onRemove: (Int, Int) -> Unit,
+  onRemovePicture: (Int, Int) -> Unit,
+  onEditTitle: () -> Unit,
+  onDeleteAlbum: () -> Unit,
+  onClickDrawMenu: () -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
@@ -111,11 +178,34 @@ fun AlbumContent(
     delay(600)
     showTutorial = currentAlbumData.pictures.isEmpty()
   }
-  Box(
-    modifier = Modifier
-      .padding(top = 64.dp)
-      .fillMaxSize()
-  ) {
+  Scaffold(
+    modifier = Modifier,
+    topBar = {
+      AlbumTopBar(
+        modifier = Modifier
+          .clickable(onClick = onEditTitle),
+        title = { Text(text = currentAlbumData.title) },
+        navigationIcon = {
+          IconButton(onClick = onClickDrawMenu) {
+            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+          }
+        },
+        actions = {
+          IconButton(onClick = onEditTitle) {
+            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+          }
+          IconButton(onClick = onDeleteAlbum) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+          }
+        }
+      )
+    }
+  ) { contentPadding ->
+    Box(
+      modifier = Modifier
+        .padding(contentPadding)
+        .fillMaxSize()
+    )
     LazyVerticalStaggeredGrid(
       state = scrollState,
       columns = StaggeredGridCells.Fixed(2)
