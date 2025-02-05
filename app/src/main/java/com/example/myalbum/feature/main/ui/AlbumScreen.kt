@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -72,9 +73,6 @@ fun AlbumScreen(
   viewModel: MainViewModel = hiltViewModel(),
   launchPicker: () -> Unit,
   navigateEditScreen: (Int, PictureData) -> Unit,
-  onUpPress: () -> Unit,
-  onDelete: () -> Unit,
-  onEdit: () -> Unit,
 
   ) {
   val coroutineScope = rememberCoroutineScope()
@@ -202,117 +200,119 @@ fun AlbumContent(
           }
         }
       )
-    }
-  ) { contentPadding ->
+    },
+    floatingActionButton = {
+      FloatingActionButton(
+        modifier = Modifier
+          .padding(16.dp)
+          .wrapContentSize(Alignment.BottomEnd),
+        onClick = {
+          showTutorial = false
+          launchPicker()
+        }
+      ) {
+        Icon(
+          imageVector = Icons.Default.Add,
+          contentDescription = null
+        )
+      }
+    },
+  ) { paddingValues ->
     Box(
       modifier = Modifier
-        .padding(contentPadding)
         .fillMaxSize()
-    )
-    LazyVerticalStaggeredGrid(
-      state = scrollState,
-      columns = StaggeredGridCells.Fixed(2)
+        .padding(paddingValues)
     ) {
-      items(currentAlbumData.pictures) { pictureData ->
-        var expanded by remember { mutableStateOf(false) }
-        Box(
-          modifier = Modifier.padding(
-            top = 8.dp,
-            bottom = 8.dp,
-            end = 8.dp,
-          )
-        ) {
-          AsyncImage(
-            model = pictureData.uri,
-            contentDescription = null,
-            modifier = Modifier
-              .shadow(elevation = 4.dp)
-              .background(Color.White)
-              .border(
-                BorderStroke(width = 0.5.dp, color = Color.Gray)
-              )
-              .padding(
-                start = 8.dp,
-                top = 8.dp,
-                end = 8.dp,
-                bottom = 32.dp
-              )
-              .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
-          )
+      LazyVerticalStaggeredGrid(
+        state = scrollState,
+        columns = StaggeredGridCells.Fixed(2)
+      ) {
+        items(currentAlbumData.pictures) { pictureData ->
+          var expanded by remember { mutableStateOf(false) }
           Box(
-            modifier = Modifier
-              .align(Alignment.BottomStart)
-              .padding(start = 24.dp, bottom = 4.dp)
-          ) {
-            Text(
-              text = pictureData.comment.orEmpty()
+            modifier = Modifier.padding(
+              top = 8.dp,
+              bottom = 8.dp,
+              end = 8.dp,
             )
-          }
-          Box(
-            modifier = Modifier
-              .size(32.dp)
-              .align(Alignment.BottomStart)
-              .padding(start = 0.dp, bottom = 4.dp)
           ) {
-            IconButton(onClick = { expanded = true }) {
-              Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.onSurface
+            AsyncImage(
+              model = pictureData.uri,
+              contentDescription = null,
+              modifier = Modifier
+                .shadow(elevation = 4.dp)
+                .background(Color.White)
+                .border(
+                  BorderStroke(width = 0.5.dp, color = Color.Gray)
+                )
+                .padding(
+                  start = 8.dp,
+                  top = 8.dp,
+                  end = 8.dp,
+                  bottom = 32.dp
+                )
+                .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
+            )
+            Box(
+              modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 24.dp, bottom = 4.dp)
+            ) {
+              Text(
+                text = pictureData.comment.orEmpty()
               )
             }
-            DropdownMenu(
-              expanded = expanded,
-              onDismissRequest = { expanded = false }
+            Box(
+              modifier = Modifier
+                .size(32.dp)
+                .align(Alignment.BottomStart)
+                .padding(start = 0.dp, bottom = 4.dp)
             ) {
-              DropdownMenuItem(
-                text = { Text(stringResource(id = R.string.description_delete)) },
-                onClick = {
-                  onRemovePicture(currentAlbumData.id, pictureData.id)
-                  expanded = false
-                },
-                leadingIcon = {
-                  Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = null
-                  )
-                }
-              )
+              IconButton(onClick = { expanded = true }) {
+                Icon(
+                  imageVector = Icons.Default.MoreVert,
+                  contentDescription = "",
+                  tint = MaterialTheme.colorScheme.onSurface
+                )
+              }
+              DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+              ) {
+                DropdownMenuItem(
+                  text = { Text(stringResource(id = R.string.description_delete)) },
+                  onClick = {
+                    onRemovePicture(currentAlbumData.id, pictureData.id)
+                    expanded = false
+                  },
+                  leadingIcon = {
+                    Icon(
+                      imageVector = Icons.Default.Delete,
+                      contentDescription = null
+                    )
+                  }
+                )
+              }
+            }
+          }
+          AnimatedVisibility(
+            modifier = Modifier.wrapContentSize(Alignment.BottomEnd),
+            visible = showTutorial,
+            enter = fadeIn(animationSpec = tween(durationMillis = 500)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 250))
+          )
+          {
+            Column(
+              modifier = Modifier.padding(16.dp),
+              horizontalAlignment = Alignment.End
+            ) {
+              Text(text = stringResource(R.string.tutorial))
+              Spacer(modifier = Modifier.size(64.dp))
             }
           }
         }
       }
     }
-  }
-  AnimatedVisibility(
-    modifier = Modifier.align(Alignment.BottomEnd),
-    visible = showTutorial,
-    enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-    exit = fadeOut(animationSpec = tween(durationMillis = 250))
-  )
-  {
-    Column(
-      modifier = Modifier.padding(16.dp),
-      horizontalAlignment = Alignment.End
-    ) {
-      Text(text = stringResource(R.string.tutorial))
-      Spacer(modifier = Modifier.size(64.dp))
-    }
-  }
-
-  FloatingActionButton(
-    modifier = Modifier
-      .padding(16.dp)
-      .align(Alignment.BottomEnd),
-    onClick = {
-      showTutorial = false
-      launchPicker()
-    }
-  ) {
-    Icon(
-      imageVector = Icons.Default.Add,
-      contentDescription = null
-    )
   }
 }
 
