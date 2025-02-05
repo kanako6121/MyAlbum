@@ -105,13 +105,6 @@ fun MainNav(
             AlbumScreen(
               viewModel = mainViewModel,
               launchPicker = launchPicker,
-              onUpPress = {
-                coroutineScope.launch {
-                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
-                }
-              },
-              onDelete = { showDeleteDialog = true },
-              onEdit = { editShowDialog = true },
               navigateEditScreen = { albumId, pictureData ->
                 navController.navigate("edit/${albumId}/${pictureData.id}")
               },
