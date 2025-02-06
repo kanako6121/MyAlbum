@@ -12,7 +12,7 @@
   <string name="drawer_top">TOP</string>
   <string name="drawer_edit">編集する</string>
   <string name="drawer_preview">プレビュー</string>
-  <string name="comment">10文字までコメントできます</string>
+  <string name="comment">12文字までコメントできます</string>
   <string name="post">投稿する</string>
   <string name="save">保存する</string>
   <string name="cancel">キャンセル</string>
@@ -27,6 +27,7 @@
   <string name="edit_title">タイトルを変更する</string>
   <string name="album_name">アルバムに名前をつけよう</string>
   <string name="tutorial">お気に入りの写真をピックしてみてね！</string>
+  <string name="edit_photo">コメントを編集する</string>
   <string name="yes">はい</string>"
 
 </resources>
