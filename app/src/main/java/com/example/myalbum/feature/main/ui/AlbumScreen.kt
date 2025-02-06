@@ -138,7 +138,6 @@ fun AlbumScreen(
       currentAlbum = uiState.currentAlbum,
     )
   }
-
   if (showDeleteAlbumDialog) {
     DeleteAlbumDialog(
       onDismiss = { showDeleteAlbumDialog = false },
@@ -242,9 +241,7 @@ fun AlbumContent(
                   onRemovePicture(currentAlbumData.id, pictureData.id)
                   expanded = false
                 }, leadingIcon = {
-                  Icon(
-                    imageVector = Icons.Default.Delete, contentDescription = null
-                  )
+                  Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                 })
               }
             }
@@ -252,7 +249,7 @@ fun AlbumContent(
         }
       }
       AnimatedVisibility(
-        modifier = Modifier.wrapContentSize(Alignment.BottomEnd),
+        modifier = Modifier.align(Alignment.BottomEnd),
         visible = showTutorial,
         enter = fadeIn(animationSpec = tween(durationMillis = 500)),
         exit = fadeOut(animationSpec = tween(durationMillis = 250))
@@ -269,8 +266,7 @@ fun AlbumContent(
         .align(Alignment.BottomEnd), onClick = {
         showTutorial = false
         launchPicker()
-      }
-      ) {
+      }) {
         Icon(
           imageVector = Icons.Default.Add, contentDescription = null
         )
