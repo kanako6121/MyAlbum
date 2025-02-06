@@ -44,6 +44,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -268,7 +269,8 @@ fun AlbumContent(
         .align(Alignment.BottomEnd), onClick = {
         showTutorial = false
         launchPicker()
-      }) {
+      }
+      ) {
         Icon(
           imageVector = Icons.Default.Add, contentDescription = null
         )
@@ -290,7 +292,7 @@ fun AlbumTopBar(
     title = title,
     navigationIcon = navigationIcon,
     actions = actions,
-    colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+    colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = MaterialTheme.colorScheme.primary,
     )
