@@ -73,8 +73,7 @@ fun AlbumScreen(
   viewModel: MainViewModel = hiltViewModel(),
   launchPicker: () -> Unit,
   navigateEditScreen: (Int, PictureData) -> Unit,
-
-  ) {
+) {
   val coroutineScope = rememberCoroutineScope()
   val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -82,49 +81,37 @@ fun AlbumScreen(
   var showEditAlbumDialog by remember { mutableStateOf(false) }
   var showDeleteAlbumDialog by remember { mutableStateOf(false) }
 
-  ModalNavigationDrawer(
-    modifier = Modifier.fillMaxSize(),
-    drawerState = drawerState,
-    drawerContent = {
-      ModalDrawerSheet {
-        LazyColumn(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-        ) {
-          items(
-            items = uiState.albumMenus,
-            key = { it.id }
-          ) { item ->
-            ModalDrawerAlbumItem(
-              title = item.title,
-              thumbnailUri = item.uri,
-              onClick = {
-                viewModel.selectAlbum(item.id)
-                coroutineScope.launch {
-                  if (drawerState.isClosed) drawerState.open() else drawerState.close()
-                }
-              }
-            )
-          }
-        }
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-            .padding(16.dp)
-            .clickable { showCreateAlbumDialog = true },
-        ) {
-          Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-          )
-          Text(text = stringResource(id = R.string.make_album))
+  ModalNavigationDrawer(modifier = Modifier.fillMaxSize(), drawerState = drawerState, drawerContent = {
+    ModalDrawerSheet {
+      LazyColumn(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 20.dp)
+      ) {
+        items(items = uiState.albumMenus, key = { it.id }) { item ->
+          ModalDrawerAlbumItem(title = item.title, thumbnailUri = item.uri, onClick = {
+            viewModel.selectAlbum(item.id)
+            coroutineScope.launch {
+              if (drawerState.isClosed) drawerState.open() else drawerState.close()
+            }
+          })
         }
       }
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+          .padding(16.dp)
+          .clickable { showCreateAlbumDialog = true },
+      ) {
+        Icon(
+          imageVector = Icons.Default.Add,
+          contentDescription = null,
+        )
+        Text(text = stringResource(id = R.string.make_album))
+      }
     }
-  ) {
-    AlbumContent(
-      modifier = Modifier.fillMaxSize(),
+  }) {
+    AlbumContent(modifier = Modifier.fillMaxSize(),
       currentAlbumData = uiState.currentAlbum,
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
@@ -135,8 +122,7 @@ fun AlbumScreen(
         coroutineScope.launch {
           if (drawerState.isClosed) drawerState.open() else drawerState.close()
         }
-      }
-    )
+      })
   }
   if (showCreateAlbumDialog) {
     CreateTitleDialog(
@@ -179,53 +165,31 @@ fun AlbumContent(
     delay(600)
     showTutorial = currentAlbumData.pictures.isEmpty()
   }
-  Scaffold(
-    modifier = modifier,
-    topBar = {
-      AlbumTopBar(
-        modifier = Modifier
-          .clickable(onClick = onEditTitle),
-        title = { Text(text = currentAlbumData.title) },
-        navigationIcon = {
-          IconButton(onClick = onClickDrawMenu) {
-            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
-          }
-        },
-        actions = {
-          IconButton(onClick = onEditTitle) {
-            Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-          }
-          IconButton(onClick = onDeleteAlbum) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-          }
+
+  Scaffold(modifier = modifier, topBar = {
+    AlbumTopBar(modifier = Modifier.clickable(onClick = onEditTitle),
+      title = { Text(text = currentAlbumData.title) },
+      navigationIcon = {
+        IconButton(onClick = onClickDrawMenu) {
+          Icon(imageVector = Icons.Default.Menu, contentDescription = null)
         }
-      )
-    },
-    floatingActionButton = {
-      FloatingActionButton(
-        modifier = Modifier
-          .padding(16.dp)
-          .wrapContentSize(Alignment.BottomEnd),
-        onClick = {
-          showTutorial = false
-          launchPicker()
+      },
+      actions = {
+        IconButton(onClick = onEditTitle) {
+          Icon(imageVector = Icons.Default.Edit, contentDescription = null)
         }
-      ) {
-        Icon(
-          imageVector = Icons.Default.Add,
-          contentDescription = null
-        )
-      }
-    },
-  ) { paddingValues ->
+        IconButton(onClick = onDeleteAlbum) {
+          Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+        }
+      })
+  }) { contentPadding ->
     Box(
       modifier = Modifier
+        .padding(contentPadding)
         .fillMaxSize()
-        .padding(paddingValues)
     ) {
       LazyVerticalStaggeredGrid(
-        state = scrollState,
-        columns = StaggeredGridCells.Fixed(2)
+        state = scrollState, columns = StaggeredGridCells.Fixed(2)
       ) {
         items(currentAlbumData.pictures) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
@@ -246,10 +210,7 @@ fun AlbumContent(
                   BorderStroke(width = 0.5.dp, color = Color.Gray)
                 )
                 .padding(
-                  start = 8.dp,
-                  top = 8.dp,
-                  end = 8.dp,
-                  bottom = 32.dp
+                  start = 8.dp, top = 8.dp, end = 8.dp, bottom = 32.dp
                 )
                 .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
             )
@@ -275,42 +236,42 @@ fun AlbumContent(
                   tint = MaterialTheme.colorScheme.onSurface
                 )
               }
-              DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-              ) {
-                DropdownMenuItem(
-                  text = { Text(stringResource(id = R.string.description_delete)) },
-                  onClick = {
-                    onRemovePicture(currentAlbumData.id, pictureData.id)
-                    expanded = false
-                  },
-                  leadingIcon = {
-                    Icon(
-                      imageVector = Icons.Default.Delete,
-                      contentDescription = null
-                    )
-                  }
-                )
+              DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
+                  onRemovePicture(currentAlbumData.id, pictureData.id)
+                  expanded = false
+                }, leadingIcon = {
+                  Icon(
+                    imageVector = Icons.Default.Delete, contentDescription = null
+                  )
+                })
               }
             }
           }
-          AnimatedVisibility(
-            modifier = Modifier.wrapContentSize(Alignment.BottomEnd),
-            visible = showTutorial,
-            enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-            exit = fadeOut(animationSpec = tween(durationMillis = 250))
-          )
-          {
-            Column(
-              modifier = Modifier.padding(16.dp),
-              horizontalAlignment = Alignment.End
-            ) {
-              Text(text = stringResource(R.string.tutorial))
-              Spacer(modifier = Modifier.size(64.dp))
-            }
-          }
         }
+      }
+      AnimatedVisibility(
+        modifier = Modifier.wrapContentSize(Alignment.BottomEnd),
+        visible = showTutorial,
+        enter = fadeIn(animationSpec = tween(durationMillis = 500)),
+        exit = fadeOut(animationSpec = tween(durationMillis = 250))
+      ) {
+        Column(
+          modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.End
+        ) {
+          Text(text = stringResource(R.string.tutorial))
+          Spacer(modifier = Modifier.size(64.dp))
+        }
+      }
+      FloatingActionButton(modifier = Modifier
+        .padding(16.dp)
+        .align(Alignment.BottomEnd), onClick = {
+        showTutorial = false
+        launchPicker()
+      }) {
+        Icon(
+          imageVector = Icons.Default.Add, contentDescription = null
+        )
       }
     }
   }
