@@ -78,10 +78,12 @@ class MainViewModel @Inject constructor(
   fun deleteAlbum(albumId: Int) {
     viewModelScope.launch {
       repository.deleteAlbum(albumId)
-      val firstAlbum = repository.albumsFlow.firstOrNull()
-      if (firstAlbum.isNullOrEmpty()) {
+      val firstAlbum = repository.albumsFlow.firstOrNull() ?: emptyList()
+      if (firstAlbum.isEmpty()) {
         createDefaultAlbum()
-      } else selectAlbum(firstAlbum.first().id)
+      } else {
+        selectAlbum(firstAlbum.first().id)
+      }
     }
   }
 }
