@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -68,6 +67,7 @@ import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 
 @Composable
 fun AlbumScreen(
@@ -81,6 +81,7 @@ fun AlbumScreen(
   var showCreateAlbumDialog by remember { mutableStateOf(false) }
   var showEditAlbumDialog by remember { mutableStateOf(false) }
   var showDeleteAlbumDialog by remember { mutableStateOf(false) }
+  val defaultAlbumMenu = uiState.albumMenus.getOrNull(0)
 
   ModalNavigationDrawer(modifier = Modifier.fillMaxSize(), drawerState = drawerState, drawerContent = {
     ModalDrawerSheet {
@@ -89,13 +90,17 @@ fun AlbumScreen(
           .fillMaxWidth()
           .padding(horizontal = 20.dp)
       ) {
-        items(items = uiState.albumMenus, key = { it.id }) { item ->
-          ModalDrawerAlbumItem(title = item.title, thumbnailUri = item.uri, onClick = {
-            viewModel.selectAlbum(item.id)
-            coroutineScope.launch {
-              if (drawerState.isClosed) drawerState.open() else drawerState.close()
-            }
-          })
+        items(items = uiState.albumMenus.mapNotNull { defaultAlbumMenu },key = { it.id })
+        { item ->
+          ModalDrawerAlbumItem(
+            title = item.title, thumbnailUri = item.uri,
+            onClick = {
+              viewModel.selectAlbum(item.id)
+              coroutineScope.launch {
+                if (drawerState.isClosed) drawerState.open() else drawerState.close()
+              }
+            },
+          )
         }
       }
       Row(
