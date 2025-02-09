@@ -43,8 +43,8 @@ class AlbumPreference @Inject constructor(
   }
 
   //カレントアルバムをFLOWで流す
-  val currentAlbumFlow: Flow<Int> = store.data.map { prefs ->
-    prefs[intPreferencesKey("current_album")] ?: 0
+  val currentAlbumFlow: Flow<Int?> = store.data.map { prefs ->
+    prefs[intPreferencesKey("current_album")]
   }
 
   // アルバムの新規作成保存

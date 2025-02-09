@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -81,6 +80,9 @@ fun AlbumScreen(
   var showCreateAlbumDialog by remember { mutableStateOf(false) }
   var showEditAlbumDialog by remember { mutableStateOf(false) }
   var showDeleteAlbumDialog by remember { mutableStateOf(false) }
+  val currentAlbumData = uiState.currentAlbum
+
+  if (currentAlbumData == null) return
 
   ModalNavigationDrawer(modifier = Modifier.fillMaxSize(), drawerState = drawerState, drawerContent = {
     ModalDrawerSheet {
@@ -113,7 +115,7 @@ fun AlbumScreen(
     }
   }) {
     AlbumContent(modifier = Modifier.fillMaxSize(),
-      currentAlbumData = uiState.currentAlbum,
+      currentAlbumData = currentAlbumData,
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
       launchPicker = launchPicker,
@@ -135,14 +137,14 @@ fun AlbumScreen(
     EditTitleDialog(
       onDismiss = { showEditAlbumDialog = false },
       updateTitle = viewModel::updateAlbumTitle,
-      currentAlbum = uiState.currentAlbum,
+      currentAlbum = currentAlbumData,
     )
   }
   if (showDeleteAlbumDialog) {
     DeleteAlbumDialog(
       onDismiss = { showDeleteAlbumDialog = false },
       onDeleteAlbum = viewModel::deleteAlbum,
-      currentAlbum = uiState.currentAlbum,
+      currentAlbum = currentAlbumData,
     )
   }
 }
