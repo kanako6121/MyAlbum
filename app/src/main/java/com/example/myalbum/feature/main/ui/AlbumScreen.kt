@@ -91,7 +91,7 @@ fun AlbumScreen(
           .fillMaxWidth()
           .padding(horizontal = 20.dp)
       ) {
-        items(items = uiState.albumMenus.mapNotNull { defaultAlbumMenu },key = { it.id })
+        items(items = uiState.albumMenus, key = { it.id })
         { item ->
           ModalDrawerAlbumItem(
             title = item.title, thumbnailUri = item.uri,
