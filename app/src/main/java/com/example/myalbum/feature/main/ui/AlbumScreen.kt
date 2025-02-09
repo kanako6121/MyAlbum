@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -81,6 +80,9 @@ fun AlbumScreen(
   var showCreateAlbumDialog by remember { mutableStateOf(false) }
   var showEditAlbumDialog by remember { mutableStateOf(false) }
   var showDeleteAlbumDialog by remember { mutableStateOf(false) }
+  val currentAlbum = uiState.currentAlbum
+
+  if(currentAlbum == null) return
 
   ModalNavigationDrawer(modifier = Modifier.fillMaxSize(), drawerState = drawerState, drawerContent = {
     ModalDrawerSheet {
@@ -89,13 +91,17 @@ fun AlbumScreen(
           .fillMaxWidth()
           .padding(horizontal = 20.dp)
       ) {
-        items(items = uiState.albumMenus, key = { it.id }) { item ->
-          ModalDrawerAlbumItem(title = item.title, thumbnailUri = item.uri, onClick = {
-            viewModel.selectAlbum(item.id)
-            coroutineScope.launch {
-              if (drawerState.isClosed) drawerState.open() else drawerState.close()
-            }
-          })
+        items(items = uiState.albumMenus, key = { it.id })
+        { item ->
+          ModalDrawerAlbumItem(
+            title = item.title, thumbnailUri = item.uri,
+            onClick = {
+              viewModel.selectAlbum(item.id)
+              coroutineScope.launch {
+                if (drawerState.isClosed) drawerState.open() else drawerState.close()
+              }
+            },
+          )
         }
       }
       Row(
@@ -113,7 +119,7 @@ fun AlbumScreen(
     }
   }) {
     AlbumContent(modifier = Modifier.fillMaxSize(),
-      currentAlbumData = uiState.currentAlbum,
+      currentAlbumData = currentAlbum,
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
       launchPicker = launchPicker,
@@ -135,14 +141,14 @@ fun AlbumScreen(
     EditTitleDialog(
       onDismiss = { showEditAlbumDialog = false },
       updateTitle = viewModel::updateAlbumTitle,
-      currentAlbum = uiState.currentAlbum,
+      currentAlbum = currentAlbum
     )
   }
   if (showDeleteAlbumDialog) {
     DeleteAlbumDialog(
       onDismiss = { showDeleteAlbumDialog = false },
       onDeleteAlbum = viewModel::deleteAlbum,
-      currentAlbum = uiState.currentAlbum,
+      currentAlbum = currentAlbum,
     )
   }
 }
