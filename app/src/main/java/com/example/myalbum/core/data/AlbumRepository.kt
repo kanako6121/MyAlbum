@@ -15,7 +15,7 @@ class AlbumRepository @Inject constructor(
 ) {
   val albumsFlow: Flow<List<AlbumData>> = preference.albumMap.map { it.values.toList() }
 
-  val currentAlbumIdFlow: Flow<Int> = preference.currentAlbumFlow
+  val currentAlbumIdFlow: Flow<Int?> = preference.currentAlbumFlow
 
   suspend fun createAlbum(title: String) = withContext(Dispatchers.IO) {
     preference.createAlbum(title)

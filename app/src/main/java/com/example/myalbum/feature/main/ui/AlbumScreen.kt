@@ -67,7 +67,6 @@ import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 
 @Composable
 fun AlbumScreen(
@@ -81,7 +80,9 @@ fun AlbumScreen(
   var showCreateAlbumDialog by remember { mutableStateOf(false) }
   var showEditAlbumDialog by remember { mutableStateOf(false) }
   var showDeleteAlbumDialog by remember { mutableStateOf(false) }
-  val defaultAlbumMenu = uiState.albumMenus.getOrNull(0)
+  val currentAlbum = uiState.currentAlbum
+
+  if(currentAlbum == null) return
 
   ModalNavigationDrawer(modifier = Modifier.fillMaxSize(), drawerState = drawerState, drawerContent = {
     ModalDrawerSheet {
@@ -118,7 +119,7 @@ fun AlbumScreen(
     }
   }) {
     AlbumContent(modifier = Modifier.fillMaxSize(),
-      currentAlbumData = uiState.currentAlbum,
+      currentAlbumData = currentAlbum,
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
       launchPicker = launchPicker,
@@ -140,14 +141,14 @@ fun AlbumScreen(
     EditTitleDialog(
       onDismiss = { showEditAlbumDialog = false },
       updateTitle = viewModel::updateAlbumTitle,
-      currentAlbum = uiState.currentAlbum,
+      currentAlbum = currentAlbum
     )
   }
   if (showDeleteAlbumDialog) {
     DeleteAlbumDialog(
       onDismiss = { showDeleteAlbumDialog = false },
       onDeleteAlbum = viewModel::deleteAlbum,
-      currentAlbum = uiState.currentAlbum,
+      currentAlbum = currentAlbum,
     )
   }
 }
