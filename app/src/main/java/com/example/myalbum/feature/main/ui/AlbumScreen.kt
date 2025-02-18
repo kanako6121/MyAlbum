@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -57,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -195,47 +197,33 @@ fun AlbumContent(
         .fillMaxSize()
     ) {
       LazyVerticalStaggeredGrid(
+        modifier = modifier.padding(4.dp),
         state = scrollState, columns = StaggeredGridCells.Fixed(2)
       ) {
         items(currentAlbumData.pictures) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
-          Box(
-            modifier = Modifier.padding(
-              top = 8.dp,
-              bottom = 8.dp,
-              end = 8.dp,
-            )
+          Column(
+            modifier = Modifier
+              .padding(4.dp)
+              .shadow(elevation = 4.dp)
+              .background(Color.White)
+              .border(BorderStroke(width = 0.5.dp, color = Color.Gray))
           ) {
             AsyncImage(
               model = pictureData.uri,
               contentDescription = null,
-              modifier = Modifier
-                .shadow(elevation = 4.dp)
-                .background(Color.White)
-                .border(
-                  BorderStroke(width = 0.5.dp, color = Color.Gray)
-                )
-                .padding(
-                  start = 8.dp, top = 8.dp, end = 8.dp, bottom = 32.dp
-                )
+              modifier = Modifier.padding(start = 8.dp,end = 8.dp,top = 8.dp)
+                .fillMaxWidth()
                 .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
             )
-            Box(
-              modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(start = 24.dp, bottom = 4.dp)
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              verticalAlignment = Alignment.CenterVertically
             ) {
-              Text(
-                text = pictureData.comment.orEmpty()
-              )
-            }
-            Box(
-              modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.BottomStart)
-                .padding(start = 0.dp, bottom = 4.dp)
-            ) {
-              IconButton(onClick = { expanded = true }) {
+              IconButton(
+                modifier = Modifier.width(24.dp),
+                onClick = { expanded = true }
+              ) {
                 Icon(
                   imageVector = Icons.Default.MoreVert,
                   contentDescription = "",
@@ -250,6 +238,11 @@ fun AlbumContent(
                   Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                 })
               }
+              Text(
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                text = pictureData.comment.orEmpty()
+              )
             }
           }
         }
