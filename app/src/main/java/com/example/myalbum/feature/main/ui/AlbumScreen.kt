@@ -236,42 +236,41 @@ fun AlbumContent(
                     )
                 }
           ) {
-              AsyncImage(
-                model = pictureData.uri,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                    .fillMaxWidth()
-                    .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
-              )
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+            AsyncImage(
+              model = pictureData.uri,
+              contentDescription = null,
+              modifier = Modifier
+                  .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                  .fillMaxWidth()
+                  .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
+            )
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              IconButton(
+                modifier = Modifier.width(24.dp),
+                onClick = { expanded = true }
               ) {
-                IconButton(
-                  modifier = Modifier.width(24.dp),
-                  onClick = { expanded = true }
-                ) {
-                  Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onSurface
-                  )
-                }
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                  DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
-                    onRemovePicture(currentAlbumData.id, pictureData.id)
-                    expanded = false
-                  }, leadingIcon = {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                  })
-                }
-                Text(
-                  maxLines = 1,
-                  overflow = TextOverflow.Ellipsis,
-                  text = pictureData.comment.orEmpty()
+                Icon(
+                  imageVector = Icons.Default.MoreVert,
+                  contentDescription = "",
+                  tint = MaterialTheme.colorScheme.onSurface
                 )
               }
+              DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
+                  onRemovePicture(currentAlbumData.id, pictureData.id)
+                  expanded = false
+                }, leadingIcon = {
+                  Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                })
+              }
+              Text(
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                text = pictureData.comment.orEmpty()
+              )
             }
           }
         }
