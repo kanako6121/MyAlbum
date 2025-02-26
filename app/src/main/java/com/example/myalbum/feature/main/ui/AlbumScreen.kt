@@ -1,14 +1,19 @@
 package com.example.myalbum.feature.main.ui
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -58,8 +63,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,6 +80,7 @@ import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 @Composable
 fun AlbumScreen(
@@ -93,8 +102,8 @@ fun AlbumScreen(
     ModalDrawerSheet {
       LazyColumn(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+          .fillMaxWidth()
+          .padding(horizontal = 20.dp)
       ) {
         items(items = uiState.albumMenus, key = { it.id })
         { item ->
@@ -112,8 +121,8 @@ fun AlbumScreen(
       Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(16.dp)
-            .clickable { showCreateAlbumDialog = true },
+          .padding(16.dp)
+          .clickable { showCreateAlbumDialog = true },
       ) {
         Icon(
           imageVector = Icons.Default.Add,
@@ -158,6 +167,7 @@ fun AlbumScreen(
   }
 }
 
+
 @Composable
 fun AlbumContent(
   modifier: Modifier = Modifier,
@@ -168,12 +178,18 @@ fun AlbumContent(
   launchPicker: () -> Unit,
   onNavigateEditScreen: (Int, PictureData) -> Unit,
   onRemovePicture: (Int, Int) -> Unit,
+  list: PictureData,
+  enableDebug: Boolean = false,
+  itemContent: @Composable (index: Int, item: Any, dragging: Boolean, dragOffset: Offset) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
   val draggedItem = remember { mutableStateOf<PictureData?>(null) }
+  var dragTargetIndex by remember { mutableStateOf<Int?>(null) }
+  val dragStartPosition = remember { mutableStateOf(Offset(0f, 0f)) }
+  val drag = 5.dp
   val items = remember { mutableStateListOf<PictureData>() }
-
+  
   LaunchedEffect(currentAlbumData.pictures) {
     items.clear()
     items.addAll(currentAlbumData.pictures)
@@ -203,8 +219,8 @@ fun AlbumContent(
   }) { contentPadding ->
     Box(
       modifier = Modifier
-          .padding(contentPadding)
-          .fillMaxSize()
+        .padding(contentPadding)
+        .fillMaxSize()
     ) {
       LazyVerticalStaggeredGrid(
         modifier = modifier.padding(4.dp),
@@ -212,37 +228,53 @@ fun AlbumContent(
       ) {
         items(items, key = { it.id }) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
+          val drag = with(LocalDensity.current) { drag.toPx() }
           Column(
             modifier = Modifier
-                .padding(4.dp)
-                .shadow(elevation = 4.dp)
-                .background(Color.White)
-                .border(BorderStroke(width = 0.5.dp, color = Color.Gray))
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = { draggedItem.value = pictureData },
-                        onDragEnd = { draggedItem.value = null },
-                        onDragCancel = { draggedItem.value = null },
-                        onDrag = { change, dragAmount ->
-                            change.consume()
-                            val currentIndex = items.indexOf(draggedItem.value)
-                            val targetIndex = currentIndex + (if (dragAmount.y > 0) 1 else -1)
-                            if (currentIndex in items.indices && targetIndex in items.indices) {
-                                items[currentIndex] = items[targetIndex].also {
-                                    items[targetIndex] = items[currentIndex]
-                                }
-                            }
+              .padding(4.dp)
+              .shadow(elevation = 4.dp)
+              .background(Color.White)
+              .border(BorderStroke(width = 0.5.dp, color = Color.Gray))
+              .pointerInput(Unit) {
+                detectTapGestures(
+                  onLongPress = { offset ->
+                    dragStartPosition.value = offset
+                    draggedItem.value = pictureData
+                  }
+                )
+                detectDragGestures(
+                  onDragStart = {
+                    val itemDragging =
+                      lazyGridState.layoutInfo.visibleItemsInfo.find { info ->
+                        val rect = Rect(info.offset.toOffset(), info.size.toSize())
+                        rect.contains(offset)
+                      }
+                    draggingIndex = itemDragging?.index ?: -1
+                  },
+                  onDragEnd = { draggedItem.value = null },
+                  onDragCancel = { draggedItem.value = null },
+                  onDrag = { change, dragAmount ->
+                    change.consume()
+                    if (draggedItem.value != null) {
+                      val currentIndex = items.indexOf(draggedItem.value)
+                      val targetIndex = currentIndex + (if (dragAmount.y > 0) 1 else -1)
+                      if (currentIndex in items.indices && targetIndex in items.indices) {
+                        items[currentIndex] = items[targetIndex].also {
+                          items[targetIndex] = items[currentIndex]
                         }
-                    )
-                }
+                      }
+                    }
+                  }
+                )
+              }
           ) {
             AsyncImage(
               model = pictureData.uri,
               contentDescription = null,
               modifier = Modifier
-                  .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                  .fillMaxWidth()
-                  .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                .fillMaxWidth()
+                .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
             )
             Row(
               modifier = Modifier.fillMaxWidth(),
@@ -289,8 +321,8 @@ fun AlbumContent(
         }
       }
       FloatingActionButton(modifier = Modifier
-          .padding(16.dp)
-          .align(Alignment.BottomEnd), onClick = {
+        .padding(16.dp)
+        .align(Alignment.BottomEnd), onClick = {
         showTutorial = false
         launchPicker()
       }) {
