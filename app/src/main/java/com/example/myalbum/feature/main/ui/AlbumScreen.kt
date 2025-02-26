@@ -1,19 +1,15 @@
 package com.example.myalbum.feature.main.ui
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -72,6 +69,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toOffset
+import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -80,7 +79,6 @@ import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 @Composable
 fun AlbumScreen(
@@ -132,18 +130,22 @@ fun AlbumScreen(
       }
     }
   }) {
-    AlbumContent(modifier = Modifier.fillMaxSize(),
+    AlbumContent(
+      modifier = Modifier.fillMaxSize(),
       currentAlbumData = currentAlbum,
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
       launchPicker = launchPicker,
       onNavigateEditScreen = navigateEditScreen,
       onRemovePicture = viewModel::onRemovePhoto,
-      onClickDrawMenu = {
-        coroutineScope.launch {
-          if (drawerState.isClosed) drawerState.open() else drawerState.close()
-        }
-      })
+      list = currentAlbum.pictures,
+      itemContent = { _, item, _, _ ->
+        AsyncImage(
+          model = item.uri,
+          contentDescription = null,
+        )
+      },
+    )
   }
   if (showCreateAlbumDialog) {
     CreateTitleDialog(
@@ -172,15 +174,16 @@ fun AlbumScreen(
 fun AlbumContent(
   modifier: Modifier = Modifier,
   currentAlbumData: AlbumData,
-  onClickDrawMenu: () -> Unit,
   onEditTitle: () -> Unit,
   onDeleteAlbum: () -> Unit,
   launchPicker: () -> Unit,
   onNavigateEditScreen: (Int, PictureData) -> Unit,
   onRemovePicture: (Int, Int) -> Unit,
-  list: PictureData,
+  list: List<PictureData>,
+  onClickDrawMenu: () -> Unit = {},
+  onListChanged: (List<PictureData>) -> Unit = {},
   enableDebug: Boolean = false,
-  itemContent: @Composable (index: Int, item: Any, dragging: Boolean, dragOffset: Offset) -> Unit,
+  itemContent: @Composable (index: Int, item: PictureData, dragging: Boolean, dragOffset: Offset) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
@@ -189,7 +192,10 @@ fun AlbumContent(
   val dragStartPosition = remember { mutableStateOf(Offset(0f, 0f)) }
   val drag = 5.dp
   val items = remember { mutableStateListOf<PictureData>() }
-  
+  val draggableleGridState = rememberDraggableGridState(list, onListChanged)
+  var draggingIndex by remember { mutableStateOf(-1) }
+  var dragOffset: Offset by remember { mutableStateOf(Offset.Zero) }
+
   LaunchedEffect(currentAlbumData.pictures) {
     items.clear()
     items.addAll(currentAlbumData.pictures)
@@ -245,9 +251,9 @@ fun AlbumContent(
                 detectDragGestures(
                   onDragStart = {
                     val itemDragging =
-                      lazyGridState.layoutInfo.visibleItemsInfo.find { info ->
+                      draggableleGridState.lazyGridState.layoutInfo.visibleItemsInfo.find { info ->
                         val rect = Rect(info.offset.toOffset(), info.size.toSize())
-                        rect.contains(offset)
+                        rect.contains(dragStartPosition.value)
                       }
                     draggingIndex = itemDragging?.index ?: -1
                   },
@@ -354,6 +360,21 @@ fun AlbumTopBar(
   )
 }
 
+@Composable
+fun rememberDraggableGridState(
+  list: List<PictureData>,
+  onListChanged: (List<PictureData>) -> Unit,
+): DraggableGridState {
+  val lazyGridState = rememberLazyGridState()
+  return remember {
+    DraggableGridState(
+      list = list,
+      lazyGridState = lazyGridState,
+      onListChanged = onListChanged,
+    )
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
@@ -365,5 +386,8 @@ fun ShowPhotoGrid() {
     onEditTitle = {},
     onDeleteAlbum = {},
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
+    list = emptyList(),
+    onListChanged = {},
+    itemContent = { _, _, _, _ -> }
   )
 }

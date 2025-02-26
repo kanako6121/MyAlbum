@@ -14,9 +14,9 @@ import com.example.myalbum.core.data.PictureData
 
 @Stable
 class DraggableGridState(
-  list: PictureData,
+  list: List<PictureData>,
   val lazyGridState: LazyGridState,
-  private val onListChanged: (PictureData) -> Unit = {},
+  private val onListChanged: (List<PictureData>) -> Unit = {},
 ) {
 
   var draggingIndex: Int by mutableStateOf(-1)
@@ -27,21 +27,6 @@ class DraggableGridState(
   private fun findItemInfo(index: Int): LazyGridItemInfo? {
     return lazyGridState.layoutInfo.visibleItemsInfo.find { info ->
       info.index == index
-    }
-  }
-
-  @Composable
-  fun rememberDraggableGridState(
-    list: PictureData,
-    onListChanged: (PictureData) -> Unit,
-  ): DraggableGridState {
-    val lazyGridState = rememberLazyGridState()
-    return remember {
-      DraggableGridState(
-        list = list,
-        lazyGridState = lazyGridState,
-        onListChanged = onListChanged,
-      )
     }
   }
 }
