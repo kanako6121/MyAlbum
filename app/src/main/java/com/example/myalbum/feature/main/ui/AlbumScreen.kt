@@ -224,7 +224,7 @@ fun AlbumContent(
                         onDragEnd = { draggedItem.value = null },
                         onDragCancel = { draggedItem.value = null },
                         onDrag = { change, dragAmount ->
-                            change.consume() // イベントを消費
+                            change.consume()
                             val currentIndex = items.indexOf(draggedItem.value)
                             val targetIndex = currentIndex + (if (dragAmount.y > 0) 1 else -1)
                             if (currentIndex in items.indices && targetIndex in items.indices) {
