@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -63,6 +64,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -136,13 +138,12 @@ fun AlbumScreen(
       launchPicker = launchPicker,
       onNavigateEditScreen = navigateEditScreen,
       onRemovePicture = viewModel::onRemovePhoto,
-      list = currentAlbum.pictures,
-      itemContent = { _, item, _, _ ->
-        AsyncImage(
-          model = item.uri,
-          contentDescription = null,
-        )
+      onClickDrawMenu = {
+        coroutineScope.launch {
+          if (drawerState.isClosed) drawerState.open() else drawerState.close()
+        }
       },
+      onListChanged = { },
     )
   }
   if (showCreateAlbumDialog) {
@@ -171,30 +172,16 @@ fun AlbumScreen(
 fun AlbumContent(
   modifier: Modifier = Modifier,
   currentAlbumData: AlbumData,
+  onClickDrawMenu: () -> Unit,
   onEditTitle: () -> Unit,
   onDeleteAlbum: () -> Unit,
   launchPicker: () -> Unit,
   onNavigateEditScreen: (Int, PictureData) -> Unit,
   onRemovePicture: (Int, Int) -> Unit,
-  list: List<PictureData>,
-  onClickDrawMenu: () -> Unit = {},
   onListChanged: (List<PictureData>) -> Unit = {},
-  enableDebug: Boolean = false,
-  itemContent: @Composable (index: Int, item: PictureData, dragging: Boolean, dragOffset: Offset) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
-  val draggedItem = remember { mutableStateOf<PictureData?>(null) }
-  val dragStartPosition = remember { mutableStateOf(Offset(0f, 0f)) }
-  val items = remember { mutableStateListOf<PictureData>() }
-  val draggableleGridState = rememberDraggableGridState(list, onListChanged)
-  var draggingIndex by remember { mutableStateOf(-1) }
-  var dragOffset: Offset by remember { mutableStateOf(Offset.Zero) }
-
-  LaunchedEffect(currentAlbumData.pictures) {
-    items.clear()
-    items.addAll(currentAlbumData.pictures)
-  }
 
   LaunchedEffect(currentAlbumData) {
     delay(600)
@@ -202,7 +189,8 @@ fun AlbumContent(
   }
 
   Scaffold(modifier = modifier, topBar = {
-    AlbumTopBar(modifier = Modifier.clickable(onClick = onEditTitle),
+    AlbumTopBar(
+      modifier = Modifier.clickable(onClick = onEditTitle),
       title = { Text(text = currentAlbumData.title) },
       navigationIcon = {
         IconButton(onClick = onClickDrawMenu) {
@@ -216,100 +204,28 @@ fun AlbumContent(
         IconButton(onClick = onDeleteAlbum) {
           Icon(imageVector = Icons.Default.Delete, contentDescription = null)
         }
-      })
+      }
+    )
   }) { contentPadding ->
     Box(
       modifier = Modifier
         .padding(contentPadding)
         .fillMaxSize()
     ) {
-      DraggableGrid(
-        list = items,
-        onListChanged = onListChanged,
-        enableDebug = enableDebug,
-        itemContent = itemContent,
       LazyVerticalStaggeredGrid(
-        modifier = modifier.padding(4.dp),
-        state = scrollState, columns = StaggeredGridCells.Fixed(2)
+        modifier = Modifier.padding(4.dp),
+        state = scrollState,
+        columns = StaggeredGridCells.Fixed(2)
       ) {
-        items(items, key = { it.id }) { pictureData ->
-          var expanded by remember { mutableStateOf(false) }
-          Column(
-            modifier = Modifier
-              .padding(4.dp)
-              .shadow(elevation = 4.dp)
-              .background(Color.White)
-              .border(BorderStroke(width = 0.5.dp, color = Color.Gray))
-              .pointerInput(Unit) {
-                detectTapGestures(
-                  onLongPress = { offset ->
-                    dragStartPosition.value = offset
-                    draggedItem.value = pictureData
-                  }
-                )
-                detectDragGestures(
-                  onDragStart = {
-                    val itemDragging =
-                      draggableleGridState.lazyGridState.layoutInfo.visibleItemsInfo.find { info ->
-                        val rect = Rect(info.offset.toOffset(), info.size.toSize())
-                        rect.contains(dragStartPosition.value)
-                      }
-                    draggingIndex = itemDragging?.index ?: -1
-                  },
-                  onDragEnd = { draggedItem.value = null },
-                  onDragCancel = { draggedItem.value = null },
-                  onDrag = { change, dragAmount ->
-                    change.consume()
-                    if (draggedItem.value != null) {
-                      val currentIndex = items.indexOf(draggedItem.value)
-                      val targetIndex = currentIndex + (if (dragAmount.y > 0) 1 else -1)
-                      if (currentIndex in items.indices && targetIndex in items.indices) {
-                        items[currentIndex] = items[targetIndex].also {
-                          items[targetIndex] = items[currentIndex]
-                        }
-                      }
-                    }
-                  }
-                )
-              }
-          ) {
-            AsyncImage(
-              model = pictureData.uri,
-              contentDescription = null,
-              modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                .fillMaxWidth()
-                .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
-            )
-            Row(
-              modifier = Modifier.fillMaxWidth(),
-              verticalAlignment = Alignment.CenterVertically
-            ) {
-              IconButton(
-                modifier = Modifier.width(24.dp),
-                onClick = { expanded = true }
-              ) {
-                Icon(
-                  imageVector = Icons.Default.MoreVert,
-                  contentDescription = "",
-                  tint = MaterialTheme.colorScheme.onSurface
-                )
-              }
-              DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
-                  onRemovePicture(currentAlbumData.id, pictureData.id)
-                  expanded = false
-                }, leadingIcon = {
-                  Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                })
-              }
-              Text(
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                text = pictureData.comment.orEmpty()
-              )
-            }
-          }
+        items(currentAlbumData.pictures) { pictureData ->
+          GridItem(
+            pictureData = pictureData,
+            onNavigateEditScreen = onNavigateEditScreen,
+            onRemovePicture = onRemovePicture,
+            currentAlbumId = currentAlbumData.id,
+            modifier = Modifier.fillMaxWidth(),
+            index = currentAlbumData.pictures.indexOf(pictureData),
+          )
         }
       }
       AnimatedVisibility(
@@ -325,12 +241,15 @@ fun AlbumContent(
           Spacer(modifier = Modifier.size(64.dp))
         }
       }
-      FloatingActionButton(modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.BottomEnd), onClick = {
-        showTutorial = false
-        launchPicker()
-      }) {
+      FloatingActionButton(
+        modifier = Modifier
+          .padding(16.dp)
+          .align(Alignment.BottomEnd),
+        onClick = {
+          showTutorial = false
+          launchPicker()
+        }
+      ) {
         Icon(
           imageVector = Icons.Default.Add, contentDescription = null
         )
@@ -359,6 +278,52 @@ fun AlbumTopBar(
   )
 }
 
+@Composable
+private fun GridItem(
+  pictureData: PictureData,
+  modifier: Modifier,
+  index: Int = 0,
+  onClickItem: (item: PictureData) -> Unit = {},
+  isDragging: Boolean = false,
+  dragOffset: Offset = Offset.Zero,
+  onRemovePicture: (Int, Int) -> Unit,
+  onNavigateEditScreen: (Int, PictureData) -> Unit,
+  currentAlbumId: Int,
+) {
+  var expanded by remember { mutableStateOf(false) }
+  Box(
+    modifier = modifier
+      .padding(8.dp),
+  ) {
+    if (!isDragging) {
+      Column {
+        AsyncImage(
+          model = pictureData.uri,
+          contentDescription = null,
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClickItem(pictureData) }
+        )
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          IconButton(
+            modifier = Modifier.width(24.dp),
+            onClick = { expanded = true }
+          ) {
+            Icon(
+              imageVector = Icons.Default.MoreVert,
+              contentDescription = "",
+              tint = MaterialTheme.colorScheme.onSurface
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ShowPhotoGrid() {
@@ -370,8 +335,6 @@ fun ShowPhotoGrid() {
     onEditTitle = {},
     onDeleteAlbum = {},
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
-    list = emptyList(),
     onListChanged = {},
-    itemContent = { _, _, _, _ -> }
   )
 }

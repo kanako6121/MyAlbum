@@ -169,7 +169,7 @@ fun DraggableGrid(
                     }
                 itemContent(
                     index,
-                    listOf(item),
+                    item,
                     (draggableGridState.draggingIndex == index),
                     offset,
                 )
