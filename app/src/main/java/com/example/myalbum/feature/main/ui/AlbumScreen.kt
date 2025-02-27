@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -64,7 +63,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -187,9 +185,7 @@ fun AlbumContent(
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
   val draggedItem = remember { mutableStateOf<PictureData?>(null) }
-  var dragTargetIndex by remember { mutableStateOf<Int?>(null) }
   val dragStartPosition = remember { mutableStateOf(Offset(0f, 0f)) }
-  val drag = 5.dp
   val items = remember { mutableStateListOf<PictureData>() }
   val draggableleGridState = rememberDraggableGridState(list, onListChanged)
   var draggingIndex by remember { mutableStateOf(-1) }
@@ -227,13 +223,17 @@ fun AlbumContent(
         .padding(contentPadding)
         .fillMaxSize()
     ) {
+      DraggableGrid(
+        list = items,
+        onListChanged = onListChanged,
+        enableDebug = enableDebug,
+        itemContent = itemContent,
       LazyVerticalStaggeredGrid(
         modifier = modifier.padding(4.dp),
         state = scrollState, columns = StaggeredGridCells.Fixed(2)
       ) {
         items(items, key = { it.id }) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
-          val drag = with(LocalDensity.current) { drag.toPx() }
           Column(
             modifier = Modifier
               .padding(4.dp)
@@ -357,21 +357,6 @@ fun AlbumTopBar(
       titleContentColor = MaterialTheme.colorScheme.primary,
     )
   )
-}
-
-@Composable
-fun rememberDraggableGridState(
-  list: List<Any>,
-  onListChanged: (List<PictureData>) -> Unit,
-): DraggableGridState {
-  val lazyGridState = rememberLazyGridState()
-  return remember {
-    DraggableGridState(
-      list = list,
-      lazyGridState = lazyGridState,
-      onListChanged = onListChanged,
-    )
-  }
 }
 
 @Preview(showBackground = true)
