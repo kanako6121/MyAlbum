@@ -169,7 +169,6 @@ fun AlbumScreen(
   }
 }
 
-
 @Composable
 fun AlbumContent(
   modifier: Modifier = Modifier,
@@ -362,7 +361,7 @@ fun AlbumTopBar(
 
 @Composable
 fun rememberDraggableGridState(
-  list: List<PictureData>,
+  list: List<Any>,
   onListChanged: (List<PictureData>) -> Unit,
 ): DraggableGridState {
   val lazyGridState = rememberLazyGridState()

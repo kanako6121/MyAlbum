@@ -54,7 +54,8 @@ android {
 }
 
 dependencies {
-  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+  implementation("com.google.firebase:protolite-well-known-types:18.0.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
   implementation("androidx.core:core-ktx:1.15.0")
