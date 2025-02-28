@@ -4,12 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,8 +31,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,25 +46,18 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toOffset
-import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -291,8 +278,10 @@ private fun GridItem(
   currentAlbumId: Int,
 ) {
   var expanded by remember { mutableStateOf(false) }
+  val enableItemContent = true
   Box(
     modifier = modifier
+      .background(if (isDragging) Color.Green else Color.Transparent)
       .padding(8.dp),
   ) {
     if (!isDragging) {
@@ -321,6 +310,29 @@ private fun GridItem(
         }
       }
     }
+    else {
+      DraggingItem(pictureData.uri.toString(), dragOffset)
+    }
+  }
+}
+
+@Composable
+private fun DraggingItem(
+  item: String,
+  dragOffset: Offset = Offset.Zero,
+) {
+  val density = LocalDensity.current
+  val offsetX = with(density) { dragOffset.x.toDp() }
+  val offsetY = with(density) { dragOffset.y.toDp() }
+  Box(
+    modifier =
+    Modifier
+      .size(56.dp)
+      .offset(x = offsetX, y = offsetY)
+      .background(Color.Gray),
+    contentAlignment = Alignment.Center,
+  ) {
+    Text(item)
   }
 }
 

@@ -158,6 +158,8 @@ fun DraggableGrid(
                     )
                 },
             columns = StaggeredGridCells.Fixed(2),
+            state = draggableGridState.lazyGridState,
+            userScrollEnabled = false,
         ) {
             itemsIndexed(draggableGridState.tempList) { index, item ->
                 val dragging = draggableGridState.draggingIndex == index
@@ -177,6 +179,7 @@ fun DraggableGrid(
         }
         if (enableDebug) DebugInfo(draggableGridState)
     }
+    if(enableDebug) DebugOverlay(draggableGridState)
 }
 
 class MovableList<T>(private val list: MutableList<T>) : MutableList<T> by list {
