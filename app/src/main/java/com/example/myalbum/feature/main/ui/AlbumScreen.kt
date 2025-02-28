@@ -5,14 +5,17 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -56,7 +59,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -136,13 +138,7 @@ fun AlbumScreen(
           if (drawerState.isClosed) drawerState.open() else drawerState.close()
         }
       },
-      onListChanged = { },
-      pictureData = ,
-      index = 0,
-      onClickItem = {},
-      isDragging = false,
-      dragOffset = Offset.Zero,
-      currentAlbumId = currentAlbum.id,
+      onListChanged = viewModel::updatePicture,
     )
   }
   if (showCreateAlbumDialog) {
@@ -175,18 +171,15 @@ fun AlbumContent(
   onEditTitle: () -> Unit,
   onDeleteAlbum: () -> Unit,
   launchPicker: () -> Unit,
-  onListChanged: (List<PictureData>) -> Unit = {},
-  pictureData: PictureData,
-  index: Int = 0,
-  onClickItem: (pictureData: PictureData) -> Unit = {},
-  isDragging: Boolean = false,
-  dragOffset: Offset = Offset.Zero,
-  onRemovePicture: (Int, Int) -> Unit,
   onNavigateEditScreen: (Int, PictureData) -> Unit,
-  currentAlbumId: Int,
+  onRemovePicture: (Int, Int) -> Unit,
+  onListChanged: (List<PictureData>) -> Unit = {},
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
+  var isDragging by remember { mutableStateOf(false) }
+  var dragOffset by remember { mutableStateOf(Offset.Zero) }
+  var draggingItem by remember { mutableStateOf<PictureData?>(null) }
 
   LaunchedEffect(currentAlbumData) {
     delay(600)
@@ -218,89 +211,89 @@ fun AlbumContent(
         .fillMaxSize()
     ) {
       LazyVerticalStaggeredGrid(
-        modifier = Modifier.padding(4.dp),
+        modifier = Modifier,
+        columns = StaggeredGridCells.Fixed(2),
         state = scrollState,
-        columns = StaggeredGridCells.Fixed(2)
-      ) {
+        userScrollEnabled = false,
+      )
+      {
         items(currentAlbumData.pictures) { pictureData ->
           var expanded by remember { mutableStateOf(false) }
-          if (!isDragging)
-            Column(
-              modifier = Modifier
-                .padding(4.dp)
-                .shadow(elevation = 4.dp)
-                .background(Color.White)
-                .border(BorderStroke(width = 0.5.dp, color = Color.Gray))
-            ) {
-              AsyncImage(
-                model = pictureData.uri,
-                contentDescription = null,
-                modifier = Modifier
-                  .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                  .fillMaxWidth()
-                  .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
-              )
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-              ) {
-                IconButton(
-                  modifier = Modifier.width(24.dp),
-                  onClick = { expanded = true }
+          if (!isDragging) {
+            DraggableGrid(
+              list = currentAlbumData.pictures,
+              onListChanged = onListChanged,
+              enableDebug = false,
+              itemContent = { index, item, dragging, dragOffset ->
+                AsyncImage(
+                  model = item.uri,
+                  contentDescription = null,
+                  modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                    .fillMaxWidth()
+                    .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
+                )
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  verticalAlignment = Alignment.CenterVertically
                 ) {
-                  Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onSurface
+                  IconButton(
+                    modifier = Modifier.width(24.dp),
+                    onClick = { expanded = true }
+                  ) {
+                    Icon(
+                      imageVector = Icons.Default.MoreVert,
+                      contentDescription = "",
+                      tint = MaterialTheme.colorScheme.onSurface
+                    )
+                  }
+                  DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
+                      onRemovePicture(currentAlbumData.id, pictureData.id)
+                      expanded = false
+                    }, leadingIcon = {
+                      Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                    })
+                  }
+                  Text(
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    text = pictureData.comment.orEmpty()
                   )
                 }
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                  DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
-                    onRemovePicture(currentAlbumData.id, pictureData.id)
-                    expanded = false
-                  }, leadingIcon = {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                  })
-                }
-                Text(
-                  maxLines = 1,
-                  overflow = TextOverflow.Ellipsis,
-                  text = pictureData.comment.orEmpty()
-                )
               }
-            }
-          else {
+            )
+          } else {
             DraggingItem(pictureData.uri.toString(), dragOffset)
           }
+          AnimatedVisibility(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            visible = showTutorial,
+            enter = fadeIn(animationSpec = tween(durationMillis = 500)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 250))
+          ) {
+            Column(
+              modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.End
+            ) {
+              Text(text = stringResource(R.string.tutorial))
+              Spacer(modifier = Modifier.size(64.dp))
+            }
+          }
+          FloatingActionButton(modifier = Modifier
+            .padding(16.dp)
+            .align(Alignment.BottomEnd), onClick = {
+            showTutorial = false
+            launchPicker()
+          }) {
+            Icon(
+              imageVector = Icons.Default.Add, contentDescription = null
+            )
+          }
         }
-      }
-      AnimatedVisibility(
-        modifier = Modifier.align(Alignment.BottomEnd),
-        visible = showTutorial,
-        enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-        exit = fadeOut(animationSpec = tween(durationMillis = 250))
-      ) {
-        Column(
-          modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.End
-        ) {
-          Text(text = stringResource(R.string.tutorial))
-          Spacer(modifier = Modifier.size(64.dp))
-        }
-      }
-      FloatingActionButton(modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.BottomEnd), onClick = {
-        showTutorial = false
-        launchPicker()
-      }) {
-        Icon(
-          imageVector = Icons.Default.Add, contentDescription = null
-        )
       }
     }
   }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -354,11 +347,5 @@ fun ShowPhotoGrid() {
     onDeleteAlbum = {},
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
     onListChanged = {},
-    pictureData = PictureData(id = 0, uri = , comment = null),
-    index = 0,
-    onClickItem = {},
-    isDragging = false,
-    dragOffset = Offset.Zero,
-    currentAlbumId = 0,
   )
 }
