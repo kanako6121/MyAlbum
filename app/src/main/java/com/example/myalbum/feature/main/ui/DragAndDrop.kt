@@ -28,11 +28,11 @@ import com.example.myalbum.core.data.PictureData
 
 @Stable
 class DraggableGridState(
-    list: List<PictureData>,
+    list: PictureData,
     val lazyGridState: LazyStaggeredGridState,
-    private val onListChanged: (List<PictureData>) -> Unit = {},
+    private val onListChanged: (Int, PictureData) -> Unit,
 ) {
-    val tempList = MovableList(list.toMutableList())
+    val tempList = MovableList(PictureData)
 
     var draggingIndex: Int by mutableStateOf(-1)
         private set
@@ -114,8 +114,8 @@ class DraggableGridState(
 
 @Composable
 fun rememberDraggableGridState(
-    list: List<PictureData>,
-    onListChanged: (List<PictureData>) -> Unit,
+    list: PictureData,
+    onListChanged: (Int,PictureData) -> Unit,
 ): DraggableGridState {
     val lazyGridState = rememberLazyStaggeredGridState()
     return remember {
@@ -130,7 +130,7 @@ fun rememberDraggableGridState(
 @Composable
 fun DraggableGrid(
     list: List<PictureData>,
-    onListChanged: (List<PictureData>) -> Unit = {},
+    onListChanged: (Int, PictureData) -> Unit,
     enableDebug: Boolean = false,
     itemContent: @Composable (index: Int, item: PictureData, dragging: Boolean, dragOffset: Offset) -> Unit,
 ) {

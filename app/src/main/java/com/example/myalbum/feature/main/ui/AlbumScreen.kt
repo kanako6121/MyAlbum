@@ -4,18 +4,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -173,7 +168,7 @@ fun AlbumContent(
   launchPicker: () -> Unit,
   onNavigateEditScreen: (Int, PictureData) -> Unit,
   onRemovePicture: (Int, Int) -> Unit,
-  onListChanged: (List<PictureData>) -> Unit = {},
+  onListChanged: (Int, PictureData) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
@@ -346,6 +341,6 @@ fun ShowPhotoGrid() {
     onEditTitle = {},
     onDeleteAlbum = {},
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
-    onListChanged = {},
+    onListChanged = {_,_->},
   )
 }
