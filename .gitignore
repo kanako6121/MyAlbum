@@ -4,6 +4,7 @@ Thumbs.db
 
 # Gradle
 .gradle/
+.kotlin/
 build/
 reports/
 gradlew.bat
