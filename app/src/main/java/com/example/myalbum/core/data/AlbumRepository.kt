@@ -75,6 +75,21 @@ class AlbumRepository @Inject constructor(
     preference.updateAlbum(updateAlbumData)
   }
 
+  suspend fun movePicture(
+    albumId: Int,
+    movePictureId: Int,
+    beforePictureId: Int
+  ) = withContext(Dispatchers.IO) {
+    val currentAlbumData = getCurrentAlbum(albumId) ?: return@withContext
+    val pictures = currentAlbumData.pictures.toMutableList()
+    val movePicture = pictures.find { it.id == movePictureId } ?: return@withContext
+    pictures.remove(movePicture)
+    val movePosition = pictures.indexOfFirst { it.id == beforePictureId }
+    pictures.add(movePosition, movePicture)
+    val updateAlbumData = currentAlbumData.copy(pictures = pictures)
+    preference.updateAlbum(updateAlbumData)
+  }
+
   suspend fun deleteAlbum(albumId: Int) = withContext(Dispatchers.IO) {
     preference.removeAlbum(albumId)
   }

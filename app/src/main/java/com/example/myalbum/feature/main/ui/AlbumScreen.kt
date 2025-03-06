@@ -1,13 +1,19 @@
 package com.example.myalbum.feature.main.ui
 
+import android.content.ClipData
+import android.content.ClipDescription
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.draganddrop.dragAndDropSource
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,17 +55,25 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.DragAndDropEvent
+import androidx.compose.ui.draganddrop.DragAndDropTarget
+import androidx.compose.ui.draganddrop.DragAndDropTransferData
+import androidx.compose.ui.draganddrop.mimeTypes
+import androidx.compose.ui.draganddrop.toAndroidDragEvent
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -67,6 +81,7 @@ import coil.compose.AsyncImage
 import com.example.myalbum.R
 import com.example.myalbum.core.data.AlbumData
 import com.example.myalbum.core.data.PictureData
+import com.example.myalbum.feature.main.ui.item.DraggablePictureItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -84,7 +99,7 @@ fun AlbumScreen(
   var showDeleteAlbumDialog by remember { mutableStateOf(false) }
   val currentAlbum = uiState.currentAlbum
 
-  if(currentAlbum == null) return
+  if (currentAlbum == null) return
 
   ModalNavigationDrawer(modifier = Modifier.fillMaxSize(), drawerState = drawerState, drawerContent = {
     ModalDrawerSheet {
@@ -120,7 +135,8 @@ fun AlbumScreen(
       }
     }
   }) {
-    AlbumContent(modifier = Modifier.fillMaxSize(),
+    AlbumContent(
+      modifier = Modifier.fillMaxSize(),
       currentAlbumData = currentAlbum,
       onEditTitle = { showEditAlbumDialog = true },
       onDeleteAlbum = { showDeleteAlbumDialog = true },
@@ -131,7 +147,11 @@ fun AlbumScreen(
         coroutineScope.launch {
           if (drawerState.isClosed) drawerState.open() else drawerState.close()
         }
-      })
+      },
+      onMovePicture = { moveId, targetId ->
+        viewModel.onMovePicture(currentAlbum.id, moveId, targetId)
+      },
+    )
   }
   if (showCreateAlbumDialog) {
     CreateTitleDialog(
@@ -155,6 +175,7 @@ fun AlbumScreen(
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumContent(
   modifier: Modifier = Modifier,
@@ -165,17 +186,19 @@ fun AlbumContent(
   launchPicker: () -> Unit,
   onNavigateEditScreen: (Int, PictureData) -> Unit,
   onRemovePicture: (Int, Int) -> Unit,
+  onMovePicture: (Int, Int) -> Unit,
 ) {
   var showTutorial by remember { mutableStateOf(false) }
   val scrollState = rememberLazyStaggeredGridState()
 
-  LaunchedEffect(currentAlbumData) {
+  LaunchedEffect(currentAlbumData.pictures) {
     delay(600)
     showTutorial = currentAlbumData.pictures.isEmpty()
   }
 
   Scaffold(modifier = modifier, topBar = {
-    AlbumTopBar(modifier = Modifier.clickable(onClick = onEditTitle),
+    AlbumTopBar(
+      modifier = Modifier.clickable(onClick = onEditTitle),
       title = { Text(text = currentAlbumData.title) },
       navigationIcon = {
         IconButton(onClick = onClickDrawMenu) {
@@ -197,54 +220,21 @@ fun AlbumContent(
         .fillMaxSize()
     ) {
       LazyVerticalStaggeredGrid(
-        modifier = modifier.padding(4.dp),
-        state = scrollState, columns = StaggeredGridCells.Fixed(2)
+        modifier = modifier,
+        state = scrollState,
+        columns = StaggeredGridCells.Fixed(2)
       ) {
         items(currentAlbumData.pictures) { pictureData ->
-          var expanded by remember { mutableStateOf(false) }
-          Column(
-            modifier = Modifier
-              .padding(4.dp)
-              .shadow(elevation = 4.dp)
-              .background(Color.White)
-              .border(BorderStroke(width = 0.5.dp, color = Color.Gray))
-          ) {
-            AsyncImage(
-              model = pictureData.uri,
-              contentDescription = null,
-              modifier = Modifier.padding(start = 8.dp,end = 8.dp,top = 8.dp)
-                .fillMaxWidth()
-                .clickable { onNavigateEditScreen(currentAlbumData.id, pictureData) },
-            )
-            Row(
-              modifier = Modifier.fillMaxWidth(),
-              verticalAlignment = Alignment.CenterVertically
-            ) {
-              IconButton(
-                modifier = Modifier.width(24.dp),
-                onClick = { expanded = true }
-              ) {
-                Icon(
-                  imageVector = Icons.Default.MoreVert,
-                  contentDescription = "",
-                  tint = MaterialTheme.colorScheme.onSurface
-                )
-              }
-              DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                DropdownMenuItem(text = { Text(stringResource(id = R.string.description_delete)) }, onClick = {
-                  onRemovePicture(currentAlbumData.id, pictureData.id)
-                  expanded = false
-                }, leadingIcon = {
-                  Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                })
-              }
-              Text(
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                text = pictureData.comment.orEmpty()
-              )
-            }
-          }
+          DraggablePictureItem(
+            pictureData = pictureData,
+            onNavigateEditScreen = { picData ->
+              onNavigateEditScreen(currentAlbumData.id, picData)
+            },
+            onRemovePicture = { picId ->
+              onRemovePicture(currentAlbumData.id, picId)
+            },
+            onMovePicture = onMovePicture
+          )
         }
       }
       AnimatedVisibility(
@@ -260,12 +250,13 @@ fun AlbumContent(
           Spacer(modifier = Modifier.size(64.dp))
         }
       }
-      FloatingActionButton(modifier = Modifier
-        .padding(16.dp)
-        .align(Alignment.BottomEnd), onClick = {
-        showTutorial = false
-        launchPicker()
-      }) {
+      FloatingActionButton(
+        modifier = Modifier
+          .padding(16.dp)
+          .align(Alignment.BottomEnd), onClick = {
+          showTutorial = false
+          launchPicker()
+        }) {
         Icon(
           imageVector = Icons.Default.Add, contentDescription = null
         )
@@ -305,5 +296,6 @@ fun ShowPhotoGrid() {
     onEditTitle = {},
     onDeleteAlbum = {},
     currentAlbumData = AlbumData(id = 0, title = "プレビュー", pictures = emptyList()),
+    onMovePicture = { _, _ -> }
   )
 }

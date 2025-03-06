@@ -62,13 +62,19 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  fun updateAlbumTitle(albumId: Int, newTitle: String) {
+  fun updateAlbumTitle(
+    albumId: Int,
+    newTitle: String
+  ) {
     viewModelScope.launch {
       repository.updateAlbumTitle(albumId, newTitle)
     }
   }
 
-  fun onRemovePhoto(albumId: Int, pictureId: Int) {
+  fun onRemovePhoto(
+    albumId: Int,
+    pictureId: Int
+  ) {
     viewModelScope.launch {
       repository.removePhoto(albumId, pictureId)
     }
@@ -77,6 +83,16 @@ class MainViewModel @Inject constructor(
   fun deleteAlbum(albumId: Int) {
     viewModelScope.launch {
       repository.deleteAlbum(albumId)
+    }
+  }
+
+  fun onMovePicture(
+    albumId: Int,
+    movePictureId: Int,
+    beforePictureId: Int
+  ) {
+    viewModelScope.launch {
+      repository.movePicture(albumId, movePictureId, beforePictureId)
     }
   }
 }
