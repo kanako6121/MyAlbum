@@ -1,10 +1,12 @@
 package com.example.myalbum.feature.edit.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,7 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,6 +77,9 @@ fun EditPictureContent(
 ) {
   var comment by remember(pictureData) { mutableStateOf(pictureData?.comment.orEmpty()) }
   val zoomState = rememberZoomState()
+  val keyboardController = LocalSoftwareKeyboardController.current
+  val focusRequester = remember { FocusRequester() }
+  var (text, setText) = remember { mutableStateOf("Close keyboard on done ime action (blue ✔️)") }
 
   Scaffold(
     modifier = modifier,
@@ -91,19 +101,34 @@ fun EditPictureContent(
       modifier = Modifier
         .padding(contentPadding)
         .fillMaxWidth()
+        .imePadding()
     ) {
-      AsyncImage(
-        onSuccess = { state ->
-          zoomState.setContentSize(state.painter.intrinsicSize)
-        },
-        contentScale = ContentScale.Fit,
-        modifier = Modifier
-          .zoomable(zoomState)
-          .padding(8.dp)
-          .fillMaxWidth(),
-        model = pictureData?.uri,
-        contentDescription = null
-      )
+      if (LocalInspectionMode.current) {
+        Image(
+          painter = ColorPainter(color = Color.Gray),
+          contentScale = ContentScale.Fit,
+          modifier = Modifier
+            .zoomable(zoomState)
+            .padding(8.dp)
+            .fillMaxWidth()
+            .height(300.dp),
+          contentDescription = null
+        )
+      } else {
+        AsyncImage(
+          onSuccess = { state ->
+            zoomState.setContentSize(state.painter.intrinsicSize)
+          },
+          contentScale = ContentScale.Fit,
+          modifier = Modifier
+            .zoomable(zoomState)
+            .padding(8.dp)
+            .fillMaxWidth(),
+          model = pictureData?.uri,
+          contentDescription = null
+        )
+      }
+
       if (zoomState.scale <= 1f) {
         OutlinedTextField(
           modifier = Modifier
